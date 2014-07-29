@@ -7,7 +7,6 @@ namespace Schedule.Windows
 {
     public partial class MainWindow : Window
     {
-        private ConflictsWindow _conflicts;
         public MainWindow()
         {
             InitializeComponent();
@@ -31,10 +30,14 @@ namespace Schedule.Windows
 
         private void Window_ShowConflicts(object sender, RoutedEventArgs e)
         {
-            if (_conflicts == null)
-                _conflicts = new ConflictsWindow { Owner = this };
-            _conflicts.Closed += (o, args) => { _conflicts = null; };
-            _conflicts.ShowDialog();
+            var conflicts = new ConflictsWindow { Owner = this };
+            conflicts.Show();
+        }
+
+        private void Window_AboutAuthor(object sender, RoutedEventArgs e)
+        {
+            var author = new AboutWindow();
+            author.ShowDialog();
         }
     }
 

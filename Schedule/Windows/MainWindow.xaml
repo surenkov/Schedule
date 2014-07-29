@@ -21,7 +21,7 @@
                     <MenuItem Header="Remove selected conflict" />
                 </MenuItem>
                 <MenuItem Header="About">
-                    <MenuItem Header="Author" />
+                    <MenuItem Header="Author" Click="Window_AboutAuthor"/>
                 </MenuItem>
             </Menu>
             <StatusBar DockPanel.Dock="Bottom" MinHeight="16">
@@ -35,7 +35,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <DataGrid Grid.Column="0" Margin="7 7 10 7"></DataGrid>
-                <GridSplitter Grid.Column="0" Width="3" />
+                <GridSplitter Grid.Column="0" Width="3" SnapsToDevicePixels="True" />
                 <StackPanel Grid.Column="1">
                     <StackPanel>
                         <ComboBox Margin="7 7 7 3.5"></ComboBox>
