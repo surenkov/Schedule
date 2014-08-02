@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:schedule="clr-namespace:Schedule.Windows"
         Title="Schedule" Height="350" Width="525" Background="#EAEAEA" 
-        WindowStartupLocation="CenterScreen" WindowState="Maximized">
+        WindowStartupLocation="CenterScreen" WindowState="Maximized" SnapsToDevicePixels="True">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Close" CanExecute="Command_AlwaysExecute" Executed="Window_Close"/>
         <CommandBinding Command="schedule:ScheduleCommands.Export" CanExecute="Command_AlwaysExecute" Executed="Window_ExportSchedule"></CommandBinding>
@@ -32,17 +32,24 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <DataGrid Grid.Column="0" Margin="7 7 10 7"></DataGrid>
-                <GridSplitter Grid.Column="0" Width="3" SnapsToDevicePixels="True" />
-                <StackPanel Grid.Column="1">
-                    <StackPanel>
-                        <ComboBox Margin="7 7 7 3.5"></ComboBox>
-                        <ComboBox Margin="7 3.5 7 7"></ComboBox>
-                    </StackPanel>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" />
-                </StackPanel>
+                <Expander Grid.Column="1" ExpandDirection="Left">
+                    <Grid Width="250">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Margin="10">
+                            <ComboBox Margin="0,0,0,10"/>
+                            <ComboBox/>
+                        </StackPanel>
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <StackPanel Name="FiltersPanel" Margin="10" />
+                        </ScrollViewer>
+                    </Grid>
+                </Expander>
+                <DataGrid Grid.Column="0"/>
             </Grid>
         </DockPanel>
     </Grid>

@@ -1,14 +1,14 @@
 ﻿<Window x:Class="Schedule.Windows.AboutWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="About" Height="160" Width="310" ResizeMode="NoResize" Topmost="True" 
-        WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
+        Title="About" Height="160" Width="310" ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen" ShowInTaskbar="False" SnapsToDevicePixels="True">
     <Grid Margin="7" ClipToBounds="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Border Background="#EFEFEF" BorderBrush="LightGray" BorderThickness="1" Grid.Column="1" SnapsToDevicePixels="True" Margin="-1 0 0 0">
+        <Border Background="#EFEFEF" BorderBrush="LightGray" BorderThickness="1" Grid.Column="1" Margin="-1 0 0 0">
             <StackPanel Margin="5">
                 <TextBlock Text="Savva Surenkov" />
                 <TextBlock Margin="0 2 0 1.5">
@@ -19,7 +19,7 @@
                 <TextBlock TextAlignment="Center">Built with <Run FontSize="18">WPF</Run></TextBlock>
             </StackPanel>
         </Border>
-        <Border Grid.Column="0" BorderBrush="DarkGray" BorderThickness="5 1 3 1" SnapsToDevicePixels="True">
+        <Border Grid.Column="0" BorderBrush="DarkGray" BorderThickness="5 1 3 1">
             <Image Source="http://www.gravatar.com/avatar/f64751c33d3b2bf6f10f91f7da9dd9dd?s=200" Margin="0 0 -1 0"/>
         </Border>
     </Grid>

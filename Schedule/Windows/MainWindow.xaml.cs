@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.Windows;
 using System.Windows.Input;
 
