@@ -5,7 +5,7 @@
         WindowStartupLocation="CenterScreen" ShowInTaskbar="False" SnapsToDevicePixels="True">
     <Grid Margin="7" ClipToBounds="True">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Border Background="#EFEFEF" BorderBrush="LightGray" BorderThickness="1" Grid.Column="1" Margin="-1 0 0 0">
@@ -14,13 +14,13 @@
                 <TextBlock Margin="0 2 0 1.5">
                     <Hyperlink NavigateUri="mailto:savva.surenkov@outlook.com" RequestNavigate="Author_EmailNavigate">savva.surenkov@outlook.com</Hyperlink>
                 </TextBlock>
-                <TextBlock Text="Far Eastern Federal University" Margin="0 1.5" TextWrapping="WrapWithOverflow"/>
-                <TextBlock Text="Professor: Alexander S. Klenin" Margin="0 1.5" TextWrapping="WrapWithOverflow"/>
+                <TextBlock Text="Far Eastern Federal University" Margin="0 1.5" TextWrapping="WrapWithOverflow" />
+                <TextBlock Text="Professor: Alexander S. Klenin" Margin="0 1.5" TextWrapping="WrapWithOverflow" />
                 <TextBlock TextAlignment="Center">Built with <Run FontSize="18">WPF</Run></TextBlock>
             </StackPanel>
         </Border>
         <Border Grid.Column="0" BorderBrush="DarkGray" BorderThickness="5 1 3 1">
-            <Image Source="http://www.gravatar.com/avatar/f64751c33d3b2bf6f10f91f7da9dd9dd?s=200" Margin="0 0 -1 0"/>
+            <Image Source="http://www.gravatar.com/avatar/f64751c33d3b2bf6f10f91f7da9dd9dd?s=200" Margin="0 0 -1 0" />
         </Border>
     </Grid>
 </Window>

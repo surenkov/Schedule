@@ -2,17 +2,18 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:schedule="clr-namespace:Schedule.Windows"
-        Title="Schedule" Height="350" Width="525" Background="#EAEAEA" 
+        xmlns:controls="clr-namespace:Schedule.Controls"
+        Title="Schedule" Height="350" Width="525" Background="#EAEAEA"
         WindowStartupLocation="CenterScreen" WindowState="Maximized" SnapsToDevicePixels="True">
     <Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Close" CanExecute="Command_AlwaysExecute" Executed="Window_Close"/>
+        <CommandBinding Command="ApplicationCommands.Close" CanExecute="Command_AlwaysExecute" Executed="Window_Close" />
         <CommandBinding Command="schedule:ScheduleCommands.Export" CanExecute="Command_AlwaysExecute" Executed="Window_ExportSchedule"></CommandBinding>
     </Window.CommandBindings>
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem Command="schedule:ScheduleCommands.Export"/>
+                    <MenuItem Command="schedule:ScheduleCommands.Export" />
                     <Separator />
                     <MenuItem Header="Exit" Command="ApplicationCommands.Close" />
                 </MenuItem>
@@ -21,35 +22,25 @@
                     <MenuItem Header="Remove selected conflict" />
                 </MenuItem>
                 <MenuItem Header="About">
-                    <MenuItem Header="Author" Click="Window_AboutAuthor"/>
+                    <MenuItem Header="Author" Click="Window_AboutAuthor" />
                 </MenuItem>
             </Menu>
             <StatusBar DockPanel.Dock="Bottom" MinHeight="16">
                 <StatusBarItem HorizontalAlignment="Right">
-                    <ResizeGrip/>
+                    <ResizeGrip />
                 </StatusBarItem>
             </StatusBar>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <Expander Grid.Column="1" ExpandDirection="Left">
-                    <Grid Width="250">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="1*"/>
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Margin="10">
-                            <ComboBox Margin="0,0,0,10"/>
-                            <ComboBox/>
-                        </StackPanel>
-                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                            <StackPanel Name="FiltersPanel" Margin="10" />
-                        </ScrollViewer>
-                    </Grid>
-                </Expander>
-                <DataGrid Grid.Column="0"/>
+                <Expander Grid.Column="1" ExpandDirection="Left" Grid.RowSpan="2" Header="" IsExpanded="True" />
+                <controls:Calendar x:Name="MainCalendar"
+                                   Grid.Column="0"
+                                   Background="#DFDFDF"
+                                   BorderBrush="#CCCCCC"
+                                   BorderThickness="0 1 1 1" RenderTransformOrigin="0.5,0.5" />
             </Grid>
         </DockPanel>
     </Grid>

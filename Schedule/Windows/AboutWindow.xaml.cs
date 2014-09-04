@@ -1,10 +1,5 @@
-﻿using System;
-using System.Globalization;
-using System.Text;
-using System.Windows;
-using System.Windows.Media.Imaging;
+﻿using System.Windows;
 using System.Windows.Navigation;
-using System.Security.Cryptography;
 
 namespace Schedule.Windows
 {
