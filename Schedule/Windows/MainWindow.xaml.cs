@@ -51,7 +51,7 @@ namespace Schedule.Windows
             {
                 using (ScheduleDbContext ctx = new ScheduleDbContext())
                 {
-                    var it = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group")
+                    var it = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building")
                              where s.EndDate >= startTime && s.StartDate <= endTime
                              select s;
                     return it.ToList();

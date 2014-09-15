@@ -20,5 +20,6 @@ namespace Schedule.Models
         public uint Capacity { get; set; }
     
         public virtual Building Building { get; set; }
+        public virtual ICollection<Schedule> Schedules { get; set; } 
     }
 }

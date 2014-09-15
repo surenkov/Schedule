@@ -12,7 +12,7 @@ namespace Schedule.Models.DataLayer
         public ScheduleDbContext()
             : base("ScheduleDBConnection")
         {
-            //Database.SetInitializer(new ScheduleInitializer());
+            Database.SetInitializer(new ScheduleInitializer());
         }
 
         public DbSet<Building> Buildings { get; set; }

@@ -129,7 +129,8 @@ namespace Schedule.Models.DataLayer
                     StartDate = new DateTime(2014, 9, 1), 
                     EndDate = new DateTime(2014, 12, 29), 
                     Interval = 7,
-                    DoubleClass = DoubleClass.First
+                    DoubleClass = DoubleClass.First,
+                    Class = rooms[0]
                 },
                 new Schedule
                 {
@@ -140,7 +141,8 @@ namespace Schedule.Models.DataLayer
                     StartDate = new DateTime(2014, 9, 1), 
                     EndDate = new DateTime(2014, 12, 29), 
                     Interval = 14,
-                    DoubleClass = DoubleClass.Second
+                    DoubleClass = DoubleClass.Second,
+                    Class = rooms[2]
                 }
             };
 

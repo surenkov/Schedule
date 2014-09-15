@@ -61,5 +61,6 @@ namespace Schedule.Models
         public virtual Course Course { get; set; }
         public virtual CourseType Type { get; set; }
         public virtual Group Group { get; set; }
+        public virtual Classroom Class { get; set; }
     }
 }
