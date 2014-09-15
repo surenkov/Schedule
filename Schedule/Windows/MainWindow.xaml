@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:schedule="clr-namespace:Schedule.Windows"
         xmlns:controls="clr-namespace:Schedule.Controls"
-        Title="Schedule" Height="350" Width="525" Background="#EAEAEA"
-        WindowStartupLocation="CenterScreen" WindowState="Maximized" SnapsToDevicePixels="True">
+        Title="Schedule" Height="350" Width="525" Background="#EAEAEA" WindowStartupLocation="CenterScreen" 
+        WindowState="Maximized" SnapsToDevicePixels="True" ResizeMode="CanResizeWithGrip" Loaded="MainWindow_OnLoaded">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Close" CanExecute="Command_AlwaysExecute" Executed="Window_Close" />
         <CommandBinding Command="schedule:ScheduleCommands.Export" CanExecute="Command_AlwaysExecute" Executed="Window_ExportSchedule"></CommandBinding>
@@ -26,22 +26,20 @@
                 </MenuItem>
             </Menu>
             <StatusBar DockPanel.Dock="Bottom" MinHeight="16">
-                <StatusBarItem HorizontalAlignment="Right">
-                    <ResizeGrip />
-                </StatusBarItem>
+                
             </StatusBar>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Expander Grid.Column="1" ExpandDirection="Left" Grid.RowSpan="2" Header="" IsExpanded="True" />
-                <controls:Calendar x:Name="MainCalendar"
-                                   Grid.Column="0"
-                                   Background="#DFDFDF"
-                                   BorderBrush="#CCCCCC"
-                                   BorderThickness="0 1 1 1" RenderTransformOrigin="0.5,0.5" />
-            </Grid>
+            <DockPanel>
+                <Expander DockPanel.Dock="Left" ExpandDirection="Right" IsExpanded="False" Margin="1 0 0 0">
+                    <Grid Width="250">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="52"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <controls:CalendarMonthSelector x:Name="MonthSelector" Date="{Binding Date, Mode=TwoWay}" Foreground="DarkGray"/>
+                    </Grid>
+                </Expander>
+                <controls:Calendar x:Name="MainCalendar" BorderBrush="#CCCCCC" BorderThickness="1" Background="#E1E1E1"/>
+            </DockPanel>
         </DockPanel>
     </Grid>
 </Window>

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Schedule.Models.DataLayer;
 
 namespace Schedule.Windows
 {
@@ -9,7 +13,9 @@ namespace Schedule.Windows
         public MainWindow()
         {
             InitializeComponent();
+
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
+            MonthSelector.DataContext = MainCalendar;
         }
 
         private void Command_AlwaysExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -37,6 +43,20 @@ namespace Schedule.Windows
         {
             var author = new AboutWindow();
             author.ShowDialog();
+        }
+
+        private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            MainCalendar.UpdateSource = delegate(DateTime startTime, DateTime endTime)
+            {
+                using (ScheduleDbContext ctx = new ScheduleDbContext())
+                {
+                    var it = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group")
+                             where s.EndDate >= startTime && s.StartDate <= endTime
+                             select s;
+                    return it.ToList();
+                }
+            };
         }
     }
 

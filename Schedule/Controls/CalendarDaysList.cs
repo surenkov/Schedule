@@ -1,10 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace Schedule.Controls
 {
-    public class CalendarDaysList : HeaderedItemsControl
+    public class CalendarDaysList : ItemsControl
     {
         static CalendarDaysList()
         {
