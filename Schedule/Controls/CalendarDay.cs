@@ -1,6 +1,11 @@
 ﻿using System;
+using System.Data.Entity;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using Schedule.Models;
+using Schedule.Models.DataLayer;
 using Schedule.Windows;
 
 namespace Schedule.Controls
@@ -19,14 +24,17 @@ namespace Schedule.Controls
         private Button _addButton;
         private Button _viewButton;
 
+        public static readonly DependencyProperty CalendarProperty;
         public static readonly DependencyProperty DateProperty;
         public static readonly DependencyProperty DayTypeProperty;
+
 
         static CalendarDay()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CalendarDay),
                 new FrameworkPropertyMetadata(typeof(CalendarDay)));
 
+            CalendarProperty = DependencyProperty.Register("Calendar", typeof(Calendar), typeof(CalendarDay));
             DateProperty = DependencyProperty.Register("Date", typeof(DateTime), typeof(CalendarDay),
                 new FrameworkPropertyMetadata(DateChangedCallback));
             DayTypeProperty = DependencyProperty.Register("DayType", typeof(CalendarDayType), typeof(CalendarDay),
@@ -34,6 +42,13 @@ namespace Schedule.Controls
         }
 
         #region CLR Properties
+
+        public Calendar Calendar
+        {
+            get { return (Calendar) GetValue(CalendarProperty); }
+            set { SetValue(CalendarProperty, value); }
+        }
+
         public DateTime Date
         {
             get { return (DateTime)GetValue(DateProperty); }
@@ -63,7 +78,23 @@ namespace Schedule.Controls
 
         private void OnAddButtonClick(object sender, RoutedEventArgs args)
         {
-            EditScheduleDialog dlg = new EditScheduleDialog { ShowInTaskbar = true };
+            EditScheduleDialog dlg = new EditScheduleDialog(new Models.Schedule {StartDate = Date, EndDate = Date}) { ShowInTaskbar = true };
+            dlg.Apply += delegate(object o, ApplyEventArgs eventArgs)
+            {
+                var item = eventArgs.Item;
+                eventArgs.Handled = true;
+
+                using (ScheduleDbContext ctx = new ScheduleDbContext())
+                {
+                    var properties = item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
+                    foreach (var rel in properties.Select(p => p.GetValue(item) as Entity))
+                        ctx.Set(rel.GetType()).Attach(rel);
+                    ctx.Entry(item).State = item.Id == 0 ? EntityState.Added : EntityState.Modified;
+                    ctx.SaveChanges();
+                }
+
+                Calendar.UpdateView();
+            };
             dlg.Show();
         }
 

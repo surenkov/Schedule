@@ -1,20 +1,24 @@
 using System.ComponentModel.DataAnnotations;
 using Schedule.Annotations;
+using Schedule.Attributes;
 
 namespace Schedule.Models
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class Student
+    public partial class Student : Entity
     {
-        public int Id { get; set; }
-
         [NotNull, MaxLength(300)]
         public string Name { get; set; }
         public string Address { get; set; }
         
         [NotNull]
         public virtual Group Group { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

@@ -25,9 +25,6 @@
                     <MenuItem Header="Author" Click="Window_AboutAuthor" />
                 </MenuItem>
             </Menu>
-            <StatusBar DockPanel.Dock="Bottom" MinHeight="16">
-                
-            </StatusBar>
             <DockPanel>
                 <Expander DockPanel.Dock="Left" ExpandDirection="Right" IsExpanded="False" Margin="1 0 0 0">
                     <Grid Width="250">

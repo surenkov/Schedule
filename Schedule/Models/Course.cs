@@ -1,3 +1,5 @@
+using Schedule.Attributes;
+
 namespace Schedule.Models
 {
     using System;
@@ -11,16 +13,19 @@ namespace Schedule.Models
         Lab
     }
     
-    public partial class Course
+    public partial class Course : Entity
     {
         public Course()
         {
             this.Teachers = new HashSet<Teacher>();
         }
     
-        public int Id { get; set; }
         public string Name { get; set; }
-    
         public virtual ICollection<Teacher> Teachers { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

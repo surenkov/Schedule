@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Schedule.Annotations;
+using Schedule.Models;
 using Schedule.Models.ViewModels;
+using Schedule.Utils;
 using Control = System.Windows.Controls.Control;
 
 namespace Schedule.Controls
@@ -40,17 +36,11 @@ namespace Schedule.Controls
         public Calendar()
         {
             _timer = new DispatcherTimer();
-            _timer.Tick += new EventHandler(delegate
+            _timer.Tick += delegate
             {
                 _timer.Interval = DateTime.Now.Date.AddDays(1) - DateTime.Now;
                 Date = DateTime.Now.Date;
-            });
-        }
-
-        private static void DateChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var c = d as Calendar;
-            if (c != null) c.OnDateChanged(e);
+            };
         }
 
         public override void OnApplyTemplate()
@@ -60,7 +50,7 @@ namespace Schedule.Controls
             _timer.Start();
         }
 
-        private void OnDateChanged(DependencyPropertyChangedEventArgs e)
+        public void UpdateView()
         {
             var startDay = new DateTime(Date.Year, Date.Month, 1);
             while (startDay.DayOfWeek != CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek)
@@ -68,6 +58,17 @@ namespace Schedule.Controls
             var endDay = startDay.AddDays(MaxDays);
 
             Update(UpdateSource(startDay, endDay));
+        }
+
+        private static void DateChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var c = d as Calendar;
+            if (c != null) c.OnDateChanged(e);
+        }
+
+        private void OnDateChanged(DependencyPropertyChangedEventArgs e)
+        {
+            UpdateView();
         }
 
         private void Update(IEnumerable<Models.Schedule> items = null)
@@ -83,16 +84,19 @@ namespace Schedule.Controls
                 foreach (var item in items)
                 {
                     DateTime itemDate = item.StartDate.Date;
-            
+
+                    if (item.Interval <= 0)
+                        item.Interval = 1;
+
                     while (itemDate < startDay)
                         itemDate = itemDate.AddDays(item.Interval);
-                
+
                     var endDate = endDay < item.EndDate ? endDay : item.EndDate;
                     while (itemDate <= endDate)
                     {
                         if (!dict.ContainsKey(itemDate))
                             dict.Add(itemDate, new List<Models.Schedule>());
-                
+
                         dict[itemDate].Add(item);
                         itemDate = itemDate.AddDays(item.Interval);
                     }
@@ -104,8 +108,9 @@ namespace Schedule.Controls
                 weeks[i] = new List<ScheduleDay>(MaxDays / weeks.Length);
 
             for (int i = 0; i < MaxDays; i++)
-                weeks[i/(MaxDays/weeks.Length)].Add(new ScheduleDay
+                weeks[i / (MaxDays / weeks.Length)].Add(new ScheduleDay
                 {
+                    Calendar = this,
                     Date = startDay.AddDays(i),
                     Items = dict.ContainsKey(startDay.AddDays(i)) ? ScheduleMapper.Map(dict[startDay.AddDays(i)]) : null
                 });

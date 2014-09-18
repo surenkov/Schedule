@@ -1,3 +1,5 @@
+using Schedule.Attributes;
+
 namespace Schedule.Models
 {
     using System;
@@ -11,15 +13,19 @@ namespace Schedule.Models
         Gym
     }
     
-    public partial class Classroom
+    public partial class Classroom : Entity
     {
-        public int Id { get; set; }
         public int Number { get; set; }
         public string Sign { get; set; }
         public ClassroomType Type { get; set; }
-        public uint Capacity { get; set; }
+        public int Capacity { get; set; }
     
         public virtual Building Building { get; set; }
-        public virtual ICollection<Schedule> Schedules { get; set; } 
+        public virtual ICollection<Schedule> Schedules { get; set; }
+
+        public override string ToString()
+        {
+            return Building.Name + Number;
+        }
     }
 }

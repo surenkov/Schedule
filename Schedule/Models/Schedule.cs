@@ -1,8 +1,11 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
 using Schedule.Annotations;
+using Schedule.Attributes;
+using Schedule.Properties;
 
 namespace Schedule.Models
 {
@@ -47,20 +50,30 @@ namespace Schedule.Models
         }
     }
 
-    public partial class Schedule
+    public partial class Schedule : Entity
     {
-        [Key]
-        public int Id { get; set; }
-
+        [Description("Start Date"), Required(ErrorMessageResourceType = typeof (Resources), ErrorMessageResourceName = "Schedule_StartDate_ErrMsg")]
         public System.DateTime StartDate { get; set; }
+        
+        [Description("End Date"), Required(ErrorMessageResourceType = typeof (Resources), ErrorMessageResourceName = "Schedule_EndDate_ErrMsg")]
         public System.DateTime EndDate { get; set; }
+        
+        [Required, Description("Interval")]
         public int Interval { get; set; }
+        
+        [Description("Number of period")]
         public DoubleClass DoubleClass { get; set; }
 
+        [NotNull, Required]
         public virtual Teacher Teacher { get; set; }
+        [NotNull, Required]
         public virtual Course Course { get; set; }
+
+        [Description("Type of course")]
         public virtual CourseType Type { get; set; }
+        [NotNull, Required]
         public virtual Group Group { get; set; }
+        [NotNull, Required]
         public virtual Classroom Class { get; set; }
     }
 }

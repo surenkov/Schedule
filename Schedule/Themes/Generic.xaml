@@ -2,7 +2,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:c="clr-namespace:Schedule.Controls"
-    xmlns:m="clr-namespace:Schedule.Models">
+    xmlns:m="clr-namespace:Schedule.Models"
+    xmlns:local="clr-namespace:Schedule.Controls.Editors">
 
     <c:EnumToDayNameConverter x:Key="DayItemsConverter"/>
 
@@ -64,7 +65,7 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <c:CalendarDay Header="{Binding Date.Day}" Date="{Binding Date}" ItemsSource="{Binding Items}" VerticalAlignment="Stretch">
+                    <c:CalendarDay Header="{Binding Date.Day}" Date="{Binding Date}" Calendar="{Binding Calendar}" ItemsSource="{Binding Items}" VerticalAlignment="Stretch">
                         <c:CalendarDay.ItemTemplate>
                             <DataTemplate>
                                 <c:CalendarDayItem Header="{Binding Period, Converter={StaticResource DoubleClassToStringConverter}}" ItemsSource="{Binding Items}" BorderBrush="{Binding BorderBrush}" Margin="0 1 0 0">
@@ -135,7 +136,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type c:CalendarDay}">
                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="True">
-                        <Grid MinHeight="100" MinWidth="150">
+                        <Grid MinHeight="100" MinWidth="135">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="*"/>
@@ -245,7 +246,6 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type c:CalendarDayItem}">
                     <ControlTemplate.Resources>
-                        <Path x:Key="CrossPath" Data="M305.777,398.68l4.868,4.871l2.902-2.906l-4.867-4.867l4.871-4.871L310.645,388l-4.872,4.871L300.902,388L298,390.903l4.871,4.871L298,400.645l2.906,2.906L305.777,398.68z M305.777,398.68"  />
                         <Storyboard x:Key="Expanded">
                             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.LayoutTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="listView">
                                 <EasingDoubleKeyFrame KeyTime="0:0:0.4" Value="1">
@@ -400,6 +400,25 @@
                 <ControlTemplate TargetType="{x:Type c:CalendarHeaderItem}">
                     <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="True">
                         <TextBlock Margin="5 1 0 0" Foreground="Gray" Text="{TemplateBinding Header}"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="{x:Type local:EntitySelector}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:EntitySelector}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                        <DockPanel>
+                            <Button DockPanel.Dock="Right" Width="25" x:Name="PART_AddButton">
+                                <Path Fill="DimGray" Data="M 4 4 l 0 -4 2 0 0 4 4 0 0 2 -4 0 0 4 -2 0 0 -4 -4 0 0 -2 Z" SnapsToDevicePixels="False"/>
+                            </Button>
+                            <ComboBox x:Name="PART_Items" DockPanel.Dock="Left" Margin="0 0 5 0" IsEditable="True" ItemsSource="{Binding ItemsSource, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        </DockPanel>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

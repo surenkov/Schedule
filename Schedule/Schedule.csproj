@@ -85,11 +85,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Attributes\NotShownAttribute.cs" />
     <Compile Include="Controls\CalendarHeader.cs" />
     <Compile Include="Controls\CalendarHeaderItem.cs" />
     <Compile Include="Controls\CalendarMonthSelector.xaml.cs">
       <DependentUpon>CalendarMonthSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Editors\EntitySelector.cs" />
+    <Compile Include="Models\Entity.cs" />
+    <Compile Include="Utils\EditorsFactory.cs" />
+    <Compile Include="Utils\EditorsMapper.cs" />
+    <Compile Include="Utils\ScheduleMapper.cs" />
     <Compile Include="Windows\ViewScheduleDialog.xaml.cs">
       <DependentUpon>ViewScheduleDialog.xaml</DependentUpon>
     </Compile>
@@ -211,9 +217,7 @@
   <ItemGroup>
     <SplashScreen Include="splash.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\Editors\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
