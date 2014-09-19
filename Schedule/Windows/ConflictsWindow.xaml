@@ -9,7 +9,6 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TreeView Grid.Row="0" Margin="0 0 0 10"/>
         <Button Grid.Row="1" HorizontalAlignment="Right" Padding="5 0" Click="ConflictsWindow_Close">Close</Button>
     </Grid>
 </Window>

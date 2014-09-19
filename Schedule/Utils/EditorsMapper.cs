@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using Schedule.Controls.Editors;
 using Schedule.Models;
@@ -23,7 +20,7 @@ namespace Schedule.Utils
             { typeof(Entity), FillEntitiesSelector }
         };
 
-        private static async void FillCalssroomSelector(Control c, Type t)
+        private static void FillCalssroomSelector(Control c, Type t)
         {
             var selector = c as EntitySelector;
             if (selector == null) return;
@@ -36,7 +33,7 @@ namespace Schedule.Utils
             }
         }
 
-        private static async void FillEntitiesSelector(Control c, Type t)
+        private static void FillEntitiesSelector(Control c, Type t)
         {
             var selector = c as EntitySelector;
             if (selector == null) return;

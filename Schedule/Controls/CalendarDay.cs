@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using Schedule.Models;
 using Schedule.Models.DataLayer;
+using Schedule.Utils;
 using Schedule.Windows;
 
 namespace Schedule.Controls
@@ -45,7 +48,7 @@ namespace Schedule.Controls
 
         public Calendar Calendar
         {
-            get { return (Calendar) GetValue(CalendarProperty); }
+            get { return (Calendar)GetValue(CalendarProperty); }
             set { SetValue(CalendarProperty, value); }
         }
 
@@ -78,29 +81,47 @@ namespace Schedule.Controls
 
         private void OnAddButtonClick(object sender, RoutedEventArgs args)
         {
-            EditScheduleDialog dlg = new EditScheduleDialog(new Models.Schedule {StartDate = Date, EndDate = Date}) { ShowInTaskbar = true };
+            EditScheduleDialog dlg = new EditScheduleDialog(new Models.Schedule { StartDate = Date, EndDate = Date }) { ShowInTaskbar = true };
             dlg.Apply += delegate(object o, ApplyEventArgs eventArgs)
             {
                 var item = eventArgs.Item;
                 eventArgs.Handled = true;
+                bool noExcept = true;
 
                 using (ScheduleDbContext ctx = new ScheduleDbContext())
                 {
-                    var properties = item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
-                    foreach (var rel in properties.Select(p => p.GetValue(item) as Entity))
-                        ctx.Set(rel.GetType()).Attach(rel);
-                    ctx.Entry(item).State = item.Id == 0 ? EntityState.Added : EntityState.Modified;
-                    ctx.SaveChanges();
+                    try
+                    {
+                        var properties =
+                            item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof (Entity)));
+                        foreach (var rel in properties.Select(p => p.GetValue(item) as Entity))
+                            ctx.Set(rel.GetType()).Attach(rel);
+                        ctx.Entry(item).State = item.Id == 0 ? EntityState.Added : EntityState.Modified;
+                        ctx.SaveChanges();
+                    }
+                    catch (DbEntityValidationException e)
+                    {
+                        e.ShowMessage();
+                        noExcept = false;
+                    }
+                    catch (NullReferenceException)
+                    {
+                        MessageBox.Show("Please fill all required fields", "Error");
+                        noExcept = false;
+                    }
                 }
-
-                Calendar.UpdateView();
+                if (noExcept)
+                {
+                    dlg.Close();
+                    Calendar.UpdateView();
+                }
             };
             dlg.Show();
         }
 
         private void OnViewButtonClick(object sender, RoutedEventArgs args)
         {
-            ViewScheduleDialog dlg = new ViewScheduleDialog { ShowInTaskbar = true };
+            ViewScheduleDialog dlg = new ViewScheduleDialog { ShowInTaskbar = true, ItemsSource = ItemsSource };
             dlg.Show();
         }
 

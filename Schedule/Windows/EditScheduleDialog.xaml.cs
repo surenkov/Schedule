@@ -1,10 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Schedule.Attributes;
 using Schedule.Models;
+using Schedule.Models.DataLayer;
 using Schedule.Utils;
 
 namespace Schedule.Windows
@@ -36,12 +38,25 @@ namespace Schedule.Windows
             remove { RemoveHandler(ApplyEvent, value); }
         }
 
-        public EditScheduleDialog(Entity entity = null)
+        public EditScheduleDialog(Entity entity = null, bool copy = false)
         {
             InitializeComponent();
             CloseButton.Click += (s, a) => Close();
 
-            Item = entity;
+            if (copy)
+            {
+                using (ScheduleDbContext ctx = new ScheduleDbContext())
+                {
+                    if (entity != null)
+                        Item = ctx.Set(entity.GetType()).Find(entity.Id) as Entity;
+                    else
+                        Item = null;
+                }
+            }
+            else
+            {
+                Item = entity;
+            }
             InitEditors();
         }
 
@@ -60,7 +75,7 @@ namespace Schedule.Windows
                 var shown = property.GetCustomAttribute(typeof(NotShownAttribute)) as NotShownAttribute;
 
                 if (shown != null && !shown.Shown) continue;
-                if (property.PropertyType != typeof(string) && 
+                if (property.PropertyType != typeof(string) &&
                     property.PropertyType.GetInterface("IEnumerable") != null) continue;
 
                 EditorsGrid.RowDefinitions.Add(new RowDefinition());
@@ -92,7 +107,6 @@ namespace Schedule.Windows
         private void ApplyButton_OnClick(object sender, RoutedEventArgs e)
         {
             RaiseEvent(new ApplyEventArgs(ApplyEvent, Item));
-            Close();
         }
     }
 

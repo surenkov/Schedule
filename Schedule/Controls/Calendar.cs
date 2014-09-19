@@ -103,16 +103,16 @@ namespace Schedule.Controls
                 }
 
             var listsOfDays = FindVisualChildren<CalendarDaysList>(GetTemplateChild("ListGrid")).ToList();
-            var weeks = new List<ScheduleDay>[listsOfDays.Count];
+            var weeks = new List<ScheduleDayViewModel>[listsOfDays.Count];
             for (int i = 0; i < weeks.Length; i++)
-                weeks[i] = new List<ScheduleDay>(MaxDays / weeks.Length);
+                weeks[i] = new List<ScheduleDayViewModel>(MaxDays / weeks.Length);
 
             for (int i = 0; i < MaxDays; i++)
-                weeks[i / (MaxDays / weeks.Length)].Add(new ScheduleDay
+                weeks[i / (MaxDays / weeks.Length)].Add(new ScheduleDayViewModel
                 {
                     Calendar = this,
                     Date = startDay.AddDays(i),
-                    Items = dict.ContainsKey(startDay.AddDays(i)) ? ScheduleMapper.Map(dict[startDay.AddDays(i)]) : null
+                    Items = dict.ContainsKey(startDay.AddDays(i)) ? ScheduleMapper.Map(dict[startDay.AddDays(i)], this) : null
                 });
             for (int i = 0; i < weeks.Length; i++)
                 listsOfDays[i].ItemsSource = weeks[i];

@@ -39,6 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -92,9 +93,13 @@
       <DependentUpon>CalendarMonthSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Editors\EntitySelector.cs" />
+    <Compile Include="Controls\ScheduleCardItem.cs" />
     <Compile Include="Models\Entity.cs" />
+    <Compile Include="Models\ViewModels\ScheduleCardViewModel.cs" />
+    <Compile Include="Models\ViewModels\ScheduleItemViewModel.cs" />
     <Compile Include="Utils\EditorsFactory.cs" />
     <Compile Include="Utils\EditorsMapper.cs" />
+    <Compile Include="Utils\ScheduleDbExceptionExtender.cs" />
     <Compile Include="Utils\ScheduleMapper.cs" />
     <Compile Include="Windows\ViewScheduleDialog.xaml.cs">
       <DependentUpon>ViewScheduleDialog.xaml</DependentUpon>
@@ -147,7 +152,7 @@
     <Compile Include="Models\School.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\Teacher.cs" />
-    <Compile Include="Models\ViewModels\VisualModels.cs" />
+    <Compile Include="Models\ViewModels\ScheduleDayViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Windows\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
@@ -217,7 +222,9 @@
   <ItemGroup>
     <SplashScreen Include="splash.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Utils\Export\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

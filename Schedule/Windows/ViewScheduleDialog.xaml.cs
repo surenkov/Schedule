@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +15,27 @@ using System.Windows.Shapes;
 
 namespace Schedule.Windows
 {
-    /// <summary>
-    /// Interaction logic for ViewScheduleDialog.xaml
-    /// </summary>
     public partial class ViewScheduleDialog : Window
     {
+        public static readonly DependencyProperty ItemsSourceProperty;
+
+        static ViewScheduleDialog()
+        {
+            ItemsSourceProperty = DependencyProperty.Register("ItemsSource", typeof(IEnumerable),
+                typeof(ViewScheduleDialog));
+        }
+
         public ViewScheduleDialog()
         {
             InitializeComponent();
+            DataContext = this;
         }
+
+        public IEnumerable ItemsSource
+        {
+            get { return (IEnumerable)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty, value); }
+        }
+
     }
 }

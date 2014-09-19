@@ -68,8 +68,12 @@ namespace Schedule.Controls.Editors
                     var properties = item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
                     foreach (var rel in properties.Select(p => p.GetValue(item) as Entity))
                         ctx.Set(rel.GetType()).Attach(rel);
+                    
                     ctx.Entry(item).State = item.Id == 0 ? EntityState.Added : EntityState.Modified;
                     ctx.SaveChanges();
+
+                    ctx.Set(item.GetType()).Load();
+                    ItemsSource = ctx.Set(item.GetType()).Local;
                 }
             };
             dlg.ShowInTaskbar = true;
