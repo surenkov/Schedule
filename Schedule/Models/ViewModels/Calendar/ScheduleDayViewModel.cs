@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using Schedule.Annotations;
-using Schedule.Controls;
 
-namespace Schedule.Models.ViewModels
+namespace Schedule.Models.ViewModels.Calendar
 {
-    sealed class ScheduleDayViewModel : INotifyPropertyChanged
+    sealed class ScheduleDayViewModel : BaseViewModel
     {
         private DateTime _date;
-        private Calendar _calendar;
+        private Controls.Calendar.Calendar _calendar;
         private IEnumerable<ScheduleItemViewModel> _items;
 
         public DateTime Date
@@ -23,7 +19,7 @@ namespace Schedule.Models.ViewModels
             }
         }
 
-        public Calendar Calendar
+        public Controls.Calendar.Calendar Calendar
         {
             get { return _calendar; }
             set
@@ -41,15 +37,6 @@ namespace Schedule.Models.ViewModels
                 _items = value;
                 OnPropertyChanged();
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

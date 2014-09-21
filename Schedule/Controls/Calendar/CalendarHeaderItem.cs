@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Schedule.Controls
+namespace Schedule.Controls.Calendar
 {
     public class CalendarHeaderItem : HeaderedContentControl
     {

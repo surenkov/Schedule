@@ -2,9 +2,9 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Media;
-using Schedule.Controls;
+using Schedule.Controls.Calendar;
 using Schedule.Models;
-using Schedule.Models.ViewModels;
+using Schedule.Models.ViewModels.Calendar;
 
 namespace Schedule.Utils
 {

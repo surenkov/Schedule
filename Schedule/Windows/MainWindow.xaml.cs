@@ -15,7 +15,7 @@ namespace Schedule.Windows
             InitializeComponent();
 
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
-            MonthSelector.DataContext = MainCalendar;
+            //MonthSelector.DataContext = MainCalendar;
         }
 
         private void Command_AlwaysExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -47,17 +47,17 @@ namespace Schedule.Windows
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            MainCalendar.UpdateSource = delegate(DateTime startTime, DateTime endTime)
-            {
-                using (ScheduleDbContext ctx = new ScheduleDbContext())
-                {
-                    var it = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building")
-                             where s.EndDate >= startTime && s.StartDate <= endTime
-                             orderby s.DoubleClass
-                             select s;
-                    return it.ToList();
-                }
-            };
+            //MainCalendar.UpdateSource = delegate(DateTime startTime, DateTime endTime)
+            //{
+            //    using (ScheduleDbContext ctx = new ScheduleDbContext())
+            //    {
+            //        var it = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building")
+            //                 where s.EndDate >= startTime && s.StartDate <= endTime
+            //                 orderby s.DoubleClass
+            //                 select s;
+            //        return it.ToList();
+            //    }
+            //};
         }
     }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,29 +12,27 @@ namespace Schedule.Windows
 {
     public delegate void ApplyEventHandler(object sender, ApplyEventArgs args);
 
+    public class ApplyEventArgs : RoutedEventArgs
+    {
+        public ApplyEventArgs(RoutedEvent routedEvent, Entity item) :
+            base(routedEvent)
+        {
+            Item = item;
+        }
+
+        public Entity Item { get; set; }
+    }
+
     public partial class EditScheduleDialog : Window
     {
-        public static readonly DependencyProperty ItemProperty;
         public static readonly RoutedEvent ApplyEvent;
-
+        public static readonly DependencyProperty ItemProperty;
         static EditScheduleDialog()
         {
             ItemProperty = DependencyProperty.Register("Item", typeof(Entity), typeof(EditScheduleDialog));
 
             ApplyEvent = EventManager.RegisterRoutedEvent("Apply", RoutingStrategy.Direct, typeof(ApplyEventHandler),
                 typeof(EditScheduleDialog));
-        }
-
-        private Entity Item
-        {
-            get { return (Entity)GetValue(ItemProperty); }
-            set { SetValue(ItemProperty, value); }
-        }
-
-        public event ApplyEventHandler Apply
-        {
-            add { AddHandler(ApplyEvent, value); }
-            remove { RemoveHandler(ApplyEvent, value); }
         }
 
         public EditScheduleDialog(Entity entity = null, bool copy = false)
@@ -58,6 +55,22 @@ namespace Schedule.Windows
                 Item = entity;
             }
             InitEditors();
+        }
+
+        public event ApplyEventHandler Apply
+        {
+            add { AddHandler(ApplyEvent, value); }
+            remove { RemoveHandler(ApplyEvent, value); }
+        }
+
+        private Entity Item
+        {
+            get { return (Entity)GetValue(ItemProperty); }
+            set { SetValue(ItemProperty, value); }
+        }
+        private void ApplyButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            RaiseEvent(new ApplyEventArgs(ApplyEvent, Item));
         }
 
         private void InitEditors()
@@ -102,22 +115,6 @@ namespace Schedule.Windows
                 EditorsGrid.Children.Add(lbl);
                 EditorsGrid.Children.Add(ctrl);
             }
-        }
-
-        private void ApplyButton_OnClick(object sender, RoutedEventArgs e)
-        {
-            RaiseEvent(new ApplyEventArgs(ApplyEvent, Item));
-        }
-    }
-
-    public class ApplyEventArgs : RoutedEventArgs
-    {
-        public Entity Item { get; set; }
-
-        public ApplyEventArgs(RoutedEvent routedEvent, Entity item) :
-            base(routedEvent)
-        {
-            Item = item;
         }
     }
 }

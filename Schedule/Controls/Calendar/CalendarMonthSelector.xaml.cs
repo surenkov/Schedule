@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Schedule.Controls
+namespace Schedule.Controls.Calendar
 {
     public partial class CalendarMonthSelector : UserControl
     {

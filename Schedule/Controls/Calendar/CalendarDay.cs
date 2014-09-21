@@ -4,14 +4,12 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
 using Schedule.Models;
 using Schedule.Models.DataLayer;
 using Schedule.Utils;
 using Schedule.Windows;
 
-namespace Schedule.Controls
+namespace Schedule.Controls.Calendar
 {
     public enum CalendarDayType
     {
@@ -37,7 +35,7 @@ namespace Schedule.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CalendarDay),
                 new FrameworkPropertyMetadata(typeof(CalendarDay)));
 
-            CalendarProperty = DependencyProperty.Register("Calendar", typeof(Calendar), typeof(CalendarDay));
+            CalendarProperty = DependencyProperty.Register("Calendar", typeof(Controls.Calendar.Calendar), typeof(CalendarDay));
             DateProperty = DependencyProperty.Register("Date", typeof(DateTime), typeof(CalendarDay),
                 new FrameworkPropertyMetadata(DateChangedCallback));
             DayTypeProperty = DependencyProperty.Register("DayType", typeof(CalendarDayType), typeof(CalendarDay),
@@ -46,9 +44,9 @@ namespace Schedule.Controls
 
         #region CLR Properties
 
-        public Calendar Calendar
+        public Controls.Calendar.Calendar Calendar
         {
-            get { return (Calendar)GetValue(CalendarProperty); }
+            get { return (Controls.Calendar.Calendar)GetValue(CalendarProperty); }
             set { SetValue(CalendarProperty, value); }
         }
 

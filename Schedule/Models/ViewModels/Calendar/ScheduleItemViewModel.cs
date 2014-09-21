@@ -1,18 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Media;
-using Schedule.Annotations;
-using Schedule.Controls;
 
-namespace Schedule.Models.ViewModels
+namespace Schedule.Models.ViewModels.Calendar
 {
-    sealed class ScheduleItemViewModel : INotifyPropertyChanged
+    sealed class ScheduleItemViewModel : BaseViewModel
     {
         private SolidColorBrush _brush;
         private ICollection<ScheduleCardViewModel> _items;
         private DoubleClass _period;
-        private Calendar _calendar;
+        private Controls.Calendar.Calendar _calendar;
 
         public DoubleClass Period
         {
@@ -44,7 +40,7 @@ namespace Schedule.Models.ViewModels
             }
         }
 
-        public Calendar Calendar
+        public Controls.Calendar.Calendar Calendar
         {
             get { return _calendar; }
             set
@@ -52,15 +48,6 @@ namespace Schedule.Models.ViewModels
                 _calendar = value;
                 OnPropertyChanged();
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

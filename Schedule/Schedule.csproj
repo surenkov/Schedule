@@ -87,24 +87,33 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Attributes\NotShownAttribute.cs" />
-    <Compile Include="Controls\CalendarHeader.cs" />
-    <Compile Include="Controls\CalendarHeaderItem.cs" />
-    <Compile Include="Controls\CalendarMonthSelector.xaml.cs">
+    <Compile Include="Controls\Calendar\CalendarHeader.cs" />
+    <Compile Include="Controls\Calendar\CalendarHeaderItem.cs" />
+    <Compile Include="Controls\Calendar\CalendarMonthSelector.xaml.cs">
       <DependentUpon>CalendarMonthSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Editors\EntitySelector.cs" />
-    <Compile Include="Controls\ScheduleCardItem.cs" />
+    <Compile Include="Controls\Calendar\CalendarCardItem.cs" />
+    <Compile Include="Controls\Slices\SliceCell.cs" />
+    <Compile Include="Controls\Slices\SliceHeaderItem.cs" />
+    <Compile Include="Controls\Slices\SliceHorizontalHeaderList.cs" />
+    <Compile Include="Controls\Slices\SliceList.cs" />
+    <Compile Include="Controls\Slices\SliceView.cs" />
     <Compile Include="Models\Entity.cs" />
-    <Compile Include="Models\ViewModels\ScheduleCardViewModel.cs" />
-    <Compile Include="Models\ViewModels\ScheduleItemViewModel.cs" />
+    <Compile Include="Models\ViewModels\BaseViewModel.cs" />
+    <Compile Include="Models\ViewModels\Calendar\ScheduleCardViewModel.cs" />
+    <Compile Include="Models\ViewModels\Calendar\ScheduleItemViewModel.cs" />
+    <Compile Include="Models\ViewModels\Slices\SliceRowViewModel.cs" />
     <Compile Include="Utils\EditorsFactory.cs" />
     <Compile Include="Utils\EditorsMapper.cs" />
+    <Compile Include="Utils\Export\HtmlExporter.cs" />
+    <Compile Include="Utils\Export\IExporter.cs" />
     <Compile Include="Utils\ScheduleDbExceptionExtender.cs" />
     <Compile Include="Utils\ScheduleMapper.cs" />
     <Compile Include="Windows\ViewScheduleDialog.xaml.cs">
       <DependentUpon>ViewScheduleDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\CalendarMonthSelector.xaml">
+    <Page Include="Controls\Calendar\CalendarMonthSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -113,9 +122,17 @@
       <SubType>Designer</SubType>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
     </Page>
+    <Page Include="Themes\Calengar.generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Slices.generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\AboutWindow.xaml">
       <SubType>Designer</SubType>
@@ -137,10 +154,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\Calendar.cs" />
-    <Compile Include="Controls\CalendarDay.cs" />
-    <Compile Include="Controls\CalendarDayItem.cs" />
-    <Compile Include="Controls\CalendarDaysList.cs" />
+    <Compile Include="Controls\Calendar\Calendar.cs" />
+    <Compile Include="Controls\Calendar\CalendarDay.cs" />
+    <Compile Include="Controls\Calendar\CalendarDayItem.cs" />
+    <Compile Include="Controls\Calendar\CalendarDaysList.cs" />
     <Compile Include="Models\Building.cs" />
     <Compile Include="Models\Classroom.cs" />
     <Compile Include="Models\Course.cs" />
@@ -152,7 +169,7 @@
     <Compile Include="Models\School.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\Teacher.cs" />
-    <Compile Include="Models\ViewModels\ScheduleDayViewModel.cs" />
+    <Compile Include="Models\ViewModels\Calendar\ScheduleDayViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Windows\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
@@ -222,9 +239,7 @@
   <ItemGroup>
     <SplashScreen Include="splash.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utils\Export\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

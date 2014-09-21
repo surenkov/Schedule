@@ -3,15 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Schedule.Models;
-using Schedule.Models.ViewModels;
+using Schedule.Models.ViewModels.Calendar;
 using Schedule.Utils;
-using Control = System.Windows.Controls.Control;
 
-namespace Schedule.Controls
+namespace Schedule.Controls.Calendar
 {
     public delegate IEnumerable<Models.Schedule> UpdateScheduleSourceTrigger(DateTime starTime, DateTime endTime);
     public class Calendar : Control
@@ -43,6 +41,28 @@ namespace Schedule.Controls
             };
         }
 
+        public DateTime Date
+        {
+            get { return (DateTime)GetValue(DateProperty); }
+            set { SetValue(DateProperty, value); }
+        }
+
+        public UpdateScheduleSourceTrigger UpdateSource
+        {
+            get { return (UpdateScheduleSourceTrigger)GetValue(UpdateSourceProperty); }
+            set { SetValue(UpdateSourceProperty, value); }
+        }
+
+        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj == null) yield break;
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                var child = VisualTreeHelper.GetChild(depObj, i);
+                if (child is T) yield return child as T;
+            }
+        }
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -57,7 +77,8 @@ namespace Schedule.Controls
                 startDay = startDay.AddDays(-1);
             var endDay = startDay.AddDays(MaxDays);
 
-            Update(UpdateSource(startDay, endDay));
+            if (UpdateSource != null)
+                Update(UpdateSource(startDay, endDay));
         }
 
         private static void DateChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -116,28 +137,6 @@ namespace Schedule.Controls
                 });
             for (int i = 0; i < weeks.Length; i++)
                 listsOfDays[i].ItemsSource = weeks[i];
-        }
-
-        public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
-        {
-            if (depObj == null) yield break;
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
-            {
-                var child = VisualTreeHelper.GetChild(depObj, i);
-                if (child is T) yield return child as T;
-            }
-        }
-
-        public DateTime Date
-        {
-            get { return (DateTime)GetValue(DateProperty); }
-            set { SetValue(DateProperty, value); }
-        }
-
-        public UpdateScheduleSourceTrigger UpdateSource
-        {
-            get { return (UpdateScheduleSourceTrigger)GetValue(UpdateSourceProperty); }
-            set { SetValue(UpdateSourceProperty, value); }
         }
     }
 }

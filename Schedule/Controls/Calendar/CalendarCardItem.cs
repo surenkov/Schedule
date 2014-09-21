@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
@@ -10,24 +9,24 @@ using Schedule.Models.DataLayer;
 using Schedule.Utils;
 using Schedule.Windows;
 
-namespace Schedule.Controls
+namespace Schedule.Controls.Calendar
 {
     [TemplatePart(Name = "PART_EditButton", Type = typeof(Button))]
     [TemplatePart(Name = "PART_DeleteButton", Type = typeof(Button))]
-    public class ScheduleCardItem : ContentControl
+    public class CalendarCardItem : ContentControl
     {
         private Button _editButton;
         private Button _deleteButton;
         public static readonly DependencyProperty ItemProperty;
         public static readonly DependencyProperty CalendarProperty;
 
-        static ScheduleCardItem()
+        static CalendarCardItem()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(ScheduleCardItem),
-                new FrameworkPropertyMetadata(typeof(ScheduleCardItem)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(CalendarCardItem),
+                new FrameworkPropertyMetadata(typeof(CalendarCardItem)));
 
-            ItemProperty = DependencyProperty.Register("Item", typeof(Models.Schedule), typeof(ScheduleCardItem));
-            CalendarProperty = DependencyProperty.Register("Calendar", typeof(Calendar), typeof(ScheduleCardItem));
+            ItemProperty = DependencyProperty.Register("Item", typeof(Models.Schedule), typeof(CalendarCardItem));
+            CalendarProperty = DependencyProperty.Register("Calendar", typeof(Calendar), typeof(CalendarCardItem));
         }
 
         public Models.Schedule Item
