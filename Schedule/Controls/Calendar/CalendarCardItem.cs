@@ -82,6 +82,10 @@ namespace Schedule.Controls.Calendar
                     ctx.Database.Log = s => b.Append(s);
 
                     ctx.Entry(Item).State = EntityState.Detached;
+
+                    var properties = item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
+                    foreach (var rel in properties.Select(p => p.GetValue(item) as Entity))
+                        ctx.Set(rel.GetType()).Attach(rel);
                     ctx.Entry(item).State = EntityState.Modified;
                     try
                     {

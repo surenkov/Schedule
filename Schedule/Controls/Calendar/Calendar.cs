@@ -6,16 +6,20 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Schedule.Controls.Editors;
 using Schedule.Models.ViewModels.Calendar;
 using Schedule.Utils;
+using Schedule.Utils.Filters;
 
 namespace Schedule.Controls.Calendar
 {
     public delegate IEnumerable<Models.Schedule> UpdateScheduleSourceTrigger(DateTime starTime, DateTime endTime);
+
     public class Calendar : Control
     {
         public static readonly DependencyProperty DateProperty;
         public static readonly DependencyProperty UpdateSourceProperty;
+        public static readonly DependencyProperty FiltersProperty;
 
         private const int MaxDays = 42;
         private readonly DispatcherTimer _timer;
@@ -29,6 +33,8 @@ namespace Schedule.Controls.Calendar
                 typeof(DateTime), typeof(Calendar), new FrameworkPropertyMetadata(DateTime.Now, DateChangedCallback));
             UpdateSourceProperty = DependencyProperty.Register("UpdateSource", typeof(UpdateScheduleSourceTrigger),
                 typeof(Calendar), new PropertyMetadata(null));
+            FiltersProperty = DependencyProperty.Register("Filters", typeof(IEnumerable<Filter>), typeof(Calendar),
+                new PropertyMetadata(default(IEnumerable<Filter>)));
         }
 
         public Calendar()
@@ -43,14 +49,20 @@ namespace Schedule.Controls.Calendar
 
         public DateTime Date
         {
-            get { return (DateTime)GetValue(DateProperty); }
+            get { return (DateTime) GetValue(DateProperty); }
             set { SetValue(DateProperty, value); }
         }
 
         public UpdateScheduleSourceTrigger UpdateSource
         {
-            get { return (UpdateScheduleSourceTrigger)GetValue(UpdateSourceProperty); }
+            get { return (UpdateScheduleSourceTrigger) GetValue(UpdateSourceProperty); }
             set { SetValue(UpdateSourceProperty, value); }
+        }
+
+        public IEnumerable<Filter> Filters
+        {
+            get { return (IEnumerable<Filter>) GetValue(FiltersProperty); }
+            set { SetValue(FiltersProperty, value); }
         }
 
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
@@ -78,7 +90,11 @@ namespace Schedule.Controls.Calendar
             var endDay = startDay.AddDays(MaxDays);
 
             if (UpdateSource != null)
-                Update(UpdateSource(startDay, endDay));
+            {
+                var entities = UpdateSource(startDay, endDay);
+                var items = entities.ApplyFilters(Filters).Select(e => e as Models.Schedule).ToList();
+                Update(items);
+            }
         }
 
         private static void DateChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)

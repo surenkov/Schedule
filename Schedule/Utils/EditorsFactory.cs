@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
 using Schedule.Controls.Editors;
 using Schedule.Models;
 using Button = System.Windows.Controls.Button;
 using ComboBox = System.Windows.Controls.ComboBox;
 using Control = System.Windows.Controls.Control;
-using ListBox = System.Windows.Controls.ListBox;
 using TextBox = System.Windows.Controls.TextBox;
 
 
@@ -25,7 +22,6 @@ namespace Schedule.Utils
             { typeof(int), typeof(TextBox) },
             { typeof(float), typeof(TextBox) },
             { typeof(double), typeof(TextBox) },
-            { typeof(IEnumerable), typeof(ListBox) },
             { typeof(Enum), typeof(ComboBox) },
             { typeof(DateTime), typeof(DatePicker) },
             { typeof(Entity), typeof(EntitySelector) }

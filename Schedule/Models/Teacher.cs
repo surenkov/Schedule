@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Schedule.Annotations;
 using Schedule.Attributes;
 
@@ -16,10 +17,13 @@ namespace Schedule.Models
     
         [NotNull, MaxLength(300)]
         public string Name { get; set; }
+        [NotShown]
+        public int FacultyId { get; set; }
         
         [NotNull]
         public virtual Faculty Faculty { get; set; }
         public virtual ICollection<Course> Courses { get; set; }
+
 
         public override string ToString()
         {

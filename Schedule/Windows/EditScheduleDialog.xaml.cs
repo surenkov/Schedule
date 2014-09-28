@@ -65,7 +65,7 @@ namespace Schedule.Windows
 
         private Entity Item
         {
-            get { return (Entity)GetValue(ItemProperty); }
+            get { return (Entity) GetValue(ItemProperty); }
             set { SetValue(ItemProperty, value); }
         }
         private void ApplyButton_OnClick(object sender, RoutedEventArgs e)
@@ -79,7 +79,7 @@ namespace Schedule.Windows
             EditorsFactory factory = new EditorsFactory();
             EditorsMapper mapper = new EditorsMapper();
 
-            var properties = Item.GetType().GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+            var properties = Item.GetType().GetProperties();
             int i = 0;
 
             foreach (var property in properties)

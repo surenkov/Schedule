@@ -5,8 +5,8 @@
     <Style TargetType="{x:Type slices:SliceView}">
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="BorderBrush" Value="LightGray"/>
-        <Setter Property="Background" Value="#EAEAEA"/>
+        <Setter Property="BorderBrush" Value="#CCCCCC"/>
+        <Setter Property="Background" Value="#DDDDDD"/>
         <Setter Property="SnapsToDevicePixels" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -88,7 +88,6 @@
                 <DataTemplate>
                     <slices:SliceHeaderItem Text="{Binding}"
                                             HorizontalAlignment="Left"
-                                            MaxWidth="150"
                                             BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=slices:SliceHorizontalHeaderList}}"
                                             Background="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType=slices:SliceHorizontalHeaderList}}"/>
                 </DataTemplate>
@@ -98,7 +97,7 @@
 
     <Style TargetType="{x:Type slices:SliceHeaderItem}">
         <Setter Property="Foreground" Value="Gray"/>
-        <Setter Property="Padding" Value="5 1 0 0"/>
+        <Setter Property="Padding" Value="5 1 5 0"/>
         <Setter Property="BorderThickness" Value="1 0 0 0"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -139,7 +138,7 @@
         <Setter Property="HeaderTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <slices:SliceHeaderItem Text="{Binding}" BorderThickness="0" Padding="0 1 0 0" />
+                    <slices:SliceHeaderItem Text="{Binding}" BorderThickness="0" Padding="0 1 0 0" Margin="7 0" />
                 </DataTemplate>
             </Setter.Value>
         </Setter>

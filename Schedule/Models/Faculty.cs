@@ -16,6 +16,8 @@ namespace Schedule.Models
     
         [NotNull]
         public string Name { get; set; }
+        [NotShown]
+        public int SchoolId { get; set; }
     
         [NotNull]
         public virtual School School { get; set; }

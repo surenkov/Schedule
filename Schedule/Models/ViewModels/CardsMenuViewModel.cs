@@ -1,11 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Schedule.Models.ViewModels.Slices
+namespace Schedule.Models.ViewModels
 {
-    class SliceRowViewModel : BaseViewModel
+    class CardsMenuViewModel : BaseViewModel
     {
         private string _header;
-        private ICollection<SliceCellViewModel> _items;
+        private IEnumerable<Entity> _items;
 
         public string Header
         {
@@ -17,7 +21,7 @@ namespace Schedule.Models.ViewModels.Slices
             }
         }
 
-        public ICollection<SliceCellViewModel> Items
+        public IEnumerable<Entity> Items
         {
             get { return _items; }
             set
@@ -25,6 +29,7 @@ namespace Schedule.Models.ViewModels.Slices
                 _items = value;
                 OnPropertyChanged();
             }
-        } 
+        }
+
     }
 }

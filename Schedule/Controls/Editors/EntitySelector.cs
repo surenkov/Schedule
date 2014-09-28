@@ -11,9 +11,11 @@ using Schedule.Windows;
 namespace Schedule.Controls.Editors
 {
     [TemplatePart(Name = "PART_AddButton", Type = typeof(Button))]
+    [TemplatePart(Name = "PART_Items", Type = typeof(ComboBox))]
     public class EntitySelector : Selector
     {
         private Button _addButton;
+        private ComboBox _itemsBox;
 
         public static readonly DependencyProperty ItemsTypeProperty;
 
@@ -36,6 +38,8 @@ namespace Schedule.Controls.Editors
             base.OnApplyTemplate();
 
             _addButton = GetTemplateChild("PART_AddButton") as Button;
+            _itemsBox = GetTemplateChild("PART_Items") as ComboBox;
+
             if (_addButton != null)
                 _addButton.Click += AddButton_OnClick;
         }

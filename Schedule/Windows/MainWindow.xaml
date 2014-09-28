@@ -4,21 +4,32 @@
         xmlns:schedule="clr-namespace:Schedule.Windows"
         xmlns:calendar="clr-namespace:Schedule.Controls.Calendar"
         xmlns:slices="clr-namespace:Schedule.Controls.Slices"
+        xmlns:editors="clr-namespace:Schedule.Controls.Editors"
         Title="Schedule" Height="350" Width="525" Background="#EAEAEA" WindowStartupLocation="CenterScreen" 
         WindowState="Maximized" SnapsToDevicePixels="True" ResizeMode="CanResizeWithGrip" Loaded="MainWindow_OnLoaded">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Close" CanExecute="Command_AlwaysExecute" Executed="Window_Close" />
         <CommandBinding Command="schedule:ScheduleCommands.Export" CanExecute="Command_AlwaysExecute" Executed="Window_ExportSchedule"></CommandBinding>
     </Window.CommandBindings>
+    <Window.Resources>
+        <Style x:Key="CardMenuItemStyle" TargetType="{x:Type MenuItem}">
+            <Setter Property="Header" Value="{Binding Header}"/>
+            <Setter Property="Tag" Value="{Binding Items}"/>
+            <EventSetter Event="Click" Handler="CardMenuItem_Click"></EventSetter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
+                    <MenuItem x:Name="ShowItem" Header="_Show calendar" IsCheckable="True" IsChecked="{Binding IsCalendarShown}"></MenuItem>
                     <MenuItem Command="schedule:ScheduleCommands.Export" />
-                    <Separator />
+                    <Separator/>
                     <MenuItem Header="Exit" Command="ApplicationCommands.Close" />
                 </MenuItem>
                 <MenuItem Header="_Edit">
+                    <MenuItem Header="Open card" x:Name="CardsMenuItem" ItemContainerStyle="{StaticResource CardMenuItemStyle}"/>
+                    <Separator/>
                     <MenuItem Header="Show all conflicts" Click="Window_ShowConflicts" />
                     <MenuItem Header="Remove selected conflict" />
                 </MenuItem>
@@ -28,17 +39,31 @@
             </Menu>
             <DockPanel>
                 <Expander DockPanel.Dock="Left" ExpandDirection="Right" IsExpanded="False" Margin="1 0 0 0">
-                    <Grid Width="250">
+                    <Grid Width="300" x:Name="ExpandGrid">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="52"/>
+                            <RowDefinition Height="70"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <calendar:CalendarMonthSelector x:Name="MonthSelector" Date="{Binding Date, Mode=TwoWay}" Foreground="DarkGray"/>
+                        <calendar:CalendarMonthSelector Grid.Row="0" x:Name="MonthSelector" Visibility="Collapsed" Date="{Binding Date, Mode=TwoWay}" Foreground="DarkGray"/>
+                        <Border Grid.Row="1" BorderThickness="0 1 0 0" BorderBrush="#CCCCCC" Background="#EAEAEA">
+                        <GroupBox Header="Filters" BorderThickness="0">
+                            <DockPanel>
+                                <DockPanel DockPanel.Dock="Bottom" LastChildFill="False" Margin="0 5 0 0">
+                                    <Button Margin="0 0 5 0" DockPanel.Dock="Left" Click="AddFilterButton_OnClick">Add</Button>
+                                    <Button DockPanel.Dock="Left" Click="RemoveFiltersButton_OnClick">Remove all</Button>
+                                    <Button DockPanel.Dock="Right" Click="ApplyFiltersButton_OnClick">Apply</Button>
+                                </DockPanel>
+                                <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+                                    <StackPanel x:Name="FiltersPanel" />
+                                </ScrollViewer>
+                            </DockPanel>
+                        </GroupBox>
+                        </Border>
                     </Grid>
                 </Expander>
                 <Grid>
-                    <calendar:Calendar x:Name="MainCalendar" BorderBrush="#CCCCCC" BorderThickness="1" Background="#E1E1E1"/>
-                    <slices:SliceView />
+                    <slices:SliceView x:Name="MainSliceView"/>
+                    <calendar:Calendar x:Name="MainCalendar" Visibility="Collapsed" BorderBrush="#CCCCCC" BorderThickness="1" Background="#E1E1E1"/>
                 </Grid>
             </DockPanel>
         </DockPanel>

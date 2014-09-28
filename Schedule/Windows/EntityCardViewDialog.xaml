@@ -1,0 +1,46 @@
+﻿<Window x:Class="Schedule.Windows.EntityCardViewDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Entities Data" Height="400" Width="640" Background="#EAEAEA"
+        SnapsToDevicePixels="True" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid Grid.Column="0"
+                  x:Name="ItemsGrid"
+                  ItemsSource="{Binding Items}" 
+                  HorizontalGridLinesBrush="LightGray" 
+                  VerticalGridLinesBrush="LightGray"
+                  AlternatingRowBackground="#F1F1F1"
+                  MouseDoubleClick="DataGrid_OnMouseDoubleClick"
+                  IsReadOnly="True" 
+                  SelectionMode="Single" 
+                  SelectionUnit="FullRow"/>
+        <GridSplitter Grid.Column="0" 
+                      Width="2" 
+                      VerticalAlignment="Stretch" 
+                      HorizontalAlignment="Right" 
+                      BorderBrush="LightGray" 
+                      BorderThickness="1 0 0 0"/>
+        <DockPanel Grid.Column="1">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
+                <Button Content="Add Record" Margin="7 0" Padding="5 2"/>
+                <Button Content="Remove Record"/> 
+            </StackPanel>
+            <GroupBox Header="Filters" DockPanel.Dock="Bottom">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
+                        <Button Margin="0 0 5 0" Click="AddFilterButton_OnClick" DockPanel.Dock="Left">Add</Button>
+                        <Button DockPanel.Dock="Left" Click="RemoveFiltersButton_OnClick">Remove all</Button>
+                        <Button DockPanel.Dock="Right" Click="ApplyFiltersButton_OnClick">Apply</Button>
+                    </DockPanel>
+                    <ScrollViewer DockPanel.Dock="Top">
+                        <StackPanel x:Name="FilterPanel"/>
+                    </ScrollViewer>
+                </DockPanel>
+            </GroupBox>
+        </DockPanel>
+    </Grid>
+</Window>

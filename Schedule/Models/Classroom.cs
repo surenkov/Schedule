@@ -19,6 +19,8 @@ namespace Schedule.Models
         public string Sign { get; set; }
         public ClassroomType Type { get; set; }
         public int Capacity { get; set; }
+        [NotShown]
+        public int BuildingId { get; set; }
     
         public virtual Building Building { get; set; }
         public virtual ICollection<Schedule> Schedules { get; set; }

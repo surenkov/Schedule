@@ -52,10 +52,10 @@ namespace Schedule.Models
 
     public partial class Schedule : Entity
     {
-        [Description("Start Date"), Required(ErrorMessageResourceType = typeof (Resources), ErrorMessageResourceName = "Schedule_StartDate_ErrMsg")]
+        [Description("Start date"), Required(ErrorMessageResourceType = typeof (Resources), ErrorMessageResourceName = "Schedule_StartDate_ErrMsg")]
         public System.DateTime StartDate { get; set; }
         
-        [Description("End Date"), Required(ErrorMessageResourceType = typeof (Resources), ErrorMessageResourceName = "Schedule_EndDate_ErrMsg")]
+        [Description("End date"), Required(ErrorMessageResourceType = typeof (Resources), ErrorMessageResourceName = "Schedule_EndDate_ErrMsg")]
         public System.DateTime EndDate { get; set; }
         
         [Required, Description("Interval")]

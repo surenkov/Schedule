@@ -94,6 +94,9 @@
     </Compile>
     <Compile Include="Controls\Editors\EntitySelector.cs" />
     <Compile Include="Controls\Calendar\CalendarCardItem.cs" />
+    <Compile Include="Controls\Editors\Filter.xaml.cs">
+      <DependentUpon>Filter.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Slices\SliceCell.cs" />
     <Compile Include="Controls\Slices\SliceHeaderItem.cs" />
     <Compile Include="Controls\Slices\SliceHorizontalHeaderList.cs" />
@@ -103,17 +106,32 @@
     <Compile Include="Models\ViewModels\BaseViewModel.cs" />
     <Compile Include="Models\ViewModels\Calendar\ScheduleCardViewModel.cs" />
     <Compile Include="Models\ViewModels\Calendar\ScheduleItemViewModel.cs" />
+    <Compile Include="Models\ViewModels\CardsMenuViewModel.cs" />
+    <Compile Include="Models\ViewModels\Slices\SliceCellViewModel.cs" />
     <Compile Include="Models\ViewModels\Slices\SliceRowViewModel.cs" />
     <Compile Include="Utils\EditorsFactory.cs" />
     <Compile Include="Utils\EditorsMapper.cs" />
     <Compile Include="Utils\Export\HtmlExporter.cs" />
     <Compile Include="Utils\Export\IExporter.cs" />
+    <Compile Include="Utils\Filters\FilterEditorsFactory.cs" />
+    <Compile Include="Utils\Filters\FiltersExtender.cs" />
+    <Compile Include="Utils\Filters\FiltersFactory.cs" />
+    <Compile Include="Utils\Filters\FilterTypesValueConverter.cs" />
     <Compile Include="Utils\ScheduleDbExceptionExtender.cs" />
     <Compile Include="Utils\ScheduleMapper.cs" />
+    <Compile Include="Utils\ValueConverters\PropertyToStringConverter.cs" />
+    <Compile Include="Utils\ValueConverters\StringToComparerConverter.cs" />
+    <Compile Include="Windows\EntityCardViewDialog.xaml.cs">
+      <DependentUpon>EntityCardViewDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\ViewScheduleDialog.xaml.cs">
       <DependentUpon>ViewScheduleDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\Calendar\CalendarMonthSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Editors\Filter.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -143,6 +161,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\EditScheduleDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\EntityCardViewDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

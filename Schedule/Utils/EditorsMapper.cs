@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using Schedule.Controls.Editors;
 using Schedule.Models;
 using Schedule.Models.DataLayer;
 
 namespace Schedule.Utils
 {
-    internal delegate void ControlFillDelegate(Control ctrl, Type dataType);
+    internal delegate void ControlFillDelegate(Control control, Type dataType);
 
     class EditorsMapper
     {
@@ -35,10 +36,13 @@ namespace Schedule.Utils
 
         private static void FillEntitiesSelector(Control c, Type t)
         {
-            var selector = c as EntitySelector;
+            var selector = c as Selector;
             if (selector == null) return;
 
-            selector.ItemsType = t;
+            var entitySelector = selector as EntitySelector;
+            if (entitySelector != null)
+                entitySelector.ItemsType = t;
+
             using (ScheduleDbContext ctx = new ScheduleDbContext())
             {
                 ctx.Set(t).Load();
