@@ -10,7 +10,7 @@
         </Grid.ColumnDefinitions>
         <DataGrid Grid.Column="0"
                   x:Name="ItemsGrid"
-                  ItemsSource="{Binding Items}" 
+                  BorderThickness="0"
                   HorizontalGridLinesBrush="LightGray" 
                   VerticalGridLinesBrush="LightGray"
                   AlternatingRowBackground="#F1F1F1"
@@ -26,8 +26,8 @@
                       BorderThickness="1 0 0 0"/>
         <DockPanel Grid.Column="1">
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
-                <Button Content="Add Record" Margin="7 0" Padding="5 2"/>
-                <Button Content="Remove Record"/> 
+                <Button Content="Add Record" Margin="7 0" Padding="5 2" Click="AddRecordButton_OnClick"/>
+                <Button Content="Remove Record" Padding="5 2" Click="RemoveRecordButton_OnClick"/> 
             </StackPanel>
             <GroupBox Header="Filters" DockPanel.Dock="Bottom">
                 <DockPanel>
@@ -37,7 +37,7 @@
                         <Button DockPanel.Dock="Right" Click="ApplyFiltersButton_OnClick">Apply</Button>
                     </DockPanel>
                     <ScrollViewer DockPanel.Dock="Top">
-                        <StackPanel x:Name="FilterPanel"/>
+                        <StackPanel x:Name="FiltersPanel"/>
                     </ScrollViewer>
                 </DockPanel>
             </GroupBox>

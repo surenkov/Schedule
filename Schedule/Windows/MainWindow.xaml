@@ -14,7 +14,7 @@
     <Window.Resources>
         <Style x:Key="CardMenuItemStyle" TargetType="{x:Type MenuItem}">
             <Setter Property="Header" Value="{Binding Header}"/>
-            <Setter Property="Tag" Value="{Binding Items}"/>
+            <Setter Property="Tag" Value="{Binding ItemsType}"/>
             <EventSetter Event="Click" Handler="CardMenuItem_Click"></EventSetter>
         </Style>
     </Window.Resources>

@@ -8,8 +8,8 @@ namespace Schedule
     {
         public App()
         {
-            //using (ScheduleDbContext ctx = new ScheduleDbContext())
-            //    ctx.Schedule.FirstOrDefault();
+            using (ScheduleDbContext ctx = new ScheduleDbContext())
+                ctx.Schedule.FirstOrDefault();
         }
     }
 }

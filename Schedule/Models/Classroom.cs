@@ -1,3 +1,4 @@
+using System.Globalization;
 using Schedule.Attributes;
 
 namespace Schedule.Models
@@ -27,7 +28,7 @@ namespace Schedule.Models
 
         public override string ToString()
         {
-            return Building.Name + Number;
+            return Building == null ? Number.ToString(CultureInfo.CurrentCulture) : Building.Name + Number;
         }
     }
 }

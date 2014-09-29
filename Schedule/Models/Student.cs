@@ -12,8 +12,6 @@ namespace Schedule.Models
         [NotNull, MaxLength(300)]
         public string Name { get; set; }
         public string Address { get; set; }
-        [NotShown]
-        public int GroupId { get; set; }
         
         [NotNull]
         public virtual Group Group { get; set; }

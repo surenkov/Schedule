@@ -54,21 +54,18 @@ namespace Schedule.Windows
 
         private void InitializeCardMenu()
         {
-            using (ScheduleDbContext ctx = new ScheduleDbContext())
+            CardsMenuItem.ItemsSource = new List<CardsMenuViewModel>
             {
-                CardsMenuItem.ItemsSource = new List<CardsMenuViewModel>
-                {
-                    new CardsMenuViewModel { Header = "Courses", Items = ctx.Courses.ToList() },
-                    new CardsMenuViewModel { Header = "Teachers", Items = ctx.Teachers.ToList() },
-                    new CardsMenuViewModel { Header = "Students", Items = ctx.Students.ToList() },
-                    new CardsMenuViewModel { Header = "Groups", Items = ctx.Groups.ToList() },
-                    new CardsMenuViewModel { Header = "Faculties", Items = ctx.Faculties.ToList() },
-                    new CardsMenuViewModel { Header = "Schools", Items = ctx.Schools.ToList() },
-                    new CardsMenuViewModel { Header = "Buildings", Items = ctx.Buildings.ToList() },
-                    new CardsMenuViewModel { Header = "Classes", Items = ctx.Classrooms.ToList() },
-                    new CardsMenuViewModel { Header = "Schedule", Items = ctx.Schedule.ToList() },
-                };
-            }
+                new CardsMenuViewModel { Header = "Courses", ItemsType = typeof(Course) },
+                new CardsMenuViewModel { Header = "Teachers", ItemsType = typeof(Teacher) },
+                new CardsMenuViewModel { Header = "Students", ItemsType = typeof(Student) },
+                new CardsMenuViewModel { Header = "Groups", ItemsType = typeof(Group) },
+                new CardsMenuViewModel { Header = "Faculties", ItemsType = typeof(Faculty) },
+                new CardsMenuViewModel { Header = "Schools", ItemsType = typeof(School) },
+                new CardsMenuViewModel { Header = "Buildings", ItemsType = typeof(Building) },
+                new CardsMenuViewModel { Header = "Classes", ItemsType = typeof(Classroom) },
+                new CardsMenuViewModel { Header = "Schedule", ItemsType = typeof(Models.Schedule) },
+            };
         }
 
         private void Command_AlwaysExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -120,7 +117,7 @@ namespace Schedule.Windows
             var item = sender as MenuItem;
             if (item != null)
             {
-                var dlg = new EntityCardViewDialog { Items = item.Tag as IEnumerable<Entity> };
+                var dlg = new EntityCardViewDialog(item.Tag as Type);
                 dlg.Show();
             }
         }

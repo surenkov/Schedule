@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Schedule.Models.ViewModels
 {
     class CardsMenuViewModel : BaseViewModel
     {
         private string _header;
-        private IEnumerable<Entity> _items;
+        private Type _itemsType;
 
         public string Header
         {
@@ -21,12 +17,12 @@ namespace Schedule.Models.ViewModels
             }
         }
 
-        public IEnumerable<Entity> Items
+        public Type ItemsType
         {
-            get { return _items; }
+            get { return _itemsType; }
             set
             {
-                _items = value;
+                _itemsType = value;
                 OnPropertyChanged();
             }
         }
