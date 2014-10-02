@@ -15,7 +15,7 @@ namespace Schedule.Controls.Calendar
 {
     public delegate IEnumerable<Models.Schedule> UpdateScheduleSourceTrigger(DateTime starTime, DateTime endTime);
 
-    public class Calendar : Control
+    public class Calendar : Control, IScheduleView
     {
         public static readonly DependencyProperty DateProperty;
         public static readonly DependencyProperty UpdateSourceProperty;
@@ -140,12 +140,12 @@ namespace Schedule.Controls.Calendar
                 }
 
             var listsOfDays = FindVisualChildren<CalendarDaysList>(GetTemplateChild("ListGrid")).ToList();
-            var weeks = new List<ScheduleDayViewModel>[listsOfDays.Count];
+            var weeks = new List<CalendarDayViewModel>[listsOfDays.Count];
             for (int i = 0; i < weeks.Length; i++)
-                weeks[i] = new List<ScheduleDayViewModel>(MaxDays / weeks.Length);
+                weeks[i] = new List<CalendarDayViewModel>(MaxDays / weeks.Length);
 
             for (int i = 0; i < MaxDays; i++)
-                weeks[i / (MaxDays / weeks.Length)].Add(new ScheduleDayViewModel
+                weeks[i / (MaxDays / weeks.Length)].Add(new CalendarDayViewModel
                 {
                     Calendar = this,
                     Date = startDay.AddDays(i),

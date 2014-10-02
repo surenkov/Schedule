@@ -25,16 +25,17 @@
                       BorderBrush="LightGray" 
                       BorderThickness="1 0 0 0"/>
         <DockPanel Grid.Column="1">
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5">
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5 10">
                 <Button Content="Add Record" Margin="7 0" Padding="5 2" Click="AddRecordButton_OnClick"/>
                 <Button Content="Remove Record" Padding="5 2" Click="RemoveRecordButton_OnClick"/> 
             </StackPanel>
-            <GroupBox Header="Filters" DockPanel.Dock="Bottom">
+            <CheckBox DockPanel.Dock="Top" Margin="10 0" IsChecked="{Binding ShowHiddenProperties}">Show all hidden fields</CheckBox>
+            <GroupBox Header="Filters" DockPanel.Dock="Bottom" Margin="0 5 0 0">
                 <DockPanel>
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
-                        <Button Margin="0 0 5 0" Click="AddFilterButton_OnClick" DockPanel.Dock="Left">Add</Button>
-                        <Button DockPanel.Dock="Left" Click="RemoveFiltersButton_OnClick">Remove all</Button>
-                        <Button DockPanel.Dock="Right" Click="ApplyFiltersButton_OnClick">Apply</Button>
+                        <Button Margin="0 0 5 0" Padding="3 1" Click="AddFilterButton_OnClick" DockPanel.Dock="Left">Add</Button>
+                        <Button DockPanel.Dock="Left" Padding="3 0" Click="RemoveFiltersButton_OnClick">Remove all</Button>
+                        <Button DockPanel.Dock="Right" Padding="3 0" Click="ApplyFiltersButton_OnClick">Apply</Button>
                     </DockPanel>
                     <ScrollViewer DockPanel.Dock="Top">
                         <StackPanel x:Name="FiltersPanel"/>

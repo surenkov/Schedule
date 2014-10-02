@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Schedule.Models.ViewModels.Calendar
 {
-    sealed class ScheduleDayViewModel : BaseViewModel
+    sealed class CalendarDayViewModel : BaseViewModel
     {
         private DateTime _date;
         private Controls.Calendar.Calendar _calendar;
-        private IEnumerable<ScheduleItemViewModel> _items;
+        private IEnumerable<CalendarItemViewModel> _items;
 
         public DateTime Date
         {
@@ -29,7 +29,7 @@ namespace Schedule.Models.ViewModels.Calendar
             }
         }
 
-        public IEnumerable<ScheduleItemViewModel> Items
+        public IEnumerable<CalendarItemViewModel> Items
         {
             get { return _items; }
             set

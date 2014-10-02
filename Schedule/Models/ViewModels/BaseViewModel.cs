@@ -4,7 +4,7 @@ using Schedule.Annotations;
 
 namespace Schedule.Models.ViewModels
 {
-    abstract class BaseViewModel : INotifyPropertyChanged
+    abstract public class BaseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

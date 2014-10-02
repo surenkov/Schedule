@@ -8,6 +8,7 @@ using Schedule.Controls.Editors;
 using Schedule.Models;
 using Schedule.Models.DataLayer;
 using Schedule.Models.ViewModels;
+using Schedule.Models.ViewModels.Slices;
 using Schedule.Utils.Filters;
 
 namespace Schedule.Windows
@@ -16,12 +17,23 @@ namespace Schedule.Windows
     {
         public static readonly DependencyProperty IsCalendarShownProperty;
 
+        public static readonly DependencyProperty SelectorViewModelsProperty;
+
+        public ISet<SliceViewSelectorViewModel> SelectorViewModels
+        {
+            get { return (ISet<SliceViewSelectorViewModel>) GetValue(SelectorViewModelsProperty); }
+            set { SetValue(SelectorViewModelsProperty, value); }
+        }
+
         private FiltersFactory _filterFactory;
 
         static MainWindow()
         {
             IsCalendarShownProperty = DependencyProperty.Register("IsCalendarShown", typeof(Boolean), typeof(MainWindow),
                 new PropertyMetadata(false, OnIsCalendarShownChanged));
+            SelectorViewModelsProperty = DependencyProperty.Register(
+                "SelectorViewModels", typeof(ISet<SliceViewSelectorViewModel>), typeof(MainWindow),
+                new PropertyMetadata(default(ISet<SliceViewSelectorViewModel>)));
         }
 
         private static void OnIsCalendarShownChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -30,8 +42,12 @@ namespace Schedule.Windows
             if (window != null)
             {
                 bool shown = window.IsCalendarShown;
-                window.MainCalendar.Visibility = shown ? Visibility.Visible : Visibility.Collapsed;
-                window.MonthSelector.Visibility = shown ? Visibility.Visible : Visibility.Collapsed;
+                
+                window.MonthSelector.Visibility = window.MainCalendar.Visibility = 
+                    shown ? Visibility.Visible : Visibility.Collapsed;
+
+                window.MainSliceView.Visibility = window.SelectorsPanel.Visibility = 
+                    shown ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 
@@ -45,10 +61,11 @@ namespace Schedule.Windows
         {
             InitializeComponent();
             InitializeCardMenu();
+            InitializeSelectorViewModels();
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
             MonthSelector.DataContext = MainCalendar;
-            ShowItem.DataContext = this;
+            DataContext = this;
             _filterFactory = new FiltersFactory(FiltersPanel, typeof(Models.Schedule), 30);
         }
 
@@ -66,6 +83,22 @@ namespace Schedule.Windows
                 new CardsMenuViewModel { Header = "Classes", ItemsType = typeof(Classroom) },
                 new CardsMenuViewModel { Header = "Schedule", ItemsType = typeof(Models.Schedule) },
             };
+        }
+
+        private void InitializeSelectorViewModels()
+        {
+            SelectorViewModels = new HashSet<SliceViewSelectorViewModel>
+            {
+                new SliceViewSelectorViewModel {HeaderType = typeof(Teacher), Name = "Teachers"},
+                new SliceViewSelectorViewModel {HeaderType = typeof(Group), Name = "Groups"},
+                new SliceViewSelectorViewModel {HeaderType = typeof(DayOfWeek), Name = "Days"},
+                new SliceViewSelectorViewModel {HeaderType = typeof(Course), Name = "Courses"},
+                new SliceViewSelectorViewModel {HeaderType = typeof(CourseType), Name = "Types of course"},
+                new SliceViewSelectorViewModel {HeaderType = typeof(DoubleClass), Name = "Periods"}
+            };
+
+            HorizontalSelector.SelectedIndex = 2;
+            VerticalSelector.SelectedIndex = 5;
         }
 
         private void Command_AlwaysExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -97,8 +130,6 @@ namespace Schedule.Windows
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            MainSliceView.HorizontalHeaderType = typeof(Student);
-            MainSliceView.VerticalHeaderType = typeof(Teacher);
             MainCalendar.UpdateSource = delegate(DateTime startTime, DateTime endTime)
             {
                 using (ScheduleDbContext ctx = new ScheduleDbContext())
@@ -147,6 +178,21 @@ namespace Schedule.Windows
                 MainCalendar.UpdateView();
             if (MainSliceView.Visibility == Visibility.Visible)
                 MainSliceView.UpdateView();
+        }
+
+        private void HeaderSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            e.Handled = true;
+            if (sender.Equals(HorizontalSelector))
+            {
+                var item = HorizontalSelector.SelectedItem as SliceViewSelectorViewModel;
+                if (item != null) MainSliceView.HorizontalHeaderType = item.HeaderType;
+            }
+            else if (sender.Equals(VerticalSelector))
+            {
+                var item = VerticalSelector.SelectedItem as SliceViewSelectorViewModel;
+                if (item != null) MainSliceView.VerticalHeaderType = item.HeaderType;
+            }
         }
     }
 

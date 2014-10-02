@@ -2,12 +2,12 @@
 
 namespace Schedule.Models.ViewModels.Slices
 {
-    class SliceRowViewModel : BaseViewModel
+    public class SliceRowViewModel : BaseViewModel
     {
-        private string _header;
+        private object _header;
         private ICollection<SliceCellViewModel> _items;
 
-        public string Header
+        public object Header
         {
             get { return _header; }
             set

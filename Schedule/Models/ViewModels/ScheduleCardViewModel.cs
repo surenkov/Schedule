@@ -1,9 +1,11 @@
-﻿namespace Schedule.Models.ViewModels.Calendar
+﻿using Schedule.Controls;
+
+namespace Schedule.Models.ViewModels
 {
-    sealed class ScheduleCardViewModel : BaseViewModel
+    public class ScheduleCardViewModel : BaseViewModel
     {
         private Schedule _item;
-        private Controls.Calendar.Calendar _calendar;
+        private IScheduleView _scheduleView;
 
         public Schedule Item
         {
@@ -15,12 +17,12 @@
             }
         }
 
-        public Controls.Calendar.Calendar Calendar
+        public IScheduleView ScheduleView
         {
-            get { return _calendar; }
+            get { return _scheduleView; }
             set
             {
-                _calendar = value;
+                _scheduleView = value;
                 OnPropertyChanged();
             }
         }

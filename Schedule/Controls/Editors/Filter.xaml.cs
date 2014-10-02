@@ -94,7 +94,7 @@ namespace Schedule.Controls.Editors
 
         public IEnumerable<Entity> FilterEntities(IEnumerable<Entity> entities)
         {
-            return entities.Where(ApplyFilterOnEntity);
+            return entities.Where(ApplyFilterOnEntity).ToList();
         }
 
         private bool ApplyFilterOnEntity(Entity entity)

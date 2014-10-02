@@ -1,10 +1,8 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Data;
 using Schedule.Annotations;
-using Schedule.Attributes;
 using Schedule.Properties;
 
 namespace Schedule.Models

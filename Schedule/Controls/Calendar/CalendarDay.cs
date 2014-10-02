@@ -25,7 +25,7 @@ namespace Schedule.Controls.Calendar
         private Button _addButton;
         private Button _viewButton;
 
-        public static readonly DependencyProperty CalendarProperty;
+        public static readonly DependencyProperty ScheduleViewProperty;
         public static readonly DependencyProperty DateProperty;
         public static readonly DependencyProperty DayTypeProperty;
 
@@ -35,7 +35,7 @@ namespace Schedule.Controls.Calendar
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CalendarDay),
                 new FrameworkPropertyMetadata(typeof(CalendarDay)));
 
-            CalendarProperty = DependencyProperty.Register("Calendar", typeof(Controls.Calendar.Calendar), typeof(CalendarDay));
+            ScheduleViewProperty = DependencyProperty.Register("ScheduleView", typeof(IScheduleView), typeof(CalendarDay));
             DateProperty = DependencyProperty.Register("Date", typeof(DateTime), typeof(CalendarDay),
                 new FrameworkPropertyMetadata(DateChangedCallback));
             DayTypeProperty = DependencyProperty.Register("DayType", typeof(CalendarDayType), typeof(CalendarDay),
@@ -44,10 +44,10 @@ namespace Schedule.Controls.Calendar
 
         #region CLR Properties
 
-        public Controls.Calendar.Calendar Calendar
+        public IScheduleView ScheduleView
         {
-            get { return (Controls.Calendar.Calendar)GetValue(CalendarProperty); }
-            set { SetValue(CalendarProperty, value); }
+            get { return (IScheduleView) GetValue(ScheduleViewProperty); }
+            set { SetValue(ScheduleViewProperty, value); }
         }
 
         public DateTime Date
@@ -111,7 +111,7 @@ namespace Schedule.Controls.Calendar
                 if (noExcept)
                 {
                     dlg.Close();
-                    Calendar.UpdateView();
+                    ScheduleView.UpdateView();
                 }
             };
             dlg.Show();

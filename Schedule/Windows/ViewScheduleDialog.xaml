@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:models="clr-namespace:Schedule.Models"
         xmlns:calendar="clr-namespace:Schedule.Controls.Calendar"
+        xmlns:controls="clr-namespace:Schedule.Controls"
         Title="View schedule items" Height="300" Width="300" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight">
     <Window.Resources>
         <models:DoubleClassToStringConverter x:Key="DoubleClassToStringConverter"/>
@@ -14,7 +15,7 @@
                     <calendar:CalendarDayItem Width="200" IsExpanded="True" Header="{Binding Period, Converter={StaticResource DoubleClassToStringConverter}}" ItemsSource="{Binding Items}" BorderBrush="{Binding BorderBrush}">
                         <calendar:CalendarDayItem.ItemsTemplate>
                             <DataTemplate>
-                                <calendar:CalendarCardItem Item="{Binding}" />
+                                <controls:ScheduleCardItem Item="{Binding}" />
                             </DataTemplate>
                         </calendar:CalendarDayItem.ItemsTemplate>
                     </calendar:CalendarDayItem>

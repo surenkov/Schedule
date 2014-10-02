@@ -4,7 +4,6 @@
         xmlns:schedule="clr-namespace:Schedule.Windows"
         xmlns:calendar="clr-namespace:Schedule.Controls.Calendar"
         xmlns:slices="clr-namespace:Schedule.Controls.Slices"
-        xmlns:editors="clr-namespace:Schedule.Controls.Editors"
         Title="Schedule" Height="350" Width="525" Background="#EAEAEA" WindowStartupLocation="CenterScreen" 
         WindowState="Maximized" SnapsToDevicePixels="True" ResizeMode="CanResizeWithGrip" Loaded="MainWindow_OnLoaded">
     <Window.CommandBindings>
@@ -16,6 +15,15 @@
             <Setter Property="Header" Value="{Binding Header}"/>
             <Setter Property="Tag" Value="{Binding ItemsType}"/>
             <EventSetter Event="Click" Handler="CardMenuItem_Click"></EventSetter>
+        </Style>
+        <Style x:Key="HeaderSelectorStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Name}"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
     <Grid>
@@ -45,6 +53,28 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <calendar:CalendarMonthSelector Grid.Row="0" x:Name="MonthSelector" Visibility="Collapsed" Date="{Binding Date, Mode=TwoWay}" Foreground="DarkGray"/>
+                        <Grid Grid.Row="0" Margin="10" x:Name="SelectorsPanel">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="4*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Horizontal:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Vertical:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+                            <ComboBox Grid.Row="0" Grid.Column="1"
+                                      x:Name="HorizontalSelector" 
+                                      ItemsSource="{Binding SelectorViewModels}" 
+                                      SelectionChanged="HeaderSelector_SelectionChanged"
+                                      Style="{StaticResource HeaderSelectorStyle}"/>
+                            <ComboBox x:Name="VerticalSelector" Grid.Row="2" Grid.Column="1"
+                                      ItemsSource="{Binding SelectorViewModels}" 
+                                      SelectionChanged="HeaderSelector_SelectionChanged"
+                                      Style="{StaticResource HeaderSelectorStyle}"/>
+                        </Grid>
                         <Border Grid.Row="1" BorderThickness="0 1 0 0" BorderBrush="#CCCCCC" Background="#EAEAEA">
                         <GroupBox Header="Filters" BorderThickness="0">
                             <DockPanel>

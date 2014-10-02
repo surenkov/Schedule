@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using Schedule.Controls.Editors;
-using Schedule.Models;
 using Schedule.Models.DataLayer;
 using Schedule.Models.ViewModels.Slices;
+using Schedule.Utils;
 using Schedule.Utils.Filters;
 
 namespace Schedule.Controls.Slices
 {
-    public class SliceView : HeaderedItemsControl
+    public class SliceView : HeaderedItemsControl, IScheduleView
     {
         public static readonly DependencyProperty HorizontalHeaderTypeProperty;
         public static readonly DependencyProperty VerticalHeaderTypeProperty;
@@ -24,7 +23,7 @@ namespace Schedule.Controls.Slices
         static SliceView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SliceView), new FrameworkPropertyMetadata(typeof(SliceView)));
-            VerticalHeaderProperty = DependencyProperty.Register("VerticalHeader", typeof(IEnumerable),
+            VerticalHeaderProperty = DependencyProperty.Register("VerticalHeader", typeof(IEnumerable<object>),
                 typeof(SliceView), new PropertyMetadata(null, VerticalHeaderChangedCallback));
 
             HorizontalHeaderTypeProperty = DependencyProperty.Register("HorizontalHeaderType", typeof(Type),
@@ -35,45 +34,31 @@ namespace Schedule.Controls.Slices
                 new PropertyMetadata(default(IEnumerable<Filter>)));
         }
 
-        private static async void VerticalHeaderTypePropertyChangedCallback(DependencyObject d,
+        private static void VerticalHeaderTypePropertyChangedCallback(DependencyObject d,
             DependencyPropertyChangedEventArgs e)
         {
             var view = d as SliceView;
             if (view != null)
-            {
-                Type t = e.NewValue as Type;
-                using (ScheduleDbContext ctx = new ScheduleDbContext())
-                {
-                    await ctx.Set(t).LoadAsync();
-                    view.VerticalHeader = ctx.Set(t).Local;
-                }
-            }
+                view.FillVerticalHeader();
         }
 
-        private static async void HorizontalHeaderTypePropertyChangedCallback(DependencyObject d, 
+        private static void HorizontalHeaderTypePropertyChangedCallback(DependencyObject d,
             DependencyPropertyChangedEventArgs e)
         {
             var view = d as SliceView;
             if (view != null)
-            {
-                Type t = e.NewValue as Type;
-                using (ScheduleDbContext ctx = new ScheduleDbContext())
-                {
-                    await ctx.Set(t).LoadAsync();
-                    view.Header = ctx.Set(t).Local;
-                }
-            }
+                view.FillHorizontalHeader();
         }
 
         private static void VerticalHeaderChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var view = d as SliceView;
-            if (view != null) view.OnVerticalHeaderChanged(e.NewValue);
+            if (view != null) view.OnVerticalHeaderChanged();
         }
 
-        public IEnumerable VerticalHeader
+        public IEnumerable<object> VerticalHeader
         {
-            get { return (IEnumerable) GetValue(VerticalHeaderProperty); }
+            get { return (IEnumerable<object>) GetValue(VerticalHeaderProperty); }
             set { SetValue(VerticalHeaderProperty, value); }
         }
 
@@ -100,18 +85,8 @@ namespace Schedule.Controls.Slices
             Update();
         }
 
-        private void OnVerticalHeaderChanged(object newHeader)
+        private void OnVerticalHeaderChanged()
         {
-            var header = newHeader as IEnumerable<Entity>;
-            if (header != null)
-            {
-                var list = header.Select(item => new SliceRowViewModel
-                {
-                    Header = item.ToString(),
-                    Items = new List<SliceCellViewModel>()
-                }).ToList();
-                ItemsSource = list;
-            }
             Update();
         }
 
@@ -121,23 +96,37 @@ namespace Schedule.Controls.Slices
             Update();
         }
 
-        private async void Update()
+        private void Update()
         {
             using (ScheduleDbContext ctx = new ScheduleDbContext())
             {
-                await ctx.Set<Models.Schedule>().LoadAsync();
-                var list = ctx.Set<Models.Schedule>().Local.ApplyFilters(Filters);
+                if (Header == null || VerticalHeader == null) return;
 
-                var verticalHeaderItems = VerticalHeader as IEnumerable<Entity>;
-                var horizontalHeaderItems = Header as IEnumerable<Entity>;
+                ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building").Load();
+                var itemsList = ctx.Schedule.Local.ApplyFilters(Filters).Cast<Models.Schedule>();
 
-                if (verticalHeaderItems != null && horizontalHeaderItems != null)
+                var horizontalHeaderItems = Header as IEnumerable;
+                var vericalHeaderItems = VerticalHeader.Select(item => new SliceRowViewModel
                 {
-                    foreach (var verticalItem in verticalHeaderItems)
-                    {
+                    Header = item,
+                    Items = new List<SliceCellViewModel>()
+                }).ToList();
 
+                foreach (var rowModel in vericalHeaderItems)
+                {
+                    foreach (var horizontalHeaderItem in horizontalHeaderItems)
+                    {
+                        var cell = new SliceCellViewModel
+                        {
+                            HorizontalValue = horizontalHeaderItem,
+                            VerticalValue = rowModel.Header,
+                            ScheduleView = this
+                        };
+                        cell.Fill(itemsList);
+                        rowModel.Items.Add(cell);
                     }
                 }
+                ItemsSource = vericalHeaderItems;
             }
         }
     }

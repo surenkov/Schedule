@@ -20,6 +20,7 @@ namespace Schedule.Windows
     public partial class EntityCardViewDialog : Window
     {
         public static readonly DependencyProperty ItemsTypeProperty;
+        public static readonly DependencyProperty ShowHiddenPropertiesProperty;
 
         private FiltersFactory _filtersFactory;
 
@@ -27,6 +28,16 @@ namespace Schedule.Windows
         {
             ItemsTypeProperty = DependencyProperty.Register("ItemsType", typeof(Type),
                 typeof(EntityCardViewDialog));
+            ShowHiddenPropertiesProperty = DependencyProperty.Register("ShowHiddenProperties", typeof(Boolean),
+                typeof(EntityCardViewDialog), new PropertyMetadata(false, ShowHiddenPropertiesPropertyChangedCallback));
+        }
+
+        private static void ShowHiddenPropertiesPropertyChangedCallback(DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var dlg = d as EntityCardViewDialog;
+            if (dlg != null)
+                dlg.ItemsGrid_UpdateColumnsVisibility(dlg.ItemsGrid, null);
         }
 
         public EntityCardViewDialog(Type type)
@@ -46,19 +57,19 @@ namespace Schedule.Windows
             var grid = sender as DataGrid;
             if (grid != null)
             {
-                var properties = ItemsType.GetProperties();
+                var properties = grid.ItemsSource.GetType().GenericTypeArguments[0].GetProperties();
                 for (int i = 0; i < properties.Length; i++)
                 {
 
                     var descr = properties[i].GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute;
                     var shown = properties[i].GetCustomAttribute(typeof(NotShownAttribute)) as NotShownAttribute;
 
-                    bool show = properties[i].PropertyType == typeof(string) ||
-                                properties[i].PropertyType.GetInterface("IEnumerable") == null || 
-                                shown != null && shown.Shown;
+                    bool show = (properties[i].PropertyType == typeof(string) ||
+                                properties[i].PropertyType.GetInterface("IEnumerable") == null) &&
+                                (shown == null || shown.Shown) || ShowHiddenProperties;
 
                     grid.Columns[i].Visibility = show ? Visibility.Visible : Visibility.Hidden;
-                    if (descr != null) 
+                    if (descr != null)
                         grid.Columns[i].Header = descr.Description;
                 }
             }
@@ -92,6 +103,12 @@ namespace Schedule.Windows
         {
             get { return (Type) GetValue(ItemsTypeProperty); }
             set { SetValue(ItemsTypeProperty, value); }
+        }
+
+        public Boolean ShowHiddenProperties
+        {
+            get { return (Boolean) GetValue(ShowHiddenPropertiesProperty); }
+            set { SetValue(ShowHiddenPropertiesProperty, value); }
         }
 
         private void DataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)

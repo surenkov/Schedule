@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
@@ -9,36 +11,36 @@ using Schedule.Models.DataLayer;
 using Schedule.Utils;
 using Schedule.Windows;
 
-namespace Schedule.Controls.Calendar
+namespace Schedule.Controls
 {
     [TemplatePart(Name = "PART_EditButton", Type = typeof(Button))]
     [TemplatePart(Name = "PART_DeleteButton", Type = typeof(Button))]
-    public class CalendarCardItem : ContentControl
+    public class ScheduleCardItem : ContentControl
     {
         private Button _editButton;
         private Button _deleteButton;
         public static readonly DependencyProperty ItemProperty;
-        public static readonly DependencyProperty CalendarProperty;
+        public static readonly DependencyProperty ScheduleViewProperty;
 
-        static CalendarCardItem()
+        static ScheduleCardItem()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(CalendarCardItem),
-                new FrameworkPropertyMetadata(typeof(CalendarCardItem)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ScheduleCardItem),
+                new FrameworkPropertyMetadata(typeof(ScheduleCardItem)));
 
-            ItemProperty = DependencyProperty.Register("Item", typeof(Models.Schedule), typeof(CalendarCardItem));
-            CalendarProperty = DependencyProperty.Register("Calendar", typeof(Calendar), typeof(CalendarCardItem));
+            ItemProperty = DependencyProperty.Register("Item", typeof(Models.Schedule), typeof(ScheduleCardItem));
+            ScheduleViewProperty = DependencyProperty.Register("ScheduleView", typeof(IScheduleView), typeof(ScheduleCardItem));
         }
 
         public Models.Schedule Item
         {
-            get { return (Models.Schedule)GetValue(ItemProperty); }
+            get { return (Models.Schedule) GetValue(ItemProperty); }
             set { SetValue(ItemProperty, value); }
         }
 
-        public Calendar Calendar
+        public IScheduleView ScheduleView
         {
-            get { return (Calendar)GetValue(CalendarProperty); }
-            set { SetValue(CalendarProperty, value); }
+            get { return (IScheduleView) GetValue(ScheduleViewProperty); }
+            set { SetValue(ScheduleViewProperty, value); }
         }
 
         public override void OnApplyTemplate()
@@ -59,14 +61,21 @@ namespace Schedule.Controls.Calendar
             using (ScheduleDbContext ctx = new ScheduleDbContext())
             {
 
-                var properties = Item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
-                foreach (var rel in properties.Select(p => p.GetValue(Item) as Entity))
-                    ctx.Entry(rel).State = EntityState.Unchanged;
+                try
+                {
+                    var properties = Item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
+                    foreach (var rel in properties.Select(p => p.GetValue(Item) as Entity))
+                        ctx.Entry(rel).State = EntityState.Unchanged;
 
-                ctx.Entry(Item).State = EntityState.Deleted;
-                ctx.SaveChanges();
+                    ctx.Entry(Item).State = EntityState.Deleted;
+                    ctx.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    MessageBox.Show("Can't delete this record. Maybe it's already deleted?");
+                }
             }
-            Calendar.UpdateView();
+            ScheduleView.UpdateView();
         }
 
         private void EditButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
@@ -101,7 +110,7 @@ namespace Schedule.Controls.Calendar
                 if (noExcept)
                 {
                     dlg.Close();
-                    Calendar.UpdateView();
+                    ScheduleView.UpdateView();
                 }
             };
             dlg.Show();

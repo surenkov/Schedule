@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
+using Schedule.Controls;
 
 namespace Schedule.Models.ViewModels.Calendar
 {
-    sealed class ScheduleItemViewModel : BaseViewModel
+    sealed class CalendarItemViewModel : BaseViewModel
     {
         private SolidColorBrush _brush;
         private ICollection<ScheduleCardViewModel> _items;
         private DoubleClass _period;
-        private Controls.Calendar.Calendar _calendar;
+        private IScheduleView _scheduleView;
 
         public DoubleClass Period
         {
@@ -40,12 +41,12 @@ namespace Schedule.Models.ViewModels.Calendar
             }
         }
 
-        public Controls.Calendar.Calendar Calendar
+        public IScheduleView ScheduleView
         {
-            get { return _calendar; }
+            get { return _scheduleView; }
             set
             {
-                _calendar = value;
+                _scheduleView = value;
                 OnPropertyChanged();
             }
         }

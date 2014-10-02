@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Media;
 using Schedule.Controls.Calendar;
 using Schedule.Models;
+using Schedule.Models.ViewModels;
 using Schedule.Models.ViewModels.Calendar;
 
 namespace Schedule.Utils
@@ -22,25 +23,25 @@ namespace Schedule.Utils
             {DoubleClass.Eighth, Brushes.Sienna},
         };
 
-        public static IEnumerable<ScheduleItemViewModel> Map(IEnumerable<Models.Schedule> items, Calendar calendar)
+        public static IEnumerable<CalendarItemViewModel> Map(IEnumerable<Models.Schedule> items, Calendar calendar)
         {
             if (items == null) return null;
 
-            List<ScheduleItemViewModel> list = new List<ScheduleItemViewModel>();
+            List<CalendarItemViewModel> list = new List<CalendarItemViewModel>();
             var groupByPairQuery = items.GroupBy(schedule => schedule.DoubleClass);
 
             foreach (IGrouping<DoubleClass, Models.Schedule> schedules in groupByPairQuery)
             {
-                ScheduleItemViewModel itemViewModel = new ScheduleItemViewModel
+                CalendarItemViewModel itemViewModel = new CalendarItemViewModel
                 {
                     BorderBrush = PairColors[schedules.Key],
                     Period = schedules.Key,
                     Items = new Collection<ScheduleCardViewModel>(),
-                    Calendar = calendar
+                    ScheduleView = calendar
                 };
 
                 foreach (var schedule in schedules)
-                    itemViewModel.Items.Add(new ScheduleCardViewModel { Calendar = calendar, Item = schedule });
+                    itemViewModel.Items.Add(new ScheduleCardViewModel { ScheduleView = calendar, Item = schedule });
 
                 list.Add(itemViewModel);
             }
