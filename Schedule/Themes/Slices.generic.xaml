@@ -46,7 +46,7 @@
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
-                    <StackPanel HorizontalAlignment="Stretch"/>
+                    <StackPanel/>
                 </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
@@ -55,8 +55,7 @@
                 <DataTemplate>
                     <slices:SliceList BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=slices:SliceView}}"
                                       Header="{Binding Header}"
-                                      ItemsSource="{Binding Items}"
-                                      HorizontalAlignment="Stretch"/>
+                                      ItemsSource="{Binding Items}"/>
                 </DataTemplate>
             </Setter.Value>
         </Setter>

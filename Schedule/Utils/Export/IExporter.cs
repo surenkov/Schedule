@@ -1,7 +1,12 @@
-﻿namespace Schedule.Utils.Export
+﻿using Schedule.Controls.Editors;
+using System;
+using System.Collections.Generic;
+
+namespace Schedule.Utils.Export
 {
     interface IExporter
     {
-        void Save(string path);
+        string FormatString();
+        void Save(string path, object source, IEnumerable<Filter> filters);
     }
 }

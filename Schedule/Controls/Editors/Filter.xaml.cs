@@ -6,7 +6,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Linq;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using Schedule.Models;
 using Schedule.Utils;
 using Schedule.Utils.Filters;
@@ -111,6 +110,7 @@ namespace Schedule.Controls.Editors
                     var comparer = converter.Convert(ConditionsBox.SelectedItem as string,
                         typeof(CheckPropertyValueDelegate), null, null) as CheckPropertyValueDelegate;
                     var compared = (IComparable) _control.GetValue(factory.ValueProperty(_control));
+                    Value = compared;
                     if (compared != null)
                     {
                         if (compared.GetType() != value.GetType())

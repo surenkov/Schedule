@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data.Entity;
 
 namespace Schedule.Models.DataLayer
 {
@@ -12,7 +7,7 @@ namespace Schedule.Models.DataLayer
         public ScheduleDbContext()
             : base("ScheduleDBConnection")
         {
-            Database.SetInitializer(new ScheduleInitializer());
+            //Database.SetInitializer(new ScheduleInitializer());
         }
 
         public DbSet<Building> Buildings { get; set; }

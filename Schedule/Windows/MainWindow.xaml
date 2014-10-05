@@ -84,7 +84,7 @@
                                     <Button DockPanel.Dock="Right" Click="ApplyFiltersButton_OnClick">Apply</Button>
                                 </DockPanel>
                                 <ScrollViewer DockPanel.Dock="Top" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
-                                    <StackPanel x:Name="FiltersPanel" />
+                                        <StackPanel x:Name="FiltersPanel" Width="288"/>
                                 </ScrollViewer>
                             </DockPanel>
                         </GroupBox>

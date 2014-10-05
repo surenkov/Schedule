@@ -10,22 +10,23 @@ using Schedule.Models.DataLayer;
 using Schedule.Models.ViewModels;
 using Schedule.Models.ViewModels.Slices;
 using Schedule.Utils.Filters;
+using Schedule.Utils.Export;
+using Microsoft.Win32;
+using System.Text;
 
 namespace Schedule.Windows
 {
     public partial class MainWindow : Window
     {
         public static readonly DependencyProperty IsCalendarShownProperty;
-
         public static readonly DependencyProperty SelectorViewModelsProperty;
-
         public ISet<SliceViewSelectorViewModel> SelectorViewModels
         {
-            get { return (ISet<SliceViewSelectorViewModel>) GetValue(SelectorViewModelsProperty); }
+            get { return (ISet<SliceViewSelectorViewModel>)GetValue(SelectorViewModelsProperty); }
             set { SetValue(SelectorViewModelsProperty, value); }
         }
-
         private FiltersFactory _filterFactory;
+        private List<IExporter> _exporters;
 
         static MainWindow()
         {
@@ -42,18 +43,18 @@ namespace Schedule.Windows
             if (window != null)
             {
                 bool shown = window.IsCalendarShown;
-                
-                window.MonthSelector.Visibility = window.MainCalendar.Visibility = 
+
+                window.MonthSelector.Visibility = window.MainCalendar.Visibility =
                     shown ? Visibility.Visible : Visibility.Collapsed;
 
-                window.MainSliceView.Visibility = window.SelectorsPanel.Visibility = 
+                window.MainSliceView.Visibility = window.SelectorsPanel.Visibility =
                     shown ? Visibility.Collapsed : Visibility.Visible;
             }
         }
 
         public bool IsCalendarShown
         {
-            get { return (bool) GetValue(IsCalendarShownProperty); }
+            get { return (bool)GetValue(IsCalendarShownProperty); }
             set { SetValue(IsCalendarShownProperty, value); }
         }
 
@@ -62,6 +63,7 @@ namespace Schedule.Windows
             InitializeComponent();
             InitializeCardMenu();
             InitializeSelectorViewModels();
+            InitializeExporters();
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
             MonthSelector.DataContext = MainCalendar;
@@ -101,6 +103,13 @@ namespace Schedule.Windows
             VerticalSelector.SelectedIndex = 5;
         }
 
+        private void InitializeExporters()
+        {
+            _exporters = new List<IExporter> {
+                new HtmlExporter()
+            };
+        }
+
         private void Command_AlwaysExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -113,7 +122,17 @@ namespace Schedule.Windows
 
         private void Window_ExportSchedule(object sender, ExecutedRoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            SaveFileDialog dlg = new SaveFileDialog();
+            StringBuilder fmts = new StringBuilder();
+
+            foreach (var exp in _exporters)
+                fmts.Append(exp.FormatString() + "|");
+            fmts.Remove(fmts.Length - 1, 1); 
+            dlg.Filter = fmts.ToString();
+            dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            if (dlg.ShowDialog() == true)
+                _exporters[dlg.FilterIndex - 1].Save(dlg.FileName, MainSliceView, FiltersPanel.Children.OfType<Filter>());
         }
 
         private void Window_ShowConflicts(object sender, RoutedEventArgs e)
@@ -130,7 +149,7 @@ namespace Schedule.Windows
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            MainCalendar.UpdateSource = delegate(DateTime startTime, DateTime endTime)
+            MainCalendar.UpdateSource = delegate (DateTime startTime, DateTime endTime)
             {
                 using (ScheduleDbContext ctx = new ScheduleDbContext())
                 {
@@ -149,6 +168,7 @@ namespace Schedule.Windows
             if (item != null)
             {
                 var dlg = new EntityCardViewDialog(item.Tag as Type);
+                dlg.Closed += (s, evt) => UpdateViews(FiltersPanel.Children.OfType<Filter>());
                 dlg.Show();
             }
         }

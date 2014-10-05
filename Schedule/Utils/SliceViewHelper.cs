@@ -30,7 +30,7 @@ namespace Schedule.Utils
             {
                 { typeof(DoubleClass), (header, item) => item.DoubleClass == (DoubleClass) header },
                 { typeof(CourseType), (header, item) => item.Type == (CourseType) header },
-                { typeof(DayOfWeek), (header, item) => false },
+                { typeof(DayOfWeek), DaysComparer},
                 { typeof(Teacher), (header, item) => item.Teacher.CompareTo(header as IComparable) == 0 },
                 { typeof(Course), (header, item) => item.Course.CompareTo(header as IComparable) == 0 },
                 { typeof(Group), (header, item) => item.Group.CompareTo(header as IComparable) == 0 },
@@ -59,8 +59,8 @@ namespace Schedule.Utils
                 CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek
             };
 
-            for (int i = (int) daysOfWeek[0] + 1; i < (int) daysOfWeek[0] + 7; i++)
-                daysOfWeek.Add((DayOfWeek) (i % 7));
+            for (int i = (int)daysOfWeek[0] + 1; i < (int)daysOfWeek[0] + 7; i++)
+                daysOfWeek.Add((DayOfWeek)(i % 7));
             return daysOfWeek;
         }
 
@@ -82,6 +82,18 @@ namespace Schedule.Utils
                 type = type.BaseType;
             }
             return type != null ? Comparers[type] : null;
+        }
+
+        private static bool DaysComparer(object header, Models.Schedule item)
+        {
+            HashSet<DayOfWeek> days = new HashSet<DayOfWeek>();
+            var date = item.StartDate;
+            do
+            {
+                days.Add(date.DayOfWeek);
+                date = date.AddDays(item.Interval);
+            } while (!days.Contains(date.DayOfWeek));
+            return days.Contains((DayOfWeek)header);
         }
 
         public static void FillHorizontalHeader(this SliceView view)
@@ -108,7 +120,7 @@ namespace Schedule.Utils
                 cell.Items =
                     scheduleItems
                         .Where(item => hComparer(cell.HorizontalValue, item) && vComparer(cell.VerticalValue, item))
-                        .Select(item => new ScheduleCardViewModel { Item = item, ScheduleView = cell.ScheduleView});
+                        .Select(item => new ScheduleCardViewModel { Item = item, ScheduleView = cell.ScheduleView });
             }
         }
     }

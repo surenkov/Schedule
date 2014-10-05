@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using Schedule.Models.DataLayer;
 
 namespace Schedule
@@ -8,8 +7,7 @@ namespace Schedule
     {
         public App()
         {
-            using (ScheduleDbContext ctx = new ScheduleDbContext())
-                ctx.Schedule.FirstOrDefault();
+
         }
     }
 }
