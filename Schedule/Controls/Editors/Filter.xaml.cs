@@ -10,6 +10,7 @@ using Schedule.Models;
 using Schedule.Utils;
 using Schedule.Utils.Filters;
 using Schedule.Utils.ValueConverters;
+using System.Windows.Data;
 
 namespace Schedule.Controls.Editors
 {
@@ -23,7 +24,7 @@ namespace Schedule.Controls.Editors
 
         public ICollection<PropertyInfo> Properties
         {
-            get { return (ICollection<PropertyInfo>) GetValue(PropertiesProperty); }
+            get { return (ICollection<PropertyInfo>)GetValue(PropertiesProperty); }
             set { SetValue(PropertiesProperty, value); }
         }
 
@@ -32,17 +33,17 @@ namespace Schedule.Controls.Editors
 
         public object Value
         {
-            get { return (object) GetValue(ValueProperty); }
+            get { return (object)GetValue(ValueProperty); }
             set { SetValue(ValueProperty, value); }
         }
 
         private readonly List<string> _comparers = new List<string>
         {
-            "=",          
-            "<>",      
-            "<",           
-            ">",        
-            "<=",  
+            "=",
+            "<>",
+            "<",
+            ">",
+            "<=",
             ">="
         };
 
@@ -80,6 +81,13 @@ namespace Schedule.Controls.Editors
                 var control = factory.CreateControl(property.PropertyType);
                 mapper.FillData(control, property.PropertyType);
 
+                DependencyProperty dp = factory.ValueProperty(control);
+                if (dp != null)
+                {
+                    Binding binding = new Binding("Value") { Source = this };
+                    BindingOperations.SetBinding(control, dp, binding);
+                }
+
                 var box = control as ComboBox;
                 if (box != null) box.IsEditable = true;
 
@@ -104,17 +112,16 @@ namespace Schedule.Controls.Editors
 
             if (property != null)
             {
-                var value = (IComparable) property.GetValue(entity);
+                var value = (IComparable)property.GetValue(entity);
                 if (value != null)
                 {
                     var comparer = converter.Convert(ConditionsBox.SelectedItem as string,
                         typeof(CheckPropertyValueDelegate), null, null) as CheckPropertyValueDelegate;
-                    var compared = (IComparable) _control.GetValue(factory.ValueProperty(_control));
-                    Value = compared;
+                    var compared = (IComparable)_control.GetValue(factory.ValueProperty(_control));
                     if (compared != null)
                     {
                         if (compared.GetType() != value.GetType())
-                            compared = (IComparable) compared.FilterConvert(value.GetType());
+                            compared = (IComparable)compared.FilterConvert(value.GetType());
                         return comparer != null && comparer(value, compared);
                     }
                 }

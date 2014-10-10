@@ -106,7 +106,8 @@ namespace Schedule.Windows
         private void InitializeExporters()
         {
             _exporters = new List<IExporter> {
-                new HtmlExporter()
+                new HtmlExporter(),
+                new OpenXmlSpreadsheetExporter()
             };
         }
 
@@ -219,7 +220,7 @@ namespace Schedule.Windows
     public static class ScheduleCommands
     {
         public static readonly RoutedUICommand Export = new RoutedUICommand(
-            "Export as",
+            "Export as...",
             "Export",
              typeof(ScheduleCommands),
              new InputGestureCollection
