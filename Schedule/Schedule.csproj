@@ -126,6 +126,11 @@
     <Compile Include="Models\ViewModels\Slices\SliceCellViewModel.cs" />
     <Compile Include="Models\ViewModels\Slices\SliceRowViewModel.cs" />
     <Compile Include="Models\ViewModels\Slices\SliceViewSelectorViewModel.cs" />
+    <Compile Include="Utils\Conflicts\Checkers\GroupInDifferentClassroomsChecker.cs" />
+    <Compile Include="Utils\Conflicts\Checkers\TwoTeachersInClassroomChecker.cs" />
+    <Compile Include="Utils\Conflicts\Conflict.cs" />
+    <Compile Include="Utils\Conflicts\IConflictsChecker.cs" />
+    <Compile Include="Utils\Conflicts\ConflictsManager.cs" />
     <Compile Include="Utils\EditorsFactory.cs" />
     <Compile Include="Utils\EditorsMapper.cs" />
     <Compile Include="Utils\Export\HtmlExporter.cs" />
@@ -279,6 +284,9 @@
   </ItemGroup>
   <ItemGroup>
     <SplashScreen Include="splash.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utils\Conflicts\Conflicts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -50,15 +50,15 @@ namespace Schedule.Models
 
     public partial class Schedule : Entity
     {
-        [Description("Start date"), Required(ErrorMessageResourceType = typeof (Resources), ErrorMessageResourceName = "Schedule_StartDate_ErrMsg")]
+        [Description("Start date"), Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "Schedule_StartDate_ErrMsg")]
         public System.DateTime StartDate { get; set; }
-        
-        [Description("End date"), Required(ErrorMessageResourceType = typeof (Resources), ErrorMessageResourceName = "Schedule_EndDate_ErrMsg")]
+
+        [Description("End date"), Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "Schedule_EndDate_ErrMsg")]
         public System.DateTime EndDate { get; set; }
-        
+
         [Required, Description("Interval")]
         public int Interval { get; set; }
-        
+
         [Description("Number of period")]
         public DoubleClass DoubleClass { get; set; }
 
@@ -73,5 +73,17 @@ namespace Schedule.Models
         public virtual Group Group { get; set; }
         [NotNull, Required]
         public virtual Classroom Class { get; set; }
+
+        public ISet<DayOfWeek> DaysOfWeek()
+        {
+            var days = new HashSet<DayOfWeek>();
+            var date = StartDate;
+            do
+            {
+                days.Add(date.DayOfWeek);
+                date = date.AddDays(Interval);
+            } while (!days.Contains(date.DayOfWeek));
+            return days;
+        }
     }
 }

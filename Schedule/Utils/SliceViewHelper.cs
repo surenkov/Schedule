@@ -30,7 +30,7 @@ namespace Schedule.Utils
             {
                 { typeof(DoubleClass), (header, item) => item.DoubleClass == (DoubleClass) header },
                 { typeof(CourseType), (header, item) => item.Type == (CourseType) header },
-                { typeof(DayOfWeek), DaysComparer},
+                { typeof(DayOfWeek), (header, item) => item.DaysOfWeek().Contains((DayOfWeek)header) },
                 { typeof(Teacher), (header, item) => item.Teacher.CompareTo(header as IComparable) == 0 },
                 { typeof(Course), (header, item) => item.Course.CompareTo(header as IComparable) == 0 },
                 { typeof(Group), (header, item) => item.Group.CompareTo(header as IComparable) == 0 },
@@ -82,18 +82,6 @@ namespace Schedule.Utils
                 type = type.BaseType;
             }
             return type != null ? Comparers[type] : null;
-        }
-
-        private static bool DaysComparer(object header, Models.Schedule item)
-        {
-            HashSet<DayOfWeek> days = new HashSet<DayOfWeek>();
-            var date = item.StartDate;
-            do
-            {
-                days.Add(date.DayOfWeek);
-                date = date.AddDays(item.Interval);
-            } while (!days.Contains(date.DayOfWeek));
-            return days.Contains((DayOfWeek)header);
         }
 
         public static void FillHorizontalHeader(this SliceView view)
