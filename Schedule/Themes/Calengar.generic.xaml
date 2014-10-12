@@ -195,21 +195,25 @@
                             </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
                     </ControlTemplate.Resources>
-                    <DockPanel Height="34" Cursor="Hand">
-                        <Path x:Name="path" Data="M 1 1 L 5 5 9 1 8 0 5 3 2 0 1 1 Z" VerticalAlignment="Center" Margin="0 14.5,11,14.5" Fill="DimGray" SnapsToDevicePixels="True" DockPanel.Dock="Right" RenderTransformOrigin="0.5,0.5" Stretch="Fill" Width="8">
-                            <Path.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Path.RenderTransform>
-                        </Path>
-                        <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="DimGray">
+                    <Border Background="Transparent" 
+                            BorderBrush="Transparent" 
+                            BorderThickness="0" Cursor="Hand">
+                        <DockPanel Height="34">
+                            <Path x:Name="path" Data="M 1 1 L 5 5 9 1 8 0 5 3 2 0 1 1 Z" VerticalAlignment="Center" Margin="0 14.5,11,14.5" Fill="DimGray" SnapsToDevicePixels="True" DockPanel.Dock="Right" RenderTransformOrigin="0.5,0.5" Stretch="Fill" Width="8">
+                                <Path.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Path.RenderTransform>
+                            </Path>
+                            <TextBlock Margin="5 0 0 0" VerticalAlignment="Center" DockPanel.Dock="Left" Foreground="DimGray">
                             <ContentPresenter ContentSource="Content"/>
-                        </TextBlock>
-                    </DockPanel>
+                            </TextBlock>
+                        </DockPanel>
+                    </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsChecked" Value="True">
                             <Trigger.ExitActions>
