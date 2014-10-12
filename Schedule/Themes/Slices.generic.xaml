@@ -190,7 +190,7 @@
                                 <slices:SliceExpander Visibility="{Binding ExpanderVisibility, Converter={StaticResource ExpanderVisibilityConverter}}"
                                                       ItemTemplate="{StaticResource SliceCellItemsTemplate}"
                                                       IsExpanded="{Binding IsExpanded}"
-                                                      ItemsSource="{Binding Items}"/>
+                                                      ItemsSource="{Binding ExpanderItems}"/>
                             </StackPanel>
                         </Border>
                     </Border>
