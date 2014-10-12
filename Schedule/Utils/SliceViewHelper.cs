@@ -105,10 +105,14 @@ namespace Schedule.Utils
 
             if (hComparer != null && vComparer != null)
             {
-                cell.Items =
+                var items =
                     scheduleItems
-                        .Where(item => hComparer(cell.HorizontalValue, item) && vComparer(cell.VerticalValue, item))
-                        .Select(item => new ScheduleCardViewModel { Item = item, ScheduleView = cell.ScheduleView });
+                    .Where(item => hComparer(cell.HorizontalValue, item) && vComparer(cell.VerticalValue, item))
+                    .Select(item => new ScheduleCardViewModel { Item = item, ScheduleView = cell.ScheduleView });
+
+                cell.Items = items.Take(SliceCell.VisibleItemsCount);
+                cell.ExpanderItems = items.Skip(SliceCell.VisibleItemsCount);
+                cell.ExpanderVisibility = cell.ExpanderItems.Count() > 0;
             }
         }
     }

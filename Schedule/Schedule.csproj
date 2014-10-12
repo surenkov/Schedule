@@ -52,6 +52,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Schedule.App</StartupObject>
@@ -114,6 +115,7 @@
     </Compile>
     <Compile Include="Controls\IScheduleView.cs" />
     <Compile Include="Controls\Slices\SliceCell.cs" />
+    <Compile Include="Controls\Slices\SliceExpander.cs" />
     <Compile Include="Controls\Slices\SliceHeaderItem.cs" />
     <Compile Include="Controls\Slices\SliceHorizontalHeaderList.cs" />
     <Compile Include="Controls\Slices\SliceList.cs" />

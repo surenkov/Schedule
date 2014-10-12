@@ -6,9 +6,12 @@ namespace Schedule.Models.ViewModels.Slices
     public class SliceCellViewModel : BaseViewModel
     {
         private IEnumerable<ScheduleCardViewModel> _items;
+        private IEnumerable<ScheduleCardViewModel> _expanderItems;
         private IScheduleView _scheduleView;
         private object _horizontalValue;
         private object _verticalValue;
+        private bool _isExpanded;
+        private bool _expanderVisibility;
 
         public IEnumerable<ScheduleCardViewModel> Items
         {
@@ -16,6 +19,16 @@ namespace Schedule.Models.ViewModels.Slices
             set
             {
                 _items = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IEnumerable<ScheduleCardViewModel> ExpanderItems
+        {
+            get { return _expanderItems; }
+            set
+            {
+                _expanderItems = value;
                 OnPropertyChanged();
             }
         }
@@ -46,6 +59,26 @@ namespace Schedule.Models.ViewModels.Slices
             set
             {
                 _verticalValue = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsExpanded
+        {
+            get { return _isExpanded; }
+            set
+            {
+                _isExpanded = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ExpanderVisibility
+        {
+            get { return _expanderVisibility; }
+            set
+            {
+                _expanderVisibility = value;
                 OnPropertyChanged();
             }
         }
