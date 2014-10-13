@@ -163,10 +163,41 @@
         </Setter>
     </Style>
 
+    <Style x:Key="SliceButtonStyle" TargetType="{x:Type Button}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="#99EEEEEE"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="#55AAAAAA"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="{x:Type slices:SliceCell}">
         <Setter Property="MinHeight" Value="130"/>
         <Setter Property="BorderThickness" Value="1 0 0 0"/>
         <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="LightGray"/>
+        <Setter Property="View" Value="{Binding ScheduleView}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type slices:SliceCell}">
@@ -178,7 +209,7 @@
                                                ScheduleView="{Binding ScheduleView}"
                                                Background="White"
                                                BorderBrush="#EAEAEA"
-                                               BorderThickness="0 0 0 1"/>
+                                               BorderThickness="0 1 0 0"/>
                         </DataTemplate>
                     </ControlTemplate.Resources>
                     <Border Background="{TemplateBinding Background}"
@@ -186,6 +217,16 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <Border Background="{TemplateBinding Background}" BorderBrush="White" BorderThickness="0 1 1 1">
                             <StackPanel>
+                                <DockPanel LastChildFill="False" Margin="0 -1 0 0">
+                                    <Button DockPanel.Dock="Right" Height="25" Width="25" x:Name="PART_AddButton" Style="{StaticResource SliceButtonStyle}">
+                                        <Path Data="M 4 4 l 0 -4 2 0 0 4 4 0 0 2 -4 0 0 4 -2 0 0 -4 -4 0 0 -2 Z" Fill="{TemplateBinding Foreground}" SnapsToDevicePixels="False"/>
+                                    </Button>
+                                    <Button DockPanel.Dock="Right" Height="25" Width="25" x:Name="PART_ViewButton" Style="{StaticResource SliceButtonStyle}">
+                                        <WrapPanel Width="15" Height="10">
+                                            <Path Data="F 1 M 305.801,388 C 297.801,388 293,395.949 293,395.949 293,395.949 297.801,404 305.801,404 313.801,404 318.602,396 318.602,396 318.602,396 313.801,388 305.801,388 L 305.801,388 Z M 305.801,402.398 C 298.801,402.398 295,396 295,396 295,396 298.801,389.602 305.801,389.602 312.801,389.602 316.602,396 316.602,396 316.602,396 312.801,402.398 305.801,402.398 L 305.801,402.398 Z M 310.602,396 C 310.602,398.652 308.45,400.801 305.801,400.801 303.148,400.801 301,398.653 301,396 301,393.348 303.148,391.199 305.801,391.199 308.449,391.199 310.602,393.348 310.602,396 L 310.602,396 Z" Fill="{TemplateBinding Foreground}" SnapsToDevicePixels="False" Stretch="Fill"/>
+                                        </WrapPanel>
+                                    </Button>
+                                </DockPanel>
                                 <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource SliceCellItemsTemplate}"/>
                                 <slices:SliceExpander Visibility="{Binding ExpanderVisibility, Converter={StaticResource ExpanderVisibilityConverter}}"
                                                       ItemTemplate="{StaticResource SliceCellItemsTemplate}"
@@ -200,6 +241,9 @@
     </Style>
 
     <Style x:Key="SliceCellExpanderHeader" TargetType="{x:Type ToggleButton}">
+        <Setter Property="BorderThickness" Value="0 1 0 0"/>
+        <Setter Property="BorderBrush" Value="#CCCCCC"/>
+        <Setter Property="Background" Value="White"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
@@ -228,7 +272,9 @@
                             </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
                     </ControlTemplate.Resources>
-                    <Border Background="{TemplateBinding Background}" BorderThickness="0" Cursor="Hand">
+                    <Border Background="{TemplateBinding Background}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            BorderBrush="{TemplateBinding BorderBrush}" Cursor="Hand">
                         <DockPanel Height="10">
                             <Path x:Name="path" Data="M 1 1 L 5 5 9 1 8 0 5 3 2 0 1 1 Z" 
                                   VerticalAlignment="Center" 
@@ -257,9 +303,6 @@
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="#EFEFEF"/>
-                        </Trigger>
-                        <Trigger Property="IsMouseOver" Value="False">
-                            <Setter Property="Background" Value="Transparent"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

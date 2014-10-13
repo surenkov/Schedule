@@ -8,6 +8,8 @@ using Schedule.Models;
 using Schedule.Models.DataLayer;
 using Schedule.Utils;
 using Schedule.Windows;
+using System.Collections.Generic;
+using Schedule.Models.ViewModels.Calendar;
 
 namespace Schedule.Controls.Calendar
 {
@@ -46,7 +48,7 @@ namespace Schedule.Controls.Calendar
 
         public IScheduleView ScheduleView
         {
-            get { return (IScheduleView) GetValue(ScheduleViewProperty); }
+            get { return (IScheduleView)GetValue(ScheduleViewProperty); }
             set { SetValue(ScheduleViewProperty, value); }
         }
 
@@ -80,7 +82,7 @@ namespace Schedule.Controls.Calendar
         private void OnAddButtonClick(object sender, RoutedEventArgs args)
         {
             EditScheduleDialog dlg = new EditScheduleDialog(new Models.Schedule { StartDate = Date, EndDate = Date }) { ShowInTaskbar = true };
-            dlg.Apply += delegate(object o, ApplyEventArgs eventArgs)
+            dlg.Apply += delegate (object o, ApplyEventArgs eventArgs)
             {
                 var item = eventArgs.Item;
                 eventArgs.Handled = true;
@@ -91,7 +93,7 @@ namespace Schedule.Controls.Calendar
                     try
                     {
                         var properties =
-                            item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof (Entity)));
+                            item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
                         foreach (var rel in properties.Select(p => p.GetValue(item) as Entity))
                             ctx.Set(rel.GetType()).Attach(rel);
                         ctx.Entry(item).State = item.Id == 0 ? EntityState.Added : EntityState.Modified;
@@ -119,7 +121,17 @@ namespace Schedule.Controls.Calendar
 
         private void OnViewButtonClick(object sender, RoutedEventArgs args)
         {
-            throw new NotImplementedException();
+            var entities = new HashSet<Entity>();
+            var items = ItemsSource as IEnumerable<CalendarItemViewModel>;
+
+            if (items != null)
+                foreach (var item in items)
+                    foreach (var card in item.Items)
+                        entities.Add(card.Item);
+
+            var dlg = new EntityCardViewDialog();
+            dlg.Show();
+            dlg.ItemsSource = entities;
         }
 
         private static void DateChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -135,5 +147,5 @@ namespace Schedule.Controls.Calendar
                 day.DayType = CalendarDayType.CurrentDay;
         }
     }
-        #endregion
+    #endregion
 }

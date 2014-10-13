@@ -65,7 +65,7 @@ namespace Schedule.Windows
             var dlg = d as EntityCardViewDialog;
             if (dlg != null)
             {
-                dlg.RecordsPanel.IsEnabled = e.NewValue != null;
+                dlg.SettingsPanel.IsEnabled = e.NewValue != null;
                 if (e.NewValue != null)
                     dlg.ItemsSource = dlg.UpdateEvent();
             }
@@ -83,6 +83,9 @@ namespace Schedule.Windows
         {
             InitializeComponent();
             DataContext = this;
+
+            var dpd = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(DataGrid));
+            if (dpd != null) dpd.AddValueChanged(ItemsGrid, ItemsGrid_UpdateColumnsVisibility);
         }
 
         private void ItemsGrid_UpdateColumnsVisibility(object sender, EventArgs eventArgs)

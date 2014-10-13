@@ -82,7 +82,7 @@ namespace Schedule.Models
             {
                 days.Add(date.DayOfWeek);
                 date = date.AddDays(Interval);
-            } while (!days.Contains(date.DayOfWeek));
+            } while (!days.Contains(date.DayOfWeek) && date <= EndDate);
             return days;
         }
     }

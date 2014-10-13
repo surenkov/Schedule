@@ -170,6 +170,7 @@ namespace Schedule.Windows
             if (item != null)
             {
                 var dlg = new EntityCardViewDialog();
+                dlg.Show();
 
                 dlg.UpdateEvent = delegate ()
                 {
@@ -187,9 +188,7 @@ namespace Schedule.Windows
                         return ctx.Set(type).Local as IEnumerable<Entity>;
                     }
                 };
-
                 dlg.Closed += (s, evt) => UpdateViews(FiltersPanel.Children.OfType<Filter>());
-                dlg.Show();
             }
         }
 
