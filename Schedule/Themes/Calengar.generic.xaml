@@ -66,7 +66,7 @@
         <Setter Property="ItemTemplate">
             <Setter.Value>
                 <DataTemplate>
-                    <calendar:CalendarDay Header="{Binding Date.Day}" Date="{Binding Date}" ScheduleView="{Binding ScheduleView}" ItemsSource="{Binding Items}" VerticalAlignment="Stretch">
+                    <calendar:CalendarDay Header="{Binding Date.Day}" Date="{Binding Date}" ScheduleView="{Binding View}" ItemsSource="{Binding Items}" VerticalAlignment="Stretch">
                         <calendar:CalendarDay.ItemTemplate>
                             <DataTemplate>
                                 <calendar:CalendarDayItem Header="{Binding Period, Converter={StaticResource DoubleClassToStringConverter}}" ItemsSource="{Binding Items}" BorderBrush="{Binding BorderBrush}" Margin="0 1 0 0">

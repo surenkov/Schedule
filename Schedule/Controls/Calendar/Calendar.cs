@@ -147,7 +147,7 @@ namespace Schedule.Controls.Calendar
             for (int i = 0; i < MaxDays; i++)
                 weeks[i / (MaxDays / weeks.Length)].Add(new CalendarDayViewModel
                 {
-                    Calendar = this,
+                    View = this,
                     Date = startDay.AddDays(i),
                     Items = dict.ContainsKey(startDay.AddDays(i)) ? ScheduleMapper.Map(dict[startDay.AddDays(i)], this) : null
                 });

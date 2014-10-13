@@ -37,7 +37,7 @@ namespace Schedule.Utils
                     BorderBrush = PairColors[schedules.Key],
                     Period = schedules.Key,
                     Items = new Collection<ScheduleCardViewModel>(),
-                    ScheduleView = calendar
+                    View = calendar
                 };
 
                 foreach (var schedule in schedules)

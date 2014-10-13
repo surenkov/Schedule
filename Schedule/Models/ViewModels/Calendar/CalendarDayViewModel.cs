@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Schedule.Controls;
+using System;
 using System.Collections.Generic;
 
 namespace Schedule.Models.ViewModels.Calendar
@@ -6,7 +7,7 @@ namespace Schedule.Models.ViewModels.Calendar
     sealed class CalendarDayViewModel : BaseViewModel
     {
         private DateTime _date;
-        private Controls.Calendar.Calendar _calendar;
+        private IScheduleView _view;
         private IEnumerable<CalendarItemViewModel> _items;
 
         public DateTime Date
@@ -19,12 +20,12 @@ namespace Schedule.Models.ViewModels.Calendar
             }
         }
 
-        public Controls.Calendar.Calendar Calendar
+        public IScheduleView View
         {
-            get { return _calendar; }
+            get { return _view; }
             set
             {
-                _calendar = value;
+                _view = value;
                 OnPropertyChanged();
             }
         }
