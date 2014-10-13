@@ -1,61 +1,94 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
+using System.Reflection;
+using System.Data.Entity;
 using System.Windows.Input;
-using Schedule.Attributes;
-using Schedule.Controls.Editors;
-using Schedule.Models;
-using Schedule.Models.DataLayer;
+using System.ComponentModel;
+using System.Windows.Controls;
+using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using Schedule.Utils;
+using Schedule.Models;
+using Schedule.Attributes;
 using Schedule.Utils.Filters;
+using Schedule.Models.DataLayer;
+using Schedule.Controls.Editors;
 
 namespace Schedule.Windows
 {
+    public delegate IEnumerable<Entity> EntityCardViewDialogUpdateEvent();
+
     public partial class EntityCardViewDialog : Window
     {
-        public static readonly DependencyProperty ItemsTypeProperty;
-        public static readonly DependencyProperty ShowHiddenPropertiesProperty;
-
         private FiltersFactory _filtersFactory;
 
-        static EntityCardViewDialog()
+        public static readonly DependencyProperty ItemsSourceProperty =
+            DependencyProperty.Register("ItemsSource", typeof(IEnumerable<Entity>), typeof(EntityCardViewDialog),
+                new PropertyMetadata(null, ItemsSourceChanged));
+
+        public static readonly DependencyProperty ShowHiddenPropertiesProperty =
+            DependencyProperty.Register("ShowHiddenProperties", typeof(bool), typeof(EntityCardViewDialog),
+                new PropertyMetadata(false, ShowHiddenPropertiesPropertyChanged));
+
+        public static readonly DependencyProperty UpdateEventProperty =
+            DependencyProperty.Register("UpdateEvent", typeof(EntityCardViewDialogUpdateEvent), typeof(EntityCardViewDialog),
+                new PropertyMetadata(null, UpdateEventPropertyChanged));
+
+        public IEnumerable<Entity> ItemsSource
         {
-            ItemsTypeProperty = DependencyProperty.Register("ItemsType", typeof(Type),
-                typeof(EntityCardViewDialog));
-            ShowHiddenPropertiesProperty = DependencyProperty.Register("ShowHiddenProperties", typeof(Boolean),
-                typeof(EntityCardViewDialog), new PropertyMetadata(false, ShowHiddenPropertiesPropertyChangedCallback));
+            get { return (IEnumerable<Entity>)GetValue(ItemsSourceProperty); }
+            set { SetValue(ItemsSourceProperty, value); }
         }
 
-        private static void ShowHiddenPropertiesPropertyChangedCallback(DependencyObject d,
-            DependencyPropertyChangedEventArgs e)
+        public bool ShowHiddenProperties
+        {
+            get { return (bool)GetValue(ShowHiddenPropertiesProperty); }
+            set { SetValue(ShowHiddenPropertiesProperty, value); }
+        }
+
+        public EntityCardViewDialogUpdateEvent UpdateEvent
+        {
+            get { return (EntityCardViewDialogUpdateEvent)GetValue(UpdateEventProperty); }
+            set { SetValue(UpdateEventProperty, value); }
+        }
+
+        private static void ShowHiddenPropertiesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var dlg = d as EntityCardViewDialog;
             if (dlg != null)
                 dlg.ItemsGrid_UpdateColumnsVisibility(dlg.ItemsGrid, null);
         }
 
-        public EntityCardViewDialog(Type type)
+        private static void UpdateEventPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var dlg = d as EntityCardViewDialog;
+            if (dlg != null)
+            {
+                dlg.RecordsPanel.IsEnabled = e.NewValue != null;
+                if (e.NewValue != null)
+                    dlg.ItemsSource = dlg.UpdateEvent();
+            }
+        }
+
+        private static void ItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var dlg = d as EntityCardViewDialog;
+            if (dlg != null)
+                dlg.UpdateGrid();
+        }
+
+
+        public EntityCardViewDialog()
         {
             InitializeComponent();
-
-            ItemsType = type;
-            var dpd = DependencyPropertyDescriptor.FromProperty(ItemsControl.ItemsSourceProperty, typeof(DataGrid));
-            if (dpd != null) dpd.AddValueChanged(ItemsGrid, ItemsGrid_UpdateColumnsVisibility);
-            InitializeGrid();
-
             DataContext = this;
         }
 
         private void ItemsGrid_UpdateColumnsVisibility(object sender, EventArgs eventArgs)
         {
             var grid = sender as DataGrid;
-            if (grid != null)
+            if (grid != null && grid.ItemsSource.OfType<Entity>().Count() > 0)
             {
                 var properties = grid.ItemsSource.GetType().GenericTypeArguments[0].GetProperties();
                 for (int i = 0; i < properties.Length; i++)
@@ -73,42 +106,24 @@ namespace Schedule.Windows
                         grid.Columns[i].Header = descr.Description;
                 }
             }
-        }
-
-        private void InitializeGrid()
-        {
-            _filtersFactory = new FiltersFactory(FiltersPanel, ItemsType);
-
-            if (ItemsType != null)
-                UpdateGrid();
-        }
-
-        private async void UpdateGrid()
-        {
-            using (ScheduleDbContext ctx = new ScheduleDbContext())
+            else if (grid != null)
             {
-                ctx.Configuration.LazyLoadingEnabled = false;
-                var entityProps = ItemsType.GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity))).ToList();
-                await ctx.Set(ItemsType).LoadAsync();
-
-                foreach (var entity in ctx.Set(ItemsType).Local)
-                    foreach (var prop in entityProps)
-                        await ctx.Entry(entity).Reference(prop.Name).LoadAsync();
-
-                ItemsGrid.ItemsSource = (ctx.Set(ItemsType).Local as IEnumerable<Entity>).ApplyFilters(FiltersPanel.Children.OfType<Filter>());
+                foreach (var column in grid.Columns)
+                {
+                    column.Visibility = Visibility.Hidden;
+                }
             }
         }
 
-        public Type ItemsType
+        private void UpdateGrid()
         {
-            get { return (Type) GetValue(ItemsTypeProperty); }
-            set { SetValue(ItemsTypeProperty, value); }
-        }
+            if (ItemsSource != null)
+            {
+                var type = ItemsSource.GetType().GenericTypeArguments[0];
+                _filtersFactory = new FiltersFactory(FiltersPanel, type);
 
-        public Boolean ShowHiddenProperties
-        {
-            get { return (Boolean) GetValue(ShowHiddenPropertiesProperty); }
-            set { SetValue(ShowHiddenPropertiesProperty, value); }
+                ItemsGrid.ItemsSource = ItemsSource.ApplyFilters(FiltersPanel.Children.OfType<Filter>());
+            }
         }
 
         private void DataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -120,7 +135,7 @@ namespace Schedule.Windows
             if (entity == null) return;
 
             var dlg = new EditScheduleDialog(entity, true) { ShowInTaskbar = true };
-            dlg.Apply += delegate(object o, ApplyEventArgs args)
+            dlg.Apply += delegate (object o, ApplyEventArgs args)
             {
                 var item = args.Item;
                 args.Handled = true;
@@ -153,8 +168,11 @@ namespace Schedule.Windows
 
         private void AddFilterButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var filter = _filtersFactory.CreateFilter();
-            FiltersPanel.Children.Add(filter);
+            if (_filtersFactory != null)
+            {
+                var filter = _filtersFactory.CreateFilter();
+                FiltersPanel.Children.Add(filter);
+            }
         }
 
         private void RemoveFiltersButton_OnClick(object sender, RoutedEventArgs e)
@@ -165,6 +183,9 @@ namespace Schedule.Windows
 
         private void ApplyFiltersButton_OnClick(object sender, RoutedEventArgs e)
         {
+            if (UpdateEvent != null)
+                ItemsSource = UpdateEvent();
+
             UpdateGrid();
         }
 
@@ -187,6 +208,9 @@ namespace Schedule.Windows
                 }
                 finally
                 {
+                    if (UpdateEvent != null)
+                        ItemsSource = UpdateEvent();
+
                     UpdateGrid();
                 }
             }
@@ -194,42 +218,46 @@ namespace Schedule.Windows
 
         private void AddRecordButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var dlg = new EditScheduleDialog(Activator.CreateInstance(ItemsType) as Entity);
-            dlg.Apply += delegate(object o, ApplyEventArgs args)
+            if (ItemsSource != null)
             {
-                args.Handled = true;
-                var item = args.Item;
-                bool noExcept = true;
+                var type = ItemsSource.GetType().GenericTypeArguments[0];
+                var dlg = new EditScheduleDialog(Activator.CreateInstance(type) as Entity);
+                dlg.Apply += delegate (object o, ApplyEventArgs args)
+                {
+                    args.Handled = true;
+                    var item = args.Item;
+                    bool noExcept = true;
 
-                using (ScheduleDbContext ctx = new ScheduleDbContext())
-                {
-                    try
+                    using (ScheduleDbContext ctx = new ScheduleDbContext())
                     {
-                        var properties =
-                            item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
-                        foreach (var rel in properties.Select(p => p.GetValue(item) as Entity))
-                            ctx.Set(rel.GetType()).Attach(rel);
-                        ctx.Entry(item).State = item.Id == 0 ? EntityState.Added : EntityState.Modified;
-                        ctx.SaveChanges();
+                        try
+                        {
+                            var properties =
+                                item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
+                            foreach (var rel in properties.Select(p => p.GetValue(item) as Entity))
+                                ctx.Set(rel.GetType()).Attach(rel);
+                            ctx.Entry(item).State = item.Id == 0 ? EntityState.Added : EntityState.Modified;
+                            ctx.SaveChanges();
+                        }
+                        catch (DbEntityValidationException ex)
+                        {
+                            ex.ShowMessage();
+                            noExcept = false;
+                        }
+                        catch (NullReferenceException)
+                        {
+                            MessageBox.Show("Please fill all required fields", "Error");
+                            noExcept = false;
+                        }
                     }
-                    catch (DbEntityValidationException ex)
+                    if (noExcept)
                     {
-                        ex.ShowMessage();
-                        noExcept = false;
+                        dlg.Close();
+                        ItemsSource = UpdateEvent();
                     }
-                    catch (NullReferenceException)
-                    {
-                        MessageBox.Show("Please fill all required fields", "Error");
-                        noExcept = false;
-                    }
-                }
-                if (noExcept)
-                {
-                    dlg.Close();
-                    UpdateGrid();
-                }
-            };
-            dlg.Show();
+                };
+                dlg.Show();
+            }
         }
     }
 }

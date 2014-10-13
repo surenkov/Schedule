@@ -13,6 +13,7 @@ using Schedule.Utils.Filters;
 using Schedule.Utils.Export;
 using Microsoft.Win32;
 using System.Text;
+using System.Data.Entity;
 
 namespace Schedule.Windows
 {
@@ -168,7 +169,25 @@ namespace Schedule.Windows
             var item = sender as MenuItem;
             if (item != null)
             {
-                var dlg = new EntityCardViewDialog(item.Tag as Type);
+                var dlg = new EntityCardViewDialog();
+
+                dlg.UpdateEvent = delegate ()
+                {
+                    var type = item.Tag as Type;
+                    using (ScheduleDbContext ctx = new ScheduleDbContext())
+                    {
+                        ctx.Configuration.LazyLoadingEnabled = false;
+                        var entityProps = type.GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity))).ToList();
+                        ctx.Set(type).Load();
+
+                        foreach (var entity in ctx.Set(type).Local)
+                            foreach (var prop in entityProps)
+                                ctx.Entry(entity).Reference(prop.Name).Load();
+
+                        return ctx.Set(type).Local as IEnumerable<Entity>;
+                    }
+                };
+
                 dlg.Closed += (s, evt) => UpdateViews(FiltersPanel.Children.OfType<Filter>());
                 dlg.Show();
             }

@@ -25,7 +25,7 @@
                       BorderBrush="LightGray" 
                       BorderThickness="1 0 0 0"/>
         <DockPanel Grid.Column="1">
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5 10">
+            <StackPanel x:Name="RecordsPanel" IsEnabled="False" DockPanel.Dock="Top" Orientation="Horizontal" Margin="5 10">
                 <Button Content="Add Record" Margin="7 0" Padding="5 2" Click="AddRecordButton_OnClick"/>
                 <Button Content="Remove Record" Padding="5 2" Click="RemoveRecordButton_OnClick"/> 
             </StackPanel>

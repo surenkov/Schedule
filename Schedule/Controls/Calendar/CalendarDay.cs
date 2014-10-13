@@ -119,8 +119,7 @@ namespace Schedule.Controls.Calendar
 
         private void OnViewButtonClick(object sender, RoutedEventArgs args)
         {
-            ViewScheduleDialog dlg = new ViewScheduleDialog { ShowInTaskbar = true, ItemsSource = ItemsSource };
-            dlg.Show();
+            throw new NotImplementedException();
         }
 
         private static void DateChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
