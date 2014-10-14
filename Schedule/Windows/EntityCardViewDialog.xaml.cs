@@ -66,8 +66,7 @@ namespace Schedule.Windows
             if (dlg != null)
             {
                 dlg.SettingsPanel.IsEnabled = e.NewValue != null;
-                if (e.NewValue != null)
-                    dlg.ItemsSource = dlg.UpdateEvent();
+                dlg.LoadData();
             }
         }
 
@@ -129,6 +128,12 @@ namespace Schedule.Windows
             }
         }
 
+        private void LoadData()
+        {
+            if (UpdateEvent != null)
+                ItemsSource = UpdateEvent();
+        }
+
         private void DataGrid_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var grid = sender as DataGrid;
@@ -186,9 +191,7 @@ namespace Schedule.Windows
 
         private void ApplyFiltersButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (UpdateEvent != null)
-                ItemsSource = UpdateEvent();
-
+            LoadData();
             UpdateGrid();
         }
 
@@ -256,7 +259,7 @@ namespace Schedule.Windows
                     if (noExcept)
                     {
                         dlg.Close();
-                        ItemsSource = UpdateEvent();
+                        LoadData();
                     }
                 };
                 dlg.Show();
