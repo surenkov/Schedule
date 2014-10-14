@@ -140,6 +140,7 @@ namespace Schedule.Windows
         private void Window_ShowConflicts(object sender, RoutedEventArgs e)
         {
             var conflicts = new ConflictsWindow { Owner = this };
+            conflicts.Update += (s, evt) => UpdateViews(FiltersPanel.Children.OfType<Filter>());
             conflicts.Show();
         }
 
@@ -202,7 +203,6 @@ namespace Schedule.Windows
             FiltersPanel.Children.Clear();
             UpdateViews(null);
         }
-
 
         private void AddFilterButton_OnClick(object sender, RoutedEventArgs e)
         {

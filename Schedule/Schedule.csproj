@@ -122,17 +122,21 @@
     <Compile Include="Controls\Slices\SliceView.cs" />
     <Compile Include="Models\Entity.cs" />
     <Compile Include="Models\ViewModels\BaseViewModel.cs" />
+    <Compile Include="Models\ViewModels\ConflictsViewModel.cs" />
     <Compile Include="Models\ViewModels\ScheduleCardViewModel.cs" />
     <Compile Include="Models\ViewModels\Calendar\CalendarItemViewModel.cs" />
     <Compile Include="Models\ViewModels\CardsMenuViewModel.cs" />
     <Compile Include="Models\ViewModels\Slices\SliceCellViewModel.cs" />
     <Compile Include="Models\ViewModels\Slices\SliceRowViewModel.cs" />
     <Compile Include="Models\ViewModels\Slices\SliceViewSelectorViewModel.cs" />
-    <Compile Include="Utils\Conflicts\Checkers\GroupInDifferentClassroomsChecker.cs" />
-    <Compile Include="Utils\Conflicts\Checkers\TwoTeachersInClassroomChecker.cs" />
+    <Compile Include="Utils\Conflicts\Checkers\DifferentCoursesInClassroom.cs" />
+    <Compile Include="Utils\Conflicts\Checkers\DifferentCourseTypesInClassroom.cs" />
+    <Compile Include="Utils\Conflicts\Checkers\GroupInDifferentClassrooms.cs" />
+    <Compile Include="Utils\Conflicts\Checkers\SmallClassroom.cs" />
+    <Compile Include="Utils\Conflicts\Checkers\TeacherInDifferentClassrooms.cs" />
+    <Compile Include="Utils\Conflicts\Checkers\TwoTeachersInClassroom.cs" />
     <Compile Include="Utils\Conflicts\Conflict.cs" />
     <Compile Include="Utils\Conflicts\IConflictsChecker.cs" />
-    <Compile Include="Utils\Conflicts\ConflictsManager.cs" />
     <Compile Include="Utils\EditorsFactory.cs" />
     <Compile Include="Utils\EditorsMapper.cs" />
     <Compile Include="Utils\Export\HtmlExporter.cs" />
@@ -280,9 +284,7 @@
   <ItemGroup>
     <SplashScreen Include="splash.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utils\Conflicts\Conflicts\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

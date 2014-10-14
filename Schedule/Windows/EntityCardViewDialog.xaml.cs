@@ -227,7 +227,7 @@ namespace Schedule.Windows
             if (ItemsSource != null)
             {
                 var type = ItemsSource.GetType().GenericTypeArguments[0];
-                var dlg = new EditScheduleDialog(Activator.CreateInstance(type) as Entity);
+                var dlg = new EditScheduleDialog(Activator.CreateInstance(type) as Entity) { ShowInTaskbar = true };
                 dlg.Apply += delegate (object o, ApplyEventArgs args)
                 {
                     args.Handled = true;

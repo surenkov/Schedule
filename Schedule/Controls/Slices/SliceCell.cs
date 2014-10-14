@@ -1,16 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Data.Entity;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Collections.Generic;
-using Schedule.Models;
-using Schedule.Windows;
-using Schedule.Models.ViewModels;
-using Schedule.Models.DataLayer;
 using System.Data.Entity.Validation;
-using System;
-using System.Data.Entity;
+using System.Collections.Generic;
 using Schedule.Utils;
+using Schedule.Models;
+using Schedule.Models.DataLayer;
+using Schedule.Models.ViewModels.Slices;
+using Schedule.Windows;
 
 namespace Schedule.Controls.Slices
 {
@@ -65,10 +65,10 @@ namespace Schedule.Controls.Slices
         private void OnViewButtonClick(object sender, RoutedEventArgs args)
         {
             var entities = new HashSet<Entity>();
-            var items = ItemsSource as IEnumerable<ScheduleCardViewModel>;
+            var model = DataContext as SliceCellViewModel;
 
-            if (items != null)
-                entities.UnionWith(items.Select(m => m.Item));
+            if (model != null)
+                entities.UnionWith(model.Items.Select(m => m.Item).Union(model.ExpanderItems.Select(m => m.Item)));
 
             var dlg = new EntityCardViewDialog();
             dlg.Show();

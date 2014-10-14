@@ -39,7 +39,6 @@
                     <MenuItem Header="Open card" x:Name="CardsMenuItem" ItemContainerStyle="{StaticResource CardMenuItemStyle}"/>
                     <Separator/>
                     <MenuItem Header="Show all conflicts" Click="Window_ShowConflicts" />
-                    <MenuItem Header="Remove selected conflict" />
                 </MenuItem>
                 <MenuItem Header="About">
                     <MenuItem Header="Author" Click="Window_AboutAuthor" />
