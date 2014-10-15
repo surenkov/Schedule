@@ -129,7 +129,7 @@ namespace Schedule.Windows
 
             foreach (var exp in _exporters)
                 fmts.Append(exp.FormatString() + "|");
-            fmts.Remove(fmts.Length - 1, 1); 
+            fmts.Remove(fmts.Length - 1, 1);
             dlg.Filter = fmts.ToString();
             dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
@@ -189,7 +189,12 @@ namespace Schedule.Windows
                         return ctx.Set(type).Local as IEnumerable<Entity>;
                     }
                 };
-                dlg.Closed += (s, evt) => UpdateViews(FiltersPanel.Children.OfType<Filter>());
+
+                dlg.ItemsChanged += delegate (object s, RoutedEventArgs evt)
+                {
+                    e.Handled = true;
+                    UpdateViews(FiltersPanel.Children.OfType<Filter>());
+                };
             }
         }
 

@@ -30,7 +30,7 @@ namespace Schedule.Utils.Conflicts.Checkers
                     conflict.Schedule.Class + " (" +
                     conflict.Schedule.Class.Capacity + " seats) is too small for " +
                     conflict.Schedule.Group + " (" +
-                    conflict.Schedule.Group.Students.Count() + " people)";
+                    conflict.Schedule.Group.Students.Count() + " men)";
                 child.Item = conflict;
 
                 model.Children.Add(child);

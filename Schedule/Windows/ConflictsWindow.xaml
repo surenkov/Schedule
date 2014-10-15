@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:conflicts="clr-namespace:Schedule.Models.ViewModels"
         x:Class="Schedule.Windows.ConflictsWindow"
-        Title="Conflicts" Height="300" Width="600" Background="#EAEAEA"
+        Title="Conflicts" Height="262.4" Width="439.2" Background="#EAEAEA"
         WindowStartupLocation="CenterOwner" ResizeMode="CanMinimize" SnapsToDevicePixels="True">
     <DockPanel>
         <Menu DockPanel.Dock="Top" BorderBrush="LightGray" BorderThickness="0 0 0 1">
@@ -16,7 +16,13 @@
         <TreeView DockPanel.Dock="Bottom" x:Name="ConflictsView" Margin="7">
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate DataType="{x:Type conflicts:ConflictsViewModel}" ItemsSource="{Binding Children}">
-                    <TextBlock Text="{Binding Description}" />
+                    <TextBlock Text="{Binding Description}">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Remove" Click="RemoveSelected_Click"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>

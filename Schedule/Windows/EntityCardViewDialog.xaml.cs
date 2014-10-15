@@ -35,6 +35,10 @@ namespace Schedule.Windows
             DependencyProperty.Register("UpdateEvent", typeof(EntityCardViewDialogUpdateEvent), typeof(EntityCardViewDialog),
                 new PropertyMetadata(null, UpdateEventPropertyChanged));
 
+        public static readonly RoutedEvent ItemsChangedEvent =
+            EventManager.RegisterRoutedEvent("ItemsChanged", RoutingStrategy.Direct, 
+                typeof(RoutedEventHandler), typeof(EntityCardViewDialog));
+
         public IEnumerable<Entity> ItemsSource
         {
             get { return (IEnumerable<Entity>)GetValue(ItemsSourceProperty); }
@@ -51,6 +55,12 @@ namespace Schedule.Windows
         {
             get { return (EntityCardViewDialogUpdateEvent)GetValue(UpdateEventProperty); }
             set { SetValue(UpdateEventProperty, value); }
+        }
+
+        public event RoutedEventHandler ItemsChanged
+        {
+            add { AddHandler(ItemsChangedEvent, value); }
+            remove { RemoveHandler(ItemsChangedEvent, value); }
         }
 
         private static void ShowHiddenPropertiesPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -74,7 +84,10 @@ namespace Schedule.Windows
         {
             var dlg = d as EntityCardViewDialog;
             if (dlg != null)
+            {
                 dlg.UpdateGrid();
+                dlg.RaiseEvent(new RoutedEventArgs(ItemsChangedEvent));
+            }
         }
 
 
