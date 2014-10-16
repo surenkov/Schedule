@@ -8,6 +8,8 @@ using Schedule.Models;
 using Schedule.Models.DataLayer;
 using Schedule.Models.ViewModels;
 using Schedule.Models.ViewModels.Slices;
+using Schedule.Utils.Conflicts;
+using System.Text;
 
 namespace Schedule.Utils
 {
@@ -98,7 +100,7 @@ namespace Schedule.Utils
             if (d != null) view.VerticalHeader = d(type);
         }
 
-        public static void Fill(this SliceCellViewModel cell, IEnumerable<Models.Schedule> scheduleItems)
+        public static void Fill(this SliceCellViewModel cell, IEnumerable<Models.Schedule> scheduleItems, IEnumerable<Conflict> conflicts)
         {
             var hComparer = ItemsComparer(cell.HorizontalValue.GetType());
             var vComparer = ItemsComparer(cell.VerticalValue.GetType());
@@ -108,11 +110,16 @@ namespace Schedule.Utils
                 var items =
                     scheduleItems
                     .Where(item => hComparer(cell.HorizontalValue, item) && vComparer(cell.VerticalValue, item))
-                    .Select(item => new ScheduleCardViewModel { Item = item, ScheduleView = cell.ScheduleView });
+                    .Select(item => new ScheduleCardViewModel { Item = item, ScheduleView = cell.ScheduleView, HasConflict = conflicts.Where(c => c.Schedule.CompareTo(item) == 0).Count() > 0 });
+
+                var header = new StringBuilder();
+                int cnt = items.Where(m => m.HasConflict).Count();
+                if (cnt > 0) header.Append(cnt + " conflict(s)");
 
                 cell.Items = items.Take(SliceCell.VisibleItemsCount);
                 cell.ExpanderItems = items.Skip(SliceCell.VisibleItemsCount);
                 cell.ExpanderVisibility = cell.ExpanderItems.Count() > 0;
+                cell.Header = header.ToString();
             }
         }
     }

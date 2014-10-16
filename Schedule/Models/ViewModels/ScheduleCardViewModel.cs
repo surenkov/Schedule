@@ -4,25 +4,36 @@ namespace Schedule.Models.ViewModels
 {
     public class ScheduleCardViewModel : BaseViewModel
     {
-        private Schedule _item;
-        private IScheduleView _scheduleView;
+        private Schedule item;
+        private IScheduleView scheduleView;
+        private bool hasConflict;
 
         public Schedule Item
         {
-            get { return _item; }
+            get { return item; }
             set
             {
-                _item = value;
+                item = value;
                 OnPropertyChanged();
             }
         }
 
         public IScheduleView ScheduleView
         {
-            get { return _scheduleView; }
+            get { return scheduleView; }
             set
             {
-                _scheduleView = value;
+                scheduleView = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool HasConflict
+        {
+            get { return hasConflict; }
+            set
+            {
+                hasConflict = value;
                 OnPropertyChanged();
             }
         }

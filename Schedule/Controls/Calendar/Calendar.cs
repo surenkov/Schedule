@@ -10,6 +10,7 @@ using Schedule.Controls.Editors;
 using Schedule.Models.ViewModels.Calendar;
 using Schedule.Utils;
 using Schedule.Utils.Filters;
+using Schedule.Utils.Conflicts;
 
 namespace Schedule.Controls.Calendar
 {
@@ -139,8 +140,10 @@ namespace Schedule.Controls.Calendar
                     }
                 }
 
+            var conflicts = new ConflictsManager().CheckAll(items);
             var listsOfDays = FindVisualChildren<CalendarDaysList>(GetTemplateChild("ListGrid")).ToList();
             var weeks = new List<CalendarDayViewModel>[listsOfDays.Count];
+
             for (int i = 0; i < weeks.Length; i++)
                 weeks[i] = new List<CalendarDayViewModel>(MaxDays / weeks.Length);
 
@@ -149,7 +152,7 @@ namespace Schedule.Controls.Calendar
                 {
                     View = this,
                     Date = startDay.AddDays(i),
-                    Items = dict.ContainsKey(startDay.AddDays(i)) ? ScheduleMapper.Map(dict[startDay.AddDays(i)], this) : null
+                    Items = dict.ContainsKey(startDay.AddDays(i)) ? this.Map(dict[startDay.AddDays(i)], conflicts) : null
                 });
             for (int i = 0; i < weeks.Length; i++)
                 listsOfDays[i].ItemsSource = weeks[i];

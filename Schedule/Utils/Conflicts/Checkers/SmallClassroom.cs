@@ -11,6 +11,8 @@ namespace Schedule.Utils.Conflicts.Checkers
     {
         public IEnumerable<Conflict> Check(IEnumerable<Models.Schedule> items)
         {
+            if (items == null)
+                return new List<Conflict>();
             return items.Where(i => i.Group.Students.Count() > i.Class.Capacity).Select(s => new Conflict { Schedule = s });
         }
 

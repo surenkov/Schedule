@@ -20,14 +20,8 @@ namespace Schedule.Controls.Calendar
         OtherMonth
     }
 
-    [TemplatePart(Name = "PART_AddButton", Type = typeof(Button))]
-    [TemplatePart(Name = "PART_ViewButton", Type = typeof(Button))]
-    public class CalendarDay : HeaderedItemsControl
+    public class CalendarDay : ScheduleCell
     {
-        private Button _addButton;
-        private Button _viewButton;
-
-        public static readonly DependencyProperty ScheduleViewProperty;
         public static readonly DependencyProperty DateProperty;
         public static readonly DependencyProperty DayTypeProperty;
 
@@ -37,20 +31,14 @@ namespace Schedule.Controls.Calendar
             DefaultStyleKeyProperty.OverrideMetadata(typeof(CalendarDay),
                 new FrameworkPropertyMetadata(typeof(CalendarDay)));
 
-            ScheduleViewProperty = DependencyProperty.Register("ScheduleView", typeof(IScheduleView), typeof(CalendarDay));
             DateProperty = DependencyProperty.Register("Date", typeof(DateTime), typeof(CalendarDay),
                 new FrameworkPropertyMetadata(DateChangedCallback));
+
             DayTypeProperty = DependencyProperty.Register("DayType", typeof(CalendarDayType), typeof(CalendarDay),
                 new PropertyMetadata(CalendarDayType.CurrentMonth));
         }
 
         #region CLR Properties
-
-        public IScheduleView ScheduleView
-        {
-            get { return (IScheduleView)GetValue(ScheduleViewProperty); }
-            set { SetValue(ScheduleViewProperty, value); }
-        }
 
         public DateTime Date
         {
@@ -66,20 +54,8 @@ namespace Schedule.Controls.Calendar
         #endregion
 
         #region Custom logic
-        public override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
 
-            _addButton = GetTemplateChild("PART_AddButton") as Button;
-            _viewButton = GetTemplateChild("PART_ViewButton") as Button;
-
-            if (_addButton != null)
-                _addButton.Click += OnAddButtonClick;
-            if (_viewButton != null)
-                _viewButton.Click += OnViewButtonClick;
-        }
-
-        private void OnAddButtonClick(object sender, RoutedEventArgs args)
+        protected override void OnAddButtonClick(object sender, RoutedEventArgs args)
         {
             EditScheduleDialog dlg = new EditScheduleDialog(new Models.Schedule { StartDate = Date, EndDate = Date }) { ShowInTaskbar = true };
             dlg.Apply += delegate (object o, ApplyEventArgs eventArgs)
@@ -113,13 +89,13 @@ namespace Schedule.Controls.Calendar
                 if (noExcept)
                 {
                     dlg.Close();
-                    ScheduleView.UpdateView();
+                    View.UpdateView();
                 }
             };
             dlg.Show();
         }
 
-        private void OnViewButtonClick(object sender, RoutedEventArgs args)
+        protected override void OnViewButtonClick(object sender, RoutedEventArgs args)
         {
             var entities = new HashSet<Entity>();
             var items = ItemsSource as IEnumerable<CalendarItemViewModel>;

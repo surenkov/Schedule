@@ -19,56 +19,68 @@ namespace Schedule.Windows
 {
     public partial class MainWindow : Window
     {
-        public static readonly DependencyProperty IsCalendarShownProperty;
-        public static readonly DependencyProperty SelectorViewModelsProperty;
+        private FiltersFactory _filterFactory;
+        private List<IExporter> _exporters;
+
+        public static readonly DependencyProperty CalendarVisibilityProperty = 
+            DependencyProperty.Register("CalendarVisibility", typeof(bool), typeof(MainWindow),
+                new PropertyMetadata(false, OnCalendarVisibilityChanged));
+
+        public static readonly DependencyProperty SliceViewVisibilityProperty =
+            DependencyProperty.Register("SliceViewVisibility", typeof(bool), typeof(MainWindow),
+                new PropertyMetadata(true, OnSliceViewVisibilityChanged));
+
+        public static readonly DependencyProperty SelectorViewModelsProperty = 
+            DependencyProperty.Register("SelectorViewModels", typeof(ISet<SliceViewSelectorViewModel>), typeof(MainWindow),
+                new PropertyMetadata(default(ISet<SliceViewSelectorViewModel>)));
+
+        public bool CalendarVisibility
+        {
+            get { return (bool)GetValue(CalendarVisibilityProperty); }
+            set { SetValue(CalendarVisibilityProperty, value); }
+        }
+
+        public bool SliceViewVisibility
+        {
+            get { return (bool)GetValue(SliceViewVisibilityProperty); }
+            set { SetValue(SliceViewVisibilityProperty, value); }
+        }
+
         public ISet<SliceViewSelectorViewModel> SelectorViewModels
         {
             get { return (ISet<SliceViewSelectorViewModel>)GetValue(SelectorViewModelsProperty); }
             set { SetValue(SelectorViewModelsProperty, value); }
         }
-        private FiltersFactory _filterFactory;
-        private List<IExporter> _exporters;
 
-        static MainWindow()
+        private static void OnCalendarVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            IsCalendarShownProperty = DependencyProperty.Register("IsCalendarShown", typeof(Boolean), typeof(MainWindow),
-                new PropertyMetadata(false, OnIsCalendarShownChanged));
-            SelectorViewModelsProperty = DependencyProperty.Register(
-                "SelectorViewModels", typeof(ISet<SliceViewSelectorViewModel>), typeof(MainWindow),
-                new PropertyMetadata(default(ISet<SliceViewSelectorViewModel>)));
+            var window = d as MainWindow;
+            if (window != null)
+                window.SliceViewVisibility = !window.CalendarVisibility;
         }
 
-        private static void OnIsCalendarShownChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void OnSliceViewVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var window = d as MainWindow;
             if (window != null)
             {
-                bool shown = window.IsCalendarShown;
-
-                window.MonthSelector.Visibility = window.MainCalendar.Visibility =
-                    shown ? Visibility.Visible : Visibility.Collapsed;
-
-                window.MainSliceView.Visibility = window.SelectorsPanel.Visibility =
-                    shown ? Visibility.Collapsed : Visibility.Visible;
+                window.CalendarVisibility = !window.SliceViewVisibility;
+                window.UpdateViews(window.FiltersPanel.Children.OfType<Filter>());
             }
-        }
-
-        public bool IsCalendarShown
-        {
-            get { return (bool)GetValue(IsCalendarShownProperty); }
-            set { SetValue(IsCalendarShownProperty, value); }
         }
 
         public MainWindow()
         {
             InitializeComponent();
+            MonthSelector.DataContext = MainCalendar;
+            DataContext = this;
+            SliceViewVisibility = true;
+
             InitializeCardMenu();
             InitializeSelectorViewModels();
             InitializeExporters();
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
-            MonthSelector.DataContext = MainCalendar;
-            DataContext = this;
             _filterFactory = new FiltersFactory(FiltersPanel, typeof(Models.Schedule), 30);
         }
 
@@ -156,7 +168,7 @@ namespace Schedule.Windows
             {
                 using (ScheduleDbContext ctx = new ScheduleDbContext())
                 {
-                    var it = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building")
+                    var it = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group.Students").Include("Class.Building")
                              where s.EndDate >= startTime && s.StartDate <= endTime
                              orderby s.DoubleClass
                              select s;
@@ -218,9 +230,9 @@ namespace Schedule.Windows
         private void UpdateViews(IEnumerable<Filter> filters)
         {
             MainCalendar.Filters = MainSliceView.Filters = filters;
-            if (MainCalendar.Visibility == Visibility.Visible)
+            if (CalendarVisibility)
                 MainCalendar.UpdateView();
-            if (MainSliceView.Visibility == Visibility.Visible)
+            if (SliceViewVisibility)
                 MainSliceView.UpdateView();
         }
 

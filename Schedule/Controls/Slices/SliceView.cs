@@ -10,6 +10,7 @@ using Schedule.Models.DataLayer;
 using Schedule.Models.ViewModels.Slices;
 using Schedule.Utils;
 using Schedule.Utils.Filters;
+using Schedule.Utils.Conflicts;
 
 namespace Schedule.Controls.Slices
 {
@@ -112,6 +113,7 @@ namespace Schedule.Controls.Slices
                     Items = new List<SliceCellViewModel>()
                 }).ToList();
 
+                var conflicts = new ConflictsManager().CheckAll(itemsList);
                 foreach (var rowModel in vericalHeaderItems)
                 {
                     foreach (var horizontalHeaderItem in horizontalHeaderItems)
@@ -122,7 +124,7 @@ namespace Schedule.Controls.Slices
                             VerticalValue = rowModel.Header,
                             ScheduleView = this
                         };
-                        cell.Fill(itemsList);
+                        cell.Fill(itemsList, conflicts);
                         rowModel.Items.Add(cell);
                     }
                 }

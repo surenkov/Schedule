@@ -5,80 +5,91 @@ namespace Schedule.Models.ViewModels.Slices
 {
     public class SliceCellViewModel : BaseViewModel
     {
-        private IEnumerable<ScheduleCardViewModel> _items;
-        private IEnumerable<ScheduleCardViewModel> _expanderItems;
-        private IScheduleView _scheduleView;
-        private object _horizontalValue;
-        private object _verticalValue;
-        private bool _isExpanded;
-        private bool _expanderVisibility;
+        private IEnumerable<ScheduleCardViewModel> items;
+        private IEnumerable<ScheduleCardViewModel> expanderItems;
+        private IScheduleView scheduleView;
+        private object horizontalValue;
+        private object verticalValue;
+        private bool isExpanded;
+        private bool expanderVisibility;
+        private string header;
 
         public IEnumerable<ScheduleCardViewModel> Items
         {
-            get { return _items; }
+            get { return items; }
             set
             {
-                _items = value;
+                items = value;
                 OnPropertyChanged();
             }
         }
 
         public IEnumerable<ScheduleCardViewModel> ExpanderItems
         {
-            get { return _expanderItems; }
+            get { return expanderItems; }
             set
             {
-                _expanderItems = value;
+                expanderItems = value;
                 OnPropertyChanged();
             }
         }
 
         public IScheduleView ScheduleView
         {
-            get { return _scheduleView; }
+            get { return scheduleView; }
             set
             {
-                _scheduleView = value;
+                scheduleView = value;
                 OnPropertyChanged();
             }
         }
 
         public object HorizontalValue
         {
-            get { return _horizontalValue; }
+            get { return horizontalValue; }
             set
             {
-                _horizontalValue = value;
+                horizontalValue = value;
                 OnPropertyChanged();
             }
         }
 
         public object VerticalValue
         {
-            get { return _verticalValue; }
+            get { return verticalValue; }
             set
             {
-                _verticalValue = value;
+                verticalValue = value;
                 OnPropertyChanged();
             }
         }
 
         public bool IsExpanded
         {
-            get { return _isExpanded; }
+            get { return isExpanded; }
             set
             {
-                _isExpanded = value;
+                isExpanded = value;
                 OnPropertyChanged();
             }
         }
 
         public bool ExpanderVisibility
         {
-            get { return _expanderVisibility; }
+            get { return expanderVisibility; }
             set
             {
-                _expanderVisibility = value;
+                expanderVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Header
+        {
+            get { return header; }
+            set
+            {
+                header = value;
                 OnPropertyChanged();
             }
         }

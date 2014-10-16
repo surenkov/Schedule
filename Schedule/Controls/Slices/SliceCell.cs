@@ -14,26 +14,12 @@ using Schedule.Windows;
 
 namespace Schedule.Controls.Slices
 {
-    [TemplatePart(Name = "PART_AddButton", Type = typeof(Button))]
-    [TemplatePart(Name = "PART_ViewButton", Type = typeof(Button))]
-    public class SliceCell : ItemsControl
+    public class SliceCell : ScheduleCell
     {
-        private Button addButton;
-        private Button viewButton;
-
         public const int VisibleItemsCount = 2;
 
         public static readonly DependencyProperty IsExpandedProperty =
             DependencyProperty.Register("IsExpanded", typeof(bool), typeof(SliceCell));
-
-        public static readonly DependencyProperty ViewProperty =
-            DependencyProperty.Register("View", typeof(IScheduleView), typeof(SliceCell));
-
-        public IScheduleView View
-        {
-            get { return (IScheduleView)GetValue(ViewProperty); }
-            set { SetValue(ViewProperty, value); }
-        }
 
         public bool IsExpanded
         {
@@ -51,18 +37,10 @@ namespace Schedule.Controls.Slices
             var btn = GetTemplateChild("PART_ExpandButton") as ToggleButton;
             if (btn != null)
                 btn.Click += (s, e) => OnIsExpandedChanged();
-
-
-            addButton = GetTemplateChild("PART_AddButton") as Button;
-            viewButton = GetTemplateChild("PART_ViewButton") as Button;
-
-            if (addButton != null)
-                addButton.Click += OnAddButtonClick;
-            if (viewButton != null)
-                viewButton.Click += OnViewButtonClick;
+            base.OnApplyTemplate();
         }
 
-        private void OnViewButtonClick(object sender, RoutedEventArgs args)
+        protected override void OnViewButtonClick(object sender, RoutedEventArgs args)
         {
             var entities = new HashSet<Entity>();
             var model = DataContext as SliceCellViewModel;
@@ -75,7 +53,7 @@ namespace Schedule.Controls.Slices
             dlg.ItemsSource = entities;
         }
 
-        private void OnAddButtonClick(object sender, RoutedEventArgs args)
+        protected override void OnAddButtonClick(object sender, RoutedEventArgs args)
         {
             EditScheduleDialog dlg = new EditScheduleDialog(new Models.Schedule { StartDate = DateTime.Now.Date, EndDate = DateTime.Now.Date }) { ShowInTaskbar = true };
             dlg.Apply += delegate (object o, ApplyEventArgs eventArgs)

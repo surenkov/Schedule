@@ -4,15 +4,13 @@ using System.Data.Entity;
 using System.Collections.Generic;
 using Schedule.Models.DataLayer;
 using Schedule.Utils.Conflicts;
-using Schedule.Utils.Conflicts.Checkers;
 using Schedule.Models.ViewModels;
 
 namespace Schedule.Windows
 {
     public partial class ConflictsWindow : Window
     {
-        private List<IConflictsChecker> checkers;
-
+        private ConflictsManager manager;
         public static readonly RoutedEvent UpdateEvent =
             EventManager.RegisterRoutedEvent("Update", RoutingStrategy.Direct,
                 typeof(RoutedEventHandler), typeof(ConflictsWindow));
@@ -26,16 +24,7 @@ namespace Schedule.Windows
         public ConflictsWindow()
         {
             InitializeComponent();
-
-            checkers = new List<IConflictsChecker>
-            {
-                new TwoTeachersInClassroom(),
-                new GroupInDifferentClassrooms(),
-                new TeacherInDifferentClassrooms(),
-                new DifferentCourseTypesInClassroom(),
-                new SmallClassroom(),
-                new DifferentCoursesInClassroom()
-            };
+            manager = new ConflictsManager();
 
             Check();
         }
@@ -45,8 +34,9 @@ namespace Schedule.Windows
             ConflictsView.Items.Clear();
             using (ScheduleDbContext ctx = new ScheduleDbContext())
             {
-                foreach (var checker in checkers)
-                    ConflictsView.Items.Add(checker.TreeModel(ctx.Schedule));
+                var models = manager.TreeModels(ctx.Schedule);
+                foreach (var model in models)
+                    ConflictsView.Items.Add(model);
             }
         }
 

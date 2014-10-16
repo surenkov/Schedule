@@ -25,12 +25,13 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <BooleanToVisibilityConverter x:Key="VisibilityConverter"/>
     </Window.Resources>
     <Grid>
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
-                    <MenuItem x:Name="ShowItem" Header="_Show calendar" IsCheckable="True" IsChecked="{Binding IsCalendarShown}"></MenuItem>
+                    <MenuItem x:Name="ShowItem" Header="_Show calendar" IsCheckable="True" IsChecked="{Binding CalendarVisibility}"/>
                     <MenuItem Command="schedule:ScheduleCommands.Export" />
                     <Separator/>
                     <MenuItem Header="Exit" Command="ApplicationCommands.Close" />
@@ -91,8 +92,8 @@
                     </Grid>
                 </Expander>
                 <Grid>
-                    <slices:SliceView x:Name="MainSliceView"/>
-                    <calendar:Calendar x:Name="MainCalendar" Visibility="Collapsed" BorderBrush="#CCCCCC" BorderThickness="1" Background="#E1E1E1"/>
+                    <slices:SliceView x:Name="MainSliceView" Visibility="{Binding SliceViewVisibility, Converter={StaticResource VisibilityConverter}}"/>
+                    <calendar:Calendar x:Name="MainCalendar" Visibility="{Binding CalendarVisibility, Converter={StaticResource VisibilityConverter}}" BorderBrush="#CCCCCC" BorderThickness="1" Background="#E1E1E1"/>
                 </Grid>
             </DockPanel>
         </DockPanel>

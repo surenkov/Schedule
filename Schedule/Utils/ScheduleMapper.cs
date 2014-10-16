@@ -6,6 +6,7 @@ using Schedule.Controls.Calendar;
 using Schedule.Models;
 using Schedule.Models.ViewModels;
 using Schedule.Models.ViewModels.Calendar;
+using Schedule.Utils.Conflicts;
 
 namespace Schedule.Utils
 {
@@ -23,9 +24,9 @@ namespace Schedule.Utils
             {DoubleClass.Eighth, Brushes.Sienna},
         };
 
-        public static IEnumerable<CalendarItemViewModel> Map(IEnumerable<Models.Schedule> items, Calendar calendar)
+        public static IEnumerable<CalendarItemViewModel> Map(this Calendar calendar, IEnumerable<Models.Schedule> items, IEnumerable<Conflict> conflicts = null)
         {
-            if (items == null) return null;
+            if (items == null || conflicts == null) return null;
 
             List<CalendarItemViewModel> list = new List<CalendarItemViewModel>();
             var groupByPairQuery = items.GroupBy(schedule => schedule.DoubleClass);
@@ -41,7 +42,7 @@ namespace Schedule.Utils
                 };
 
                 foreach (var schedule in schedules)
-                    itemViewModel.Items.Add(new ScheduleCardViewModel { ScheduleView = calendar, Item = schedule });
+                    itemViewModel.Items.Add(new ScheduleCardViewModel { ScheduleView = calendar, Item = schedule, HasConflict = conflicts.Where(c => c.Schedule.CompareTo(schedule) == 0).Count() > 0 });
 
                 list.Add(itemViewModel);
             }

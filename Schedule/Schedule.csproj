@@ -114,6 +114,7 @@
       <DependentUpon>Filter.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\IScheduleView.cs" />
+    <Compile Include="Controls\ScheduleCell.cs" />
     <Compile Include="Controls\Slices\SliceCell.cs" />
     <Compile Include="Controls\Slices\SliceExpander.cs" />
     <Compile Include="Controls\Slices\SliceHeaderItem.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Utils\Conflicts\Checkers\TeacherInDifferentClassrooms.cs" />
     <Compile Include="Utils\Conflicts\Checkers\TwoTeachersInClassroom.cs" />
     <Compile Include="Utils\Conflicts\Conflict.cs" />
+    <Compile Include="Utils\Conflicts\ConflictsManager.cs" />
     <Compile Include="Utils\Conflicts\IConflictsChecker.cs" />
     <Compile Include="Utils\EditorsFactory.cs" />
     <Compile Include="Utils\EditorsMapper.cs" />
@@ -284,7 +286,9 @@
   <ItemGroup>
     <SplashScreen Include="splash.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\bullet_red.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
