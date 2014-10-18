@@ -4,6 +4,7 @@
         xmlns:schedule="clr-namespace:Schedule.Windows"
         xmlns:calendar="clr-namespace:Schedule.Controls.Calendar"
         xmlns:slices="clr-namespace:Schedule.Controls.Slices"
+        xmlns:editors="clr-namespace:Schedule.Controls.Editors"
         Title="Schedule" Height="350" Width="525" Background="#EAEAEA" WindowStartupLocation="CenterScreen" 
         WindowState="Maximized" SnapsToDevicePixels="True" ResizeMode="CanResizeWithGrip" Loaded="MainWindow_OnLoaded">
     <Window.CommandBindings>
@@ -49,12 +50,14 @@
                 <Expander DockPanel.Dock="Left" ExpandDirection="Right" IsExpanded="False" Margin="1 0 0 0">
                     <Grid Width="300" x:Name="ExpandGrid">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="70"/>
+                            <RowDefinition Height="105"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <calendar:CalendarMonthSelector Grid.Row="0" Visibility="{Binding CalendarVisibility, Converter={StaticResource VisibilityConverter}}" Date="{Binding Date, ElementName=MainCalendar, Mode=TwoWay}" Foreground="DarkGray"/>
+                        <editors:CalendarMonthSelector Grid.Row="0" Visibility="{Binding CalendarVisibility, Converter={StaticResource VisibilityConverter}}" Date="{Binding Date, ElementName=MainCalendar, Mode=TwoWay}" Foreground="DarkGray"/>
                         <Grid Grid.Row="0" Margin="10" Visibility="{Binding SliceViewVisibility, Converter={StaticResource VisibilityConverter}}">
                             <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="5"/>
                                 <RowDefinition/>
                                 <RowDefinition Height="5"/>
                                 <RowDefinition/>
@@ -74,6 +77,9 @@
                                       ItemsSource="{Binding SelectorViewModels}" 
                                       SelectionChanged="HeaderSelector_SelectionChanged"
                                       Style="{StaticResource HeaderSelectorStyle}"/>
+                            <editors:SliceDatesSelector Grid.Row="4" Grid.ColumnSpan="2"
+                                                        StartDate="{Binding StartDate, ElementName=MainSliceView, Mode=TwoWay}"
+                                                        EndDate="{Binding EndDate, ElementName=MainSliceView, Mode=TwoWay}"/>
                         </Grid>
                         <Border Grid.Row="1" BorderThickness="0 1 0 0" BorderBrush="#CCCCCC" Background="#EAEAEA">
                             <GroupBox Header="Filters" BorderThickness="0">

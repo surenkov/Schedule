@@ -85,9 +85,6 @@ namespace Schedule.Windows
                 var hide = property.GetCustomAttribute(typeof(HiddenAttribute)) as HiddenAttribute;
 
                 if (hide != null && hide.Hidden) continue;
-                if (property.PropertyType != typeof(string) &&
-                    property.PropertyType.GetInterface("IEnumerable") != null)
-                    continue;
 
                 EditorsGrid.RowDefinitions.Add(new RowDefinition());
                 string caption = descr != null ? descr.Description : property.Name;

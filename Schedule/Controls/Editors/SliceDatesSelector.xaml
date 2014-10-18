@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="Schedule.Controls.Editors.SliceDatesSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Schedule.Controls.Editors"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="300">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="10"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="0">
+            <Label Content="Starts:" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+            <DatePicker DockPanel.Dock="Right"
+                        x:Name="StartDatePicker"
+                        SelectedDate="{Binding StartDate, Mode=TwoWay}"
+                        VerticalAlignment="Center" 
+                        Background="White"/>
+        </DockPanel>
+        <DockPanel Grid.Column="2">
+            <Label Content="Ends:" DockPanel.Dock="Left" VerticalAlignment="Center"/>
+            <DatePicker DockPanel.Dock="Right" 
+                        x:Name="EndDatePicker"
+                        SelectedDate="{Binding EndDate, Mode=TwoWay}"
+                        VerticalAlignment="Center" 
+                        Background="White"/>
+        </DockPanel>
+    </Grid>
+</UserControl>

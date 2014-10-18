@@ -102,10 +102,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Editors\SliceDatesSelector.xaml.cs">
+      <DependentUpon>SliceDatesSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\Attributes\HiddenAttribute.cs" />
     <Compile Include="Controls\Calendar\CalendarHeader.cs" />
     <Compile Include="Controls\Calendar\CalendarHeaderItem.cs" />
-    <Compile Include="Controls\Calendar\CalendarMonthSelector.xaml.cs">
+    <Compile Include="Controls\Editors\CalendarMonthSelector.xaml.cs">
       <DependentUpon>CalendarMonthSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Editors\EntitySelector.cs" />
@@ -157,11 +160,15 @@
     <Compile Include="Windows\EntityGridViewDialog.xaml.cs">
       <DependentUpon>EntityGridViewDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Controls\Calendar\CalendarMonthSelector.xaml">
+    <Page Include="Controls\Editors\CalendarMonthSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Editors\Filter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Editors\SliceDatesSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -285,7 +292,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <SplashScreen Include="splash.png" />
+    <SplashScreen Include="Resources\splash.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\bullet_red.png" />

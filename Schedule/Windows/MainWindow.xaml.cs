@@ -22,8 +22,9 @@ namespace Schedule.Windows
     {
         private FiltersFactory filterFactory;
         private List<IExporter> exporters;
+        private Dictionary<Type, EntityGridViewDialog> gridViews;
 
-        public static readonly DependencyProperty CalendarVisibilityProperty = 
+        public static readonly DependencyProperty CalendarVisibilityProperty =
             DependencyProperty.Register("CalendarVisibility", typeof(bool), typeof(MainWindow),
                 new PropertyMetadata(false, OnCalendarVisibilityChanged));
 
@@ -31,7 +32,7 @@ namespace Schedule.Windows
             DependencyProperty.Register("SliceViewVisibility", typeof(bool), typeof(MainWindow),
                 new PropertyMetadata(true, OnSliceViewVisibilityChanged));
 
-        public static readonly DependencyProperty SelectorViewModelsProperty = 
+        public static readonly DependencyProperty SelectorViewModelsProperty =
             DependencyProperty.Register("SelectorViewModels", typeof(ISet<SliceViewSelectorViewModel>), typeof(MainWindow),
                 new PropertyMetadata(default(ISet<SliceViewSelectorViewModel>)));
 
@@ -73,6 +74,7 @@ namespace Schedule.Windows
         public MainWindow()
         {
             InitializeComponent();
+            gridViews = new Dictionary<Type, EntityGridViewDialog>();
             DataContext = this;
             SliceViewVisibility = true;
 
@@ -191,12 +193,16 @@ namespace Schedule.Windows
             var item = sender as MenuItem;
             if (item != null)
             {
-                var dlg = new EntityGridViewDialog();
+                var type = item.Tag as Type;
+                if (!gridViews.ContainsKey(type))
+                    gridViews[type] = new EntityGridViewDialog();
+
+                var dlg = gridViews[type];
                 dlg.Show();
+                dlg.Activate();
 
                 dlg.LoadEvent = delegate ()
                 {
-                    var type = item.Tag as Type;
                     using (ScheduleDbContext ctx = new ScheduleDbContext())
                     {
                         ctx.Configuration.LazyLoadingEnabled = false;
@@ -216,6 +222,8 @@ namespace Schedule.Windows
                     e.Handled = true;
                     UpdateViews(FiltersPanel.Children.OfType<Filter>());
                 };
+
+                dlg.Closed += (s, args) => gridViews.Remove(type);
             }
         }
 

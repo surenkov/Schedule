@@ -86,7 +86,7 @@ namespace Schedule.Utils
             {
                 dates.Add(startDate);
                 startDate = startDate.AddDays(1);
-            } while (startDate < endDate);
+            } while (startDate <= endDate);
 
             return dates;
         }

@@ -22,7 +22,8 @@ namespace Schedule.Windows
 
     public partial class EntityGridViewDialog : Window
     {
-        private FiltersFactory _filtersFactory;
+        private FiltersFactory filtersFactory;
+        private Dictionary<int, EditEntityDialog> editDialogs;
 
         public static readonly DependencyProperty ItemsSourceProperty =
             DependencyProperty.Register("ItemsSource", typeof(IEnumerable<Entity>), typeof(EntityGridViewDialog),
@@ -95,6 +96,7 @@ namespace Schedule.Windows
         public EntityGridViewDialog()
         {
             InitializeComponent();
+            editDialogs = new Dictionary<int, EditEntityDialog>();
             DataContext = this;
         }
 
@@ -107,7 +109,7 @@ namespace Schedule.Windows
                 bool contains = enumerator.MoveNext();
 
                 if (!contains) return;
-                _filtersFactory = new FiltersFactory(FiltersPanel, enumerator.Current.GetType());
+                filtersFactory = new FiltersFactory(FiltersPanel, enumerator.Current.GetType());
                 var properties = enumerator.Current.GetType().GetProperties();
                 foreach (var property in properties)
                 {
@@ -144,7 +146,12 @@ namespace Schedule.Windows
             if (entity == null) return;
 
             Cursor = Cursors.AppStarting;
-            var dlg = new EditEntityDialog(entity, true) { ShowInTaskbar = true };
+
+            if (!editDialogs.ContainsKey(entity.Id))
+                editDialogs[entity.Id] = new EditEntityDialog(entity, true) { ShowInTaskbar = true };
+
+            var dlg = editDialogs[entity.Id];
+
             dlg.Apply += delegate (object o, ApplyEventArgs args)
             {
                 var item = args.Item;
@@ -173,15 +180,20 @@ namespace Schedule.Windows
                     UpdateGrid();
                 }
             };
+
+            dlg.Closed += (s, args) => editDialogs.Remove(entity.Id);
+
             dlg.Show();
+            dlg.Activate();
+
             Cursor = Cursors.Arrow;
         }
 
         private void AddFilterButton_OnClick(object sender, RoutedEventArgs e)
         {
-            if (_filtersFactory != null)
+            if (filtersFactory != null)
             {
-                var filter = _filtersFactory.CreateFilter();
+                var filter = filtersFactory.CreateFilter();
                 FiltersPanel.Children.Add(filter);
             }
         }

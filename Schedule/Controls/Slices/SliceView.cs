@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Windows;
 using Schedule.Models.DataLayer;
@@ -28,11 +27,11 @@ namespace Schedule.Controls.Slices
 
         public static readonly DependencyProperty StartDateProperty =
             DependencyProperty.Register("StartDate", typeof(DateTime), typeof(SliceView), 
-                new PropertyMetadata(DateTime.Now.Date));
+                new PropertyMetadata(DateTime.Now.Date, DatesChangedCallback));
 
         public static readonly DependencyProperty EndDateProperty =
             DependencyProperty.Register("EndDate", typeof(DateTime), typeof(SliceView), 
-                new PropertyMetadata(DateTime.Now.Date.AddMonths(1)));
+                new PropertyMetadata(DateTime.Now.Date.AddMonths(1), DatesChangedCallback));
 
         static SliceView()
         {
@@ -59,6 +58,21 @@ namespace Schedule.Controls.Slices
         {
             var view = d as SliceView;
             if (view != null) view.OnVerticalHeaderChanged();
+        }
+
+        private static void DatesChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var view = d as SliceView;
+            if (view != null)
+            {
+                Type headerType = view.HorizontalHeaderType;
+                view.HorizontalHeaderType = null;
+                view.HorizontalHeaderType = headerType;
+
+                headerType = view.VerticalHeaderType;
+                view.VerticalHeaderType = null;
+                view.VerticalHeaderType = headerType;
+            }
         }
 
         public IEnumerable VerticalHeader
@@ -113,8 +127,10 @@ namespace Schedule.Controls.Slices
             {
                 if (Header == null || VerticalHeader == null) return;
 
-                ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building").Load();
-                var itemsList = ctx.Schedule.Local.ApplyFilters(Filters).Cast<Models.Schedule>();
+                var q = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building")
+                        where s.EndDate >= StartDate && s.StartDate <= EndDate
+                        select s;
+                var itemsList = q.ApplyFilters(Filters).Cast<Models.Schedule>().ToList();
 
                 var horizontalHeaderItems = Header as IEnumerable;
                 var vericalHeaderItems = VerticalHeader.Cast<object>().Select(item => new SliceRowViewModel
