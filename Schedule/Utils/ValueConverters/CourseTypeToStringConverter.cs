@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
 using Schedule.Models;
+using Schedule.Properties;
 
 namespace Schedule.Utils.ValueConverters
 {
@@ -10,9 +11,9 @@ namespace Schedule.Utils.ValueConverters
     {
         private Dictionary<CourseType, string> courses = new Dictionary<CourseType, string>
         {
-            { CourseType.Lection, "Лекция" },
-            { CourseType.Practice, "Практика" },
-            { CourseType.Lab, "Лабораторная" }
+            { CourseType.Lecture, Resources.Lecture_Name },
+            { CourseType.Practice, Resources.Practice_Name },
+            { CourseType.Lab, Resources.Lab_Name }
         };
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

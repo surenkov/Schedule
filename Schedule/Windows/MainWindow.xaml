@@ -52,8 +52,8 @@
                             <RowDefinition Height="70"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <calendar:CalendarMonthSelector Grid.Row="0" x:Name="MonthSelector" Visibility="Collapsed" Date="{Binding Date, Mode=TwoWay}" Foreground="DarkGray"/>
-                        <Grid Grid.Row="0" Margin="10" x:Name="SelectorsPanel">
+                        <calendar:CalendarMonthSelector Grid.Row="0" Visibility="{Binding CalendarVisibility, Converter={StaticResource VisibilityConverter}}" Date="{Binding Date, ElementName=MainCalendar, Mode=TwoWay}" Foreground="DarkGray"/>
+                        <Grid Grid.Row="0" Margin="10" Visibility="{Binding SliceViewVisibility, Converter={StaticResource VisibilityConverter}}">
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
                                 <RowDefinition Height="5"/>

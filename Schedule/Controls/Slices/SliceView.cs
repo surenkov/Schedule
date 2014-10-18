@@ -23,8 +23,16 @@ namespace Schedule.Controls.Slices
                 new PropertyMetadata(null, VerticalHeaderTypePropertyChangedCallback));
 
         public static readonly DependencyProperty VerticalHeaderProperty = 
-            DependencyProperty.Register("VerticalHeader", typeof(IEnumerable<object>), typeof(SliceView), 
+            DependencyProperty.Register("VerticalHeader", typeof(IEnumerable), typeof(SliceView), 
                 new PropertyMetadata(null, VerticalHeaderChangedCallback));
+
+        public static readonly DependencyProperty StartDateProperty =
+            DependencyProperty.Register("StartDate", typeof(DateTime), typeof(SliceView), 
+                new PropertyMetadata(DateTime.Now.Date));
+
+        public static readonly DependencyProperty EndDateProperty =
+            DependencyProperty.Register("EndDate", typeof(DateTime), typeof(SliceView), 
+                new PropertyMetadata(DateTime.Now.Date.AddMonths(1)));
 
         static SliceView()
         {
@@ -53,9 +61,9 @@ namespace Schedule.Controls.Slices
             if (view != null) view.OnVerticalHeaderChanged();
         }
 
-        public IEnumerable<object> VerticalHeader
+        public IEnumerable VerticalHeader
         {
-            get { return (IEnumerable<object>) GetValue(VerticalHeaderProperty); }
+            get { return (IEnumerable) GetValue(VerticalHeaderProperty); }
             set { SetValue(VerticalHeaderProperty, value); }
         }
 
@@ -69,6 +77,18 @@ namespace Schedule.Controls.Slices
         {
             get { return (Type) GetValue(VerticalHeaderTypeProperty); }
             set { SetValue(VerticalHeaderTypeProperty, value); }
+        }
+
+        public DateTime StartDate
+        {
+            get { return (DateTime)GetValue(StartDateProperty); }
+            set { SetValue(StartDateProperty, value); }
+        }
+
+        public DateTime EndDate
+        {
+            get { return (DateTime)GetValue(EndDateProperty); }
+            set { SetValue(EndDateProperty, value); }
         }
 
         public override void UpdateView()
@@ -97,7 +117,7 @@ namespace Schedule.Controls.Slices
                 var itemsList = ctx.Schedule.Local.ApplyFilters(Filters).Cast<Models.Schedule>();
 
                 var horizontalHeaderItems = Header as IEnumerable;
-                var vericalHeaderItems = VerticalHeader.Select(item => new SliceRowViewModel
+                var vericalHeaderItems = VerticalHeader.Cast<object>().Select(item => new SliceRowViewModel
                 {
                     Header = item,
                     Items = new List<SliceCellViewModel>()

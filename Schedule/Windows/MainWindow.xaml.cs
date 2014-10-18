@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Microsoft.Win32;
 using Schedule.Controls.Editors;
+using Schedule.Controls.Slices;
 using Schedule.Models;
 using Schedule.Models.DataLayer;
 using Schedule.Models.ViewModels;
 using Schedule.Models.ViewModels.Slices;
-using Schedule.Utils.Filters;
 using Schedule.Utils.Export;
-using Microsoft.Win32;
-using System.Text;
-using System.Data.Entity;
-using Schedule.Controls.Slices;
+using Schedule.Utils.Filters;
 
 namespace Schedule.Windows
 {
@@ -73,7 +73,6 @@ namespace Schedule.Windows
         public MainWindow()
         {
             InitializeComponent();
-            MonthSelector.DataContext = MainCalendar;
             DataContext = this;
             SliceViewVisibility = true;
 
@@ -105,16 +104,17 @@ namespace Schedule.Windows
         {
             SelectorViewModels = new HashSet<SliceViewSelectorViewModel>
             {
-                new SliceViewSelectorViewModel {HeaderType = typeof(Teacher), Name = "Teachers"},
-                new SliceViewSelectorViewModel {HeaderType = typeof(Group), Name = "Groups"},
-                new SliceViewSelectorViewModel {HeaderType = typeof(DayOfWeek), Name = "Days"},
-                new SliceViewSelectorViewModel {HeaderType = typeof(Course), Name = "Courses"},
-                new SliceViewSelectorViewModel {HeaderType = typeof(CourseType), Name = "Types of course"},
-                new SliceViewSelectorViewModel {HeaderType = typeof(DoubleClass), Name = "Periods"}
+                new SliceViewSelectorViewModel { HeaderType = typeof(Teacher), Name = "Teachers" },
+                new SliceViewSelectorViewModel { HeaderType = typeof(Group), Name = "Groups" },
+                new SliceViewSelectorViewModel { HeaderType = typeof(DayOfWeek), Name = "Days of week" },
+                new SliceViewSelectorViewModel { HeaderType = typeof(DateTime), Name = "Dates" },
+                new SliceViewSelectorViewModel { HeaderType = typeof(Course), Name = "Courses" },
+                new SliceViewSelectorViewModel { HeaderType = typeof(CourseType), Name = "Types of course" },
+                new SliceViewSelectorViewModel { HeaderType = typeof(DoubleClass), Name = "Periods" }
             };
 
             HorizontalSelector.SelectedIndex = 2;
-            VerticalSelector.SelectedIndex = 5;
+            VerticalSelector.SelectedIndex = 6;
         }
 
         private void InitializeExporters()

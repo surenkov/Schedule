@@ -5,7 +5,7 @@ namespace Schedule.Models
 {
     public enum CourseType
     {
-        Lection,
+        Lecture,
         Practice,
         Lab
     }

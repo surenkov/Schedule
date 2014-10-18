@@ -123,7 +123,7 @@ namespace Schedule.Models.DataLayer
                 new Schedule
                 {
                     Course = courses[0], 
-                    Type = CourseType.Lection, 
+                    Type = CourseType.Lecture, 
                     Teacher = teachers[2], 
                     Group = group,
                     StartDate = new DateTime(2014, 9, 1), 

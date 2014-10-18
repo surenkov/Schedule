@@ -80,6 +80,33 @@ namespace Schedule.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Лабораторная.
+        /// </summary>
+        internal static string Lab_Name {
+            get {
+                return ResourceManager.GetString("Lab_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Лекция.
+        /// </summary>
+        internal static string Lecture_Name {
+            get {
+                return ResourceManager.GetString("Lecture_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Практика.
+        /// </summary>
+        internal static string Practice_Name {
+            get {
+                return ResourceManager.GetString("Practice_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please fill end date.
         /// </summary>
         internal static string Schedule_EndDate_ErrMsg {
