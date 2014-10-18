@@ -227,7 +227,7 @@
                                 </Button>
                                 <TextBlock Text="{Binding Header}" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="5 0 0 0"/>
                             </DockPanel>
-                            <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource SliceCellItemsTemplate}"/>
+                            <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource SliceCellItemsTemplate}" Focusable="False"/>
                             <slices:SliceExpander Visibility="{Binding ExpanderVisibility, Converter={StaticResource ExpanderVisibilityConverter}}"
                                                       ItemTemplate="{StaticResource SliceCellItemsTemplate}"
                                                       IsExpanded="{Binding IsExpanded}"
@@ -312,6 +312,7 @@
     <Style TargetType="{x:Type slices:SliceExpander}">
         <Setter Property="Background" Value="White"/>
         <Setter Property="BorderBrush" Value="MediumPurple"/>
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type slices:SliceExpander}">
@@ -345,10 +346,10 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
-                        <ListView x:Name="listView" Grid.Row="0" Height="Auto" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding ItemTemplate}">
+                        <ListView x:Name="listView" Focusable="False" Grid.Row="0" Height="Auto" ItemsSource="{TemplateBinding ItemsSource}" ItemTemplate="{TemplateBinding ItemTemplate}">
                             <ListView.Template>
                                 <ControlTemplate TargetType="{x:Type ListView}">
-                                    <ItemsPresenter />
+                                    <ItemsPresenter Focusable="False"/>
                                 </ControlTemplate>
                             </ListView.Template>
                             <ListView.ItemsPanel>
@@ -361,7 +362,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                <ContentPresenter ContentSource="Content"/>
+                                                <ContentPresenter Focusable="False" ContentSource="Content"/>
                                             </ControlTemplate>
                                         </Setter.Value>
                                     </Setter>

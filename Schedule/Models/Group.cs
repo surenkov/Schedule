@@ -1,26 +1,28 @@
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 using Schedule.Annotations;
-using Schedule.Attributes;
+using Schedule.Utils.Attributes;
 
 namespace Schedule.Models
 {
-    using System;
-    using System.Collections.Generic;
-    
+
     public partial class Group : Entity
     {
         public Group()
         {
-            this.Students = new HashSet<Student>();
-            this.Schedule = new HashSet<Schedule>();
+            Students = new HashSet<Student>();
+            Schedule = new HashSet<Schedule>();
         }
 
         [NotNull]
         public string Name { get; set; }
-    
+
         [NotNull]
         public virtual Faculty Faculty { get; set; }
+        [Hidden]
         public virtual ICollection<Student> Students { get; set; }
+        [Hidden]
         public virtual ICollection<Schedule> Schedule { get; set; }
 
         public override string ToString()

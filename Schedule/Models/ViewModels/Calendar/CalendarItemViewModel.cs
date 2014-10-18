@@ -9,7 +9,7 @@ namespace Schedule.Models.ViewModels.Calendar
         private SolidColorBrush _brush;
         private ICollection<ScheduleCardViewModel> _items;
         private DoubleClass _period;
-        private IScheduleView _view;
+        private ScheduleView _view;
 
         public DoubleClass Period
         {
@@ -41,7 +41,7 @@ namespace Schedule.Models.ViewModels.Calendar
             }
         }
 
-        public IScheduleView View
+        public ScheduleView View
         {
             get { return _view; }
             set

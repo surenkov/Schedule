@@ -1,23 +1,18 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using Schedule.Attributes;
+using Schedule.Utils.Attributes;
 
 namespace Schedule.Models
 {
-    public abstract partial class Entity : IComparable
+    public abstract partial class Entity : IComparable<Entity>
     {
-        [Key, NotShown]
+        [Key, Hidden]
         public int Id { get; set; }
 
-        public int CompareTo(object obj)
+        public int CompareTo(Entity obj)
         {
-            var e = (Entity) obj;
-            if (this.GetType() != obj.GetType()) throw new StrongTypingException();
-            
-            if (Id == e.Id) return 0;
-            if (Id > e.Id) return 1;
-            return -1;
+            return Id.CompareTo(obj.Id);
         }
     }
 }

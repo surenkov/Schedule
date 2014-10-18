@@ -7,7 +7,7 @@ namespace Schedule.Models.ViewModels.Calendar
     sealed class CalendarDayViewModel : BaseViewModel
     {
         private DateTime _date;
-        private IScheduleView _view;
+        private ScheduleView _view;
         private IEnumerable<CalendarItemViewModel> _items;
 
         public DateTime Date
@@ -20,7 +20,7 @@ namespace Schedule.Models.ViewModels.Calendar
             }
         }
 
-        public IScheduleView View
+        public ScheduleView View
         {
             get { return _view; }
             set

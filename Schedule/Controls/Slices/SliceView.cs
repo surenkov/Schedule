@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using Schedule.Controls.Editors;
 using Schedule.Models.DataLayer;
 using Schedule.Models.ViewModels.Slices;
 using Schedule.Utils;
@@ -14,25 +12,23 @@ using Schedule.Utils.Conflicts;
 
 namespace Schedule.Controls.Slices
 {
-    public class SliceView : HeaderedItemsControl, IScheduleView
+    public class SliceView : ScheduleView
     {
-        public static readonly DependencyProperty HorizontalHeaderTypeProperty;
-        public static readonly DependencyProperty VerticalHeaderTypeProperty;
-        public static readonly DependencyProperty VerticalHeaderProperty;
-        public static readonly DependencyProperty FiltersProperty;
+        public static readonly DependencyProperty HorizontalHeaderTypeProperty = 
+            DependencyProperty.Register("HorizontalHeaderType", typeof(Type), typeof(SliceView), 
+                new PropertyMetadata(null, HorizontalHeaderTypePropertyChangedCallback));
+
+        public static readonly DependencyProperty VerticalHeaderTypeProperty = 
+            DependencyProperty.Register("VerticalHeaderType", typeof(Type), typeof(SliceView), 
+                new PropertyMetadata(null, VerticalHeaderTypePropertyChangedCallback));
+
+        public static readonly DependencyProperty VerticalHeaderProperty = 
+            DependencyProperty.Register("VerticalHeader", typeof(IEnumerable<object>), typeof(SliceView), 
+                new PropertyMetadata(null, VerticalHeaderChangedCallback));
 
         static SliceView()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(SliceView), new FrameworkPropertyMetadata(typeof(SliceView)));
-            VerticalHeaderProperty = DependencyProperty.Register("VerticalHeader", typeof(IEnumerable<object>),
-                typeof(SliceView), new PropertyMetadata(null, VerticalHeaderChangedCallback));
-
-            HorizontalHeaderTypeProperty = DependencyProperty.Register("HorizontalHeaderType", typeof(Type),
-                typeof(SliceView), new PropertyMetadata(null, HorizontalHeaderTypePropertyChangedCallback));
-            VerticalHeaderTypeProperty = DependencyProperty.Register("VerticalHeaderType", typeof(Type),
-                typeof(SliceView), new PropertyMetadata(null, VerticalHeaderTypePropertyChangedCallback));
-            FiltersProperty = DependencyProperty.Register("Filters", typeof(IEnumerable<Filter>), typeof(SliceView),
-                new PropertyMetadata(default(IEnumerable<Filter>)));
         }
 
         private static void VerticalHeaderTypePropertyChangedCallback(DependencyObject d,
@@ -75,13 +71,7 @@ namespace Schedule.Controls.Slices
             set { SetValue(VerticalHeaderTypeProperty, value); }
         }
 
-        public IEnumerable<Filter> Filters
-        {
-            get { return (IEnumerable<Filter>) GetValue(FiltersProperty); }
-            set { SetValue(FiltersProperty, value); }
-        }
-
-        public void UpdateView()
+        public override void UpdateView()
         {
             Update();
         }

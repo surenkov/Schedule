@@ -1,10 +1,10 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Globalization;
-using System.Collections.Generic;
 using ClosedXML.Excel;
 using Schedule.Controls.Slices;
 using Schedule.Models.ViewModels.Slices;
@@ -19,13 +19,21 @@ namespace Schedule.Utils.Export
             return "Microsoft Excel (*.xlsx)|*.xlsx";
         }
 
-        public void Save(string path, object source, IEnumerable<Controls.Editors.Filter> filters)
+        public Type SourceType()
+        {
+            return typeof(SliceView);
+        }
+
+        public void Save(string path, object source)
         {
             var workbook = new XLWorkbook();
             var view = source as SliceView;
 
-            SaveSchedule(workbook, view.ItemsSource as IEnumerable<SliceRowViewModel>);
-            SaveFilters(workbook, filters);
+            if (view != null)
+            {
+                SaveSchedule(workbook, view.ItemsSource as IEnumerable<SliceRowViewModel>);
+                SaveFilters(workbook, view.Filters);
+            }
 
             try
             {
@@ -92,7 +100,7 @@ namespace Schedule.Utils.Export
                 maxX = cellWidth * firsRow.Items.Count();
                 foreach (var cell in firsRow.Items)
                 {
-                    var hHeader = 
+                    var hHeader =
                         scheduleWorksheet.Range(startY - 1, currentX + startX, startY - 1, currentX + startX + cellWidth - 1);
                     hHeader.Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
                     hHeader.Style.Fill.BackgroundColor = XLColor.LightGray;
@@ -156,7 +164,7 @@ namespace Schedule.Utils.Export
                 maxY += cellHeight * Math.Max(row.Items.Max(p => p.Items.Count()), 1);
                 tableRange.Row(maxY).Style.Border.BottomBorder = XLBorderStyleValues.Thick;
 
-                var vHeader = scheduleWorksheet.Range(currentY + startY, startX - 1, 
+                var vHeader = scheduleWorksheet.Range(currentY + startY, startX - 1,
                     maxY + startY - 1, startX - 1);
                 vHeader.Style.Border.OutsideBorder = XLBorderStyleValues.Thick;
                 vHeader.Style.Fill.BackgroundColor = XLColor.LightGray;

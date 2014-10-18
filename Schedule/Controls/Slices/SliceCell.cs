@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Data.Entity;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Data.Entity.Validation;
 using System.Collections.Generic;
@@ -48,14 +47,15 @@ namespace Schedule.Controls.Slices
             if (model != null)
                 entities.UnionWith(model.Items.Select(m => m.Item).Union(model.ExpanderItems.Select(m => m.Item)));
 
-            var dlg = new EntityCardViewDialog();
+            var dlg = new EntityGridViewDialog();
+            dlg.ItemsChanged += (s, e) => View.UpdateView();
             dlg.Show();
             dlg.ItemsSource = entities;
         }
 
         protected override void OnAddButtonClick(object sender, RoutedEventArgs args)
         {
-            EditScheduleDialog dlg = new EditScheduleDialog(new Models.Schedule { StartDate = DateTime.Now.Date, EndDate = DateTime.Now.Date }) { ShowInTaskbar = true };
+            EditEntityDialog dlg = new EditEntityDialog(new Models.Schedule { StartDate = DateTime.Now.Date, EndDate = DateTime.Now.Date }) { ShowInTaskbar = true };
             dlg.Apply += delegate (object o, ApplyEventArgs eventArgs)
             {
                 var item = eventArgs.Item;

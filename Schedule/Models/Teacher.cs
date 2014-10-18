@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Schedule.Annotations;
-using Schedule.Attributes;
+using Schedule.Utils.Attributes;
 
 namespace Schedule.Models
 {
@@ -17,11 +17,12 @@ namespace Schedule.Models
     
         [NotNull, MaxLength(300)]
         public string Name { get; set; }
-        [NotShown]
+        [Hidden]
         public int FacultyId { get; set; }
         
         [NotNull]
         public virtual Faculty Faculty { get; set; }
+        [Hidden]
         public virtual ICollection<Course> Courses { get; set; }
 
 

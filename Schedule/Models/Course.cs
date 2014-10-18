@@ -1,11 +1,8 @@
-using Schedule.Attributes;
+using Schedule.Utils.Attributes;
+    using System.Collections.Generic;
 
 namespace Schedule.Models
 {
-    using System;
-    using System.Collections.Generic;
-
-
     public enum CourseType
     {
         Lection,
@@ -21,6 +18,7 @@ namespace Schedule.Models
         }
     
         public string Name { get; set; }
+        [Hidden]
         public virtual ICollection<Teacher> Teachers { get; set; }
 
         public override string ToString()

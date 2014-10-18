@@ -1,4 +1,4 @@
-﻿<Window x:Class="Schedule.Windows.EntityCardViewDialog"
+﻿<Window x:Class="Schedule.Windows.EntityGridViewDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Entities Data" Height="400" Width="640" Background="#EAEAEA"
@@ -17,17 +17,18 @@
                   MouseDoubleClick="DataGrid_OnMouseDoubleClick"
                   IsReadOnly="True" 
                   SelectionMode="Single" 
-                  SelectionUnit="FullRow"/>
+                  SelectionUnit="FullRow"
+                  AutoGenerateColumns="False"/>
         <GridSplitter Grid.Column="0" 
                       Width="2" 
                       VerticalAlignment="Stretch" 
                       HorizontalAlignment="Right" 
                       BorderBrush="LightGray" 
                       BorderThickness="1 0 0 0"/>
-        <DockPanel Grid.Column="1" x:Name="SettingsPanel" IsEnabled="False">
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="5 10">
-                <Button Content="Add Record" Margin="7 0" Padding="5 2" Click="AddRecordButton_OnClick"/>
-                <Button Content="Remove Record" Padding="5 2" Click="RemoveRecordButton_OnClick"/> 
+        <DockPanel Grid.Column="1">
+            <StackPanel x:Name="RecordsPanel" IsEnabled="False" DockPanel.Dock="Top" Orientation="Horizontal" Margin="5 10">
+                <Button x:Name="AddRecordButton" Content="Add Record" Margin="7 0" Padding="5 2" Click="AddRecordButton_OnClick"/>
+                <Button x:Name="RemoveRecordButton" Content="Remove Record" Padding="5 2" Click="RemoveRecordButton_OnClick"/> 
             </StackPanel>
             <CheckBox DockPanel.Dock="Top" Margin="10 0" IsChecked="{Binding ShowHiddenProperties}">Show all hidden fields</CheckBox>
             <GroupBox Header="Filters" DockPanel.Dock="Bottom" Margin="0 5 0 0">

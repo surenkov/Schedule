@@ -1,5 +1,5 @@
 using System.Globalization;
-using Schedule.Attributes;
+using Schedule.Utils.Attributes;
 
 namespace Schedule.Models
 {
@@ -20,10 +20,11 @@ namespace Schedule.Models
         public string Sign { get; set; }
         public ClassroomType Type { get; set; }
         public int Capacity { get; set; }
-        [NotShown]
+        [Hidden]
         public int BuildingId { get; set; }
     
         public virtual Building Building { get; set; }
+        [Hidden]
         public virtual ICollection<Schedule> Schedules { get; set; }
 
         public override string ToString()

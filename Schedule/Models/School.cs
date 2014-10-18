@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Schedule.Annotations;
-using Schedule.Attributes;
+using Schedule.Utils.Attributes;
 
 namespace Schedule.Models
 {
@@ -18,7 +18,9 @@ namespace Schedule.Models
         [NotNull]
         public string Name { get; set; }
     
+        [Hidden]
         public virtual ICollection<Building> Buildings { get; set; }
+        [Hidden]
         public virtual ICollection<Faculty> Faculties { get; set; }
 
         public override string ToString()

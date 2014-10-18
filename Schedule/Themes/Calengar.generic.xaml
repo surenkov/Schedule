@@ -233,7 +233,6 @@
         <Setter Property="Opacity" Value=".7"/>
         <Setter Property="Background" Value="White"/>
         <Setter Property="BorderBrush" Value="MediumPurple"/>
-        <Setter Property="MaxWidth" Value="205"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type calendar:CalendarDayItem}">
@@ -292,7 +291,7 @@
                                         <Setter Property="Template">
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                    <Border BorderBrush="#EFEFEF" BorderThickness="0 1 0 0" Padding="3" SnapsToDevicePixels="True">
+                                                    <Border BorderBrush="#EFEFEF" BorderThickness="0 1 0 0" SnapsToDevicePixels="True">
                                                         <ContentPresenter ContentSource="Content"/>
                                                     </Border>
                                                 </ControlTemplate>

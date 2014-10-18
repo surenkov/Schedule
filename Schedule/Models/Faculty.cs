@@ -1,5 +1,5 @@
 using Schedule.Annotations;
-using Schedule.Attributes;
+using Schedule.Utils.Attributes;
 
 namespace Schedule.Models
 {
@@ -16,12 +16,14 @@ namespace Schedule.Models
     
         [NotNull]
         public string Name { get; set; }
-        [NotShown]
+        [Hidden]
         public int SchoolId { get; set; }
     
         [NotNull]
         public virtual School School { get; set; }
+        [Hidden]
         public virtual ICollection<Teacher> Teachers { get; set; }
+        [Hidden]
         public virtual ICollection<Group> Groups { get; set; }
 
         public override string ToString()

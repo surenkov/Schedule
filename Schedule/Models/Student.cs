@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Schedule.Annotations;
-using Schedule.Attributes;
+using Schedule.Utils.Attributes;
 
 namespace Schedule.Models
 {

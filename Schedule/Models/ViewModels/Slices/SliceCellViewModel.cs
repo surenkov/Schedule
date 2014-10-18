@@ -7,7 +7,7 @@ namespace Schedule.Models.ViewModels.Slices
     {
         private IEnumerable<ScheduleCardViewModel> items;
         private IEnumerable<ScheduleCardViewModel> expanderItems;
-        private IScheduleView scheduleView;
+        private ScheduleView scheduleView;
         private object horizontalValue;
         private object verticalValue;
         private bool isExpanded;
@@ -34,7 +34,7 @@ namespace Schedule.Models.ViewModels.Slices
             }
         }
 
-        public IScheduleView ScheduleView
+        public ScheduleView ScheduleView
         {
             get { return scheduleView; }
             set

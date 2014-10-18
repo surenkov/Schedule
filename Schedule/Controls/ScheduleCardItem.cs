@@ -28,7 +28,7 @@ namespace Schedule.Controls
                 new FrameworkPropertyMetadata(typeof(ScheduleCardItem)));
 
             ItemProperty = DependencyProperty.Register("Item", typeof(Models.Schedule), typeof(ScheduleCardItem));
-            ScheduleViewProperty = DependencyProperty.Register("ScheduleView", typeof(IScheduleView), typeof(ScheduleCardItem));
+            ScheduleViewProperty = DependencyProperty.Register("ScheduleView", typeof(ScheduleView), typeof(ScheduleCardItem));
         }
 
         public Models.Schedule Item
@@ -37,9 +37,9 @@ namespace Schedule.Controls
             set { SetValue(ItemProperty, value); }
         }
 
-        public IScheduleView ScheduleView
+        public ScheduleView ScheduleView
         {
-            get { return (IScheduleView) GetValue(ScheduleViewProperty); }
+            get { return (ScheduleView) GetValue(ScheduleViewProperty); }
             set { SetValue(ScheduleViewProperty, value); }
         }
 
@@ -80,7 +80,7 @@ namespace Schedule.Controls
 
         private void EditButtonOnClick(object sender, RoutedEventArgs routedEventArgs)
         {
-            var dlg = new EditScheduleDialog(Item, true) { ShowInTaskbar = true };
+            var dlg = new EditEntityDialog(Item, true) { ShowInTaskbar = true };
             dlg.Apply += delegate(object o, ApplyEventArgs args)
             {
                 bool noExcept = true;

@@ -17,11 +17,11 @@ namespace Schedule.Controls
         private Button viewButton;
 
         public static readonly DependencyProperty ViewProperty =
-            DependencyProperty.Register("View", typeof(IScheduleView), typeof(ScheduleCell));
+            DependencyProperty.Register("View", typeof(ScheduleView), typeof(ScheduleCell));
 
-        public IScheduleView View
+        public ScheduleView View
         {
-            get { return (IScheduleView)GetValue(ViewProperty); }
+            get { return (ScheduleView)GetValue(ViewProperty); }
             set { SetValue(ViewProperty, value); }
         }
 

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using Schedule.Controls.Editors;
 using Schedule.Models.ViewModels.Calendar;
 using Schedule.Utils;
 using Schedule.Utils.Filters;
@@ -16,26 +14,22 @@ namespace Schedule.Controls.Calendar
 {
     public delegate IEnumerable<Models.Schedule> UpdateScheduleSourceTrigger(DateTime starTime, DateTime endTime);
 
-    public class Calendar : Control, IScheduleView
+    public class Calendar : ScheduleView
     {
-        public static readonly DependencyProperty DateProperty;
-        public static readonly DependencyProperty UpdateSourceProperty;
-        public static readonly DependencyProperty FiltersProperty;
+        public static readonly DependencyProperty DateProperty = 
+            DependencyProperty.Register("Date", typeof(DateTime), typeof(Calendar), 
+                new FrameworkPropertyMetadata(DateTime.Now, DateChangedCallback));
+
+        public static readonly DependencyProperty UpdateSourceProperty = 
+            DependencyProperty.Register("UpdateSource", typeof(UpdateScheduleSourceTrigger),
+                typeof(Calendar), new PropertyMetadata(null));
 
         private const int MaxDays = 42;
         private readonly DispatcherTimer _timer;
 
         static Calendar()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(Calendar),
-                new FrameworkPropertyMetadata(typeof(Calendar)));
-
-            DateProperty = DependencyProperty.Register("Date",
-                typeof(DateTime), typeof(Calendar), new FrameworkPropertyMetadata(DateTime.Now, DateChangedCallback));
-            UpdateSourceProperty = DependencyProperty.Register("UpdateSource", typeof(UpdateScheduleSourceTrigger),
-                typeof(Calendar), new PropertyMetadata(null));
-            FiltersProperty = DependencyProperty.Register("Filters", typeof(IEnumerable<Filter>), typeof(Calendar),
-                new PropertyMetadata(default(IEnumerable<Filter>)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(Calendar), new FrameworkPropertyMetadata(typeof(Calendar)));
         }
 
         public Calendar()
@@ -60,12 +54,6 @@ namespace Schedule.Controls.Calendar
             set { SetValue(UpdateSourceProperty, value); }
         }
 
-        public IEnumerable<Filter> Filters
-        {
-            get { return (IEnumerable<Filter>) GetValue(FiltersProperty); }
-            set { SetValue(FiltersProperty, value); }
-        }
-
         public static IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
         {
             if (depObj == null) yield break;
@@ -83,7 +71,7 @@ namespace Schedule.Controls.Calendar
             _timer.Start();
         }
 
-        public void UpdateView()
+        public override void UpdateView()
         {
             var startDay = new DateTime(Date.Year, Date.Month, 1);
             while (startDay.DayOfWeek != CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek)

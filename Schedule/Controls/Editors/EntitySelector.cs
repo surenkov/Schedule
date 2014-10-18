@@ -50,7 +50,7 @@ namespace Schedule.Controls.Editors
             if (ItemsType == null) return;
 
             var i = Activator.CreateInstance(ItemsType) as Entity;
-            var dlg = new EditScheduleDialog(i);
+            var dlg = new EditEntityDialog(i);
             dlg.Apply += delegate(object o, ApplyEventArgs args)
             {
                 var item = args.Item;

@@ -14,13 +14,14 @@ using Schedule.Utils.Export;
 using Microsoft.Win32;
 using System.Text;
 using System.Data.Entity;
+using Schedule.Controls.Slices;
 
 namespace Schedule.Windows
 {
     public partial class MainWindow : Window
     {
-        private FiltersFactory _filterFactory;
-        private List<IExporter> _exporters;
+        private FiltersFactory filterFactory;
+        private List<IExporter> exporters;
 
         public static readonly DependencyProperty CalendarVisibilityProperty = 
             DependencyProperty.Register("CalendarVisibility", typeof(bool), typeof(MainWindow),
@@ -81,7 +82,7 @@ namespace Schedule.Windows
             InitializeExporters();
             Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
-            _filterFactory = new FiltersFactory(FiltersPanel, typeof(Models.Schedule), 30);
+            filterFactory = new FiltersFactory(FiltersPanel, typeof(Models.Schedule), 30);
         }
 
         private void InitializeCardMenu()
@@ -118,7 +119,7 @@ namespace Schedule.Windows
 
         private void InitializeExporters()
         {
-            _exporters = new List<IExporter> {
+            exporters = new List<IExporter> {
                 new HtmlExporter(),
                 new OpenXmlSpreadsheetExporter()
             };
@@ -139,14 +140,22 @@ namespace Schedule.Windows
             SaveFileDialog dlg = new SaveFileDialog();
             StringBuilder fmts = new StringBuilder();
 
-            foreach (var exp in _exporters)
+            foreach (var exp in exporters)
                 fmts.Append(exp.FormatString() + "|");
-            fmts.Remove(fmts.Length - 1, 1);
-            dlg.Filter = fmts.ToString();
+            dlg.Filter = fmts.Remove(fmts.Length - 1, 1).ToString();
             dlg.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 
+            Dictionary<Type, object> sources = new Dictionary<Type, object>
+            {
+                { typeof(SliceView), MainSliceView },
+                { typeof(Calendar), MainCalendar }
+            };
+
             if (dlg.ShowDialog() == true)
-                _exporters[dlg.FilterIndex - 1].Save(dlg.FileName, MainSliceView, FiltersPanel.Children.OfType<Filter>());
+            {
+                var exporter = exporters[dlg.FilterIndex - 1];
+                exporter.Save(dlg.FileName, sources[exporter.SourceType()]);
+            }
         }
 
         private void Window_ShowConflicts(object sender, RoutedEventArgs e)
@@ -182,10 +191,10 @@ namespace Schedule.Windows
             var item = sender as MenuItem;
             if (item != null)
             {
-                var dlg = new EntityCardViewDialog();
+                var dlg = new EntityGridViewDialog();
                 dlg.Show();
 
-                dlg.UpdateEvent = delegate ()
+                dlg.LoadEvent = delegate ()
                 {
                     var type = item.Tag as Type;
                     using (ScheduleDbContext ctx = new ScheduleDbContext())
@@ -223,7 +232,7 @@ namespace Schedule.Windows
 
         private void AddFilterButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var filter = _filterFactory.CreateFilter();
+            var filter = filterFactory.CreateFilter();
             FiltersPanel.Children.Add(filter);
         }
 

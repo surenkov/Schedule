@@ -5,7 +5,7 @@ namespace Schedule.Models.ViewModels
     public class ScheduleCardViewModel : BaseViewModel
     {
         private Schedule item;
-        private IScheduleView scheduleView;
+        private ScheduleView scheduleView;
         private bool hasConflict;
 
         public Schedule Item
@@ -18,7 +18,7 @@ namespace Schedule.Models.ViewModels
             }
         }
 
-        public IScheduleView ScheduleView
+        public ScheduleView ScheduleView
         {
             get { return scheduleView; }
             set

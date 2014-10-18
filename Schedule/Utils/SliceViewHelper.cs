@@ -33,10 +33,10 @@ namespace Schedule.Utils
                 { typeof(DoubleClass), (header, item) => item.DoubleClass == (DoubleClass) header },
                 { typeof(CourseType), (header, item) => item.Type == (CourseType) header },
                 { typeof(DayOfWeek), (header, item) => item.DaysOfWeek().Contains((DayOfWeek)header) },
-                { typeof(Teacher), (header, item) => item.Teacher.CompareTo(header as IComparable) == 0 },
-                { typeof(Course), (header, item) => item.Course.CompareTo(header as IComparable) == 0 },
-                { typeof(Group), (header, item) => item.Group.CompareTo(header as IComparable) == 0 },
-                { typeof(Classroom), (header, item) => item.Class.CompareTo(header as IComparable) == 0 },
+                { typeof(Teacher), (header, item) => item.Teacher.CompareTo(header as Entity) == 0 },
+                { typeof(Course), (header, item) => item.Course.CompareTo(header as Entity) == 0 },
+                { typeof(Group), (header, item) => item.Group.CompareTo(header as Entity) == 0 },
+                { typeof(Classroom), (header, item) => item.Class.CompareTo(header as Entity) == 0 },
             };
 
         private static IEnumerable<object> FillEnumHeader(Type type)

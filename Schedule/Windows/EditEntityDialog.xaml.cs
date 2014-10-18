@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Schedule.Attributes;
+using Schedule.Utils.Attributes;
 using Schedule.Models;
 using Schedule.Models.DataLayer;
 using Schedule.Utils;
@@ -23,37 +23,25 @@ namespace Schedule.Windows
         public Entity Item { get; set; }
     }
 
-    public partial class EditScheduleDialog : Window
+    public partial class EditEntityDialog : Window
     {
-        public static readonly RoutedEvent ApplyEvent;
-        public static readonly DependencyProperty ItemProperty;
-        static EditScheduleDialog()
-        {
-            ItemProperty = DependencyProperty.Register("Item", typeof(Entity), typeof(EditScheduleDialog));
+        public static readonly RoutedEvent ApplyEvent =
+            EventManager.RegisterRoutedEvent("Apply", RoutingStrategy.Direct, typeof(ApplyEventHandler),
+                typeof(EditEntityDialog));
 
-            ApplyEvent = EventManager.RegisterRoutedEvent("Apply", RoutingStrategy.Direct, typeof(ApplyEventHandler),
-                typeof(EditScheduleDialog));
-        }
+        public static readonly DependencyProperty ItemProperty =
+            DependencyProperty.Register("Item", typeof(Entity), typeof(EditEntityDialog));
 
-        public EditScheduleDialog(Entity entity = null, bool copy = false)
+        public EditEntityDialog(Entity entity = null, bool copy = false)
         {
             InitializeComponent();
             CloseButton.Click += (s, a) => Close();
 
             if (copy)
-            {
-                using (ScheduleDbContext ctx = new ScheduleDbContext())
-                {
-                    if (entity != null)
-                        Item = ctx.Set(entity.GetType()).Find(entity.Id) as Entity;
-                    else
-                        Item = null;
-                }
-            }
+                LoadEntity(entity);
             else
-            {
                 Item = entity;
-            }
+
             InitEditors();
         }
 
@@ -65,12 +53,21 @@ namespace Schedule.Windows
 
         private Entity Item
         {
-            get { return (Entity) GetValue(ItemProperty); }
+            get { return (Entity)GetValue(ItemProperty); }
             set { SetValue(ItemProperty, value); }
         }
         private void ApplyButton_OnClick(object sender, RoutedEventArgs e)
         {
             RaiseEvent(new ApplyEventArgs(ApplyEvent, Item));
+        }
+
+        private void LoadEntity(Entity entity)
+        {
+            using (ScheduleDbContext ctx = new ScheduleDbContext())
+            {
+                if (entity != null)
+                    Item = ctx.Set(entity.GetType()).Find(entity.Id) as Entity;
+            }
         }
 
         private void InitEditors()
@@ -85,11 +82,12 @@ namespace Schedule.Windows
             foreach (var property in properties)
             {
                 var descr = property.GetCustomAttribute(typeof(DescriptionAttribute)) as DescriptionAttribute;
-                var shown = property.GetCustomAttribute(typeof(NotShownAttribute)) as NotShownAttribute;
+                var hide = property.GetCustomAttribute(typeof(HiddenAttribute)) as HiddenAttribute;
 
-                if (shown != null && !shown.Shown) continue;
+                if (hide != null && hide.Hidden) continue;
                 if (property.PropertyType != typeof(string) &&
-                    property.PropertyType.GetInterface("IEnumerable") != null) continue;
+                    property.PropertyType.GetInterface("IEnumerable") != null)
+                    continue;
 
                 EditorsGrid.RowDefinitions.Add(new RowDefinition());
                 string caption = descr != null ? descr.Description : property.Name;

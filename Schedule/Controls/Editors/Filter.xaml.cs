@@ -18,9 +18,14 @@ namespace Schedule.Controls.Editors
     public partial class Filter : UserControl
     {
         private Control _control;
+
         public static readonly DependencyProperty PropertiesProperty =
             DependencyProperty.Register("Properties", typeof(ICollection<PropertyInfo>), typeof(Filter),
                 new PropertyMetadata(default(ICollection<PropertyInfo>)));
+
+        public static readonly DependencyProperty ValueProperty = 
+            DependencyProperty.Register("Value", typeof(object), typeof(Filter), 
+                new PropertyMetadata(default(object)));
 
         public ICollection<PropertyInfo> Properties
         {
@@ -28,12 +33,9 @@ namespace Schedule.Controls.Editors
             set { SetValue(PropertiesProperty, value); }
         }
 
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-            "Value", typeof(object), typeof(Filter), new PropertyMetadata(default(object)));
-
         public object Value
         {
-            get { return (object)GetValue(ValueProperty); }
+            get { return GetValue(ValueProperty); }
             set { SetValue(ValueProperty, value); }
         }
 

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Collections;
 using System.Globalization;
 using System.Collections.Generic;
-using Schedule.Controls.Editors;
 using Schedule.Controls.Slices;
 using Schedule.Models.ViewModels.Slices;
 using Schedule.Utils.ValueConverters;
+using System;
 
 namespace Schedule.Utils.Export
 {
@@ -18,7 +18,12 @@ namespace Schedule.Utils.Export
             return "HTML page (*.html)|*.html;*.htm";
         }
 
-        public void Save(string path, object source, IEnumerable<Filter> filters)
+        public Type SourceType()
+        {
+            return typeof(SliceView);
+        }
+
+        public void Save(string path, object source)
         {
             StringBuilder htmlData = new StringBuilder();
 
@@ -33,28 +38,28 @@ namespace Schedule.Utils.Export
             htmlData.Append("</head>");
             htmlData.Append("<body>");
 
-            if (filters != null && filters.Count() > 0)
-            {
-                PropertyToStringConverter converter = new PropertyToStringConverter();
-                htmlData.Append("<table id=\"filters-table\">");
-                htmlData.Append("<caption>Applied filters</caption>");
-                htmlData.Append(@"<thead><tr><th>Property</th><th><div class=""v-header"">&nbsp;</div></th><th>Value</th</tr></thead><tbody>");
-                foreach (var filter in filters)
-                {
-                    htmlData.Append("<tr>");
-                    htmlData.Append("<td>" + (string)converter.Convert(filter.PropertiesBox.SelectedItem, typeof(string), null, CultureInfo.CurrentCulture) + "</td>");
-                    htmlData.Append("<td>" + filter.ConditionsBox.SelectedItem + "</td>");
-                    htmlData.Append("<td>" + filter.Value + "</td>");
-                    htmlData.Append("</tr>");
-                }
-                htmlData.Append("</tbody></table>");
-            }
-
             var view = source as SliceView;
             if (view != null)
             {
-                var hItems = view.Header as IEnumerable;
+                var filters = view.Filters;
+                if (filters != null && filters.Count() > 0)
+                {
+                    PropertyToStringConverter converter = new PropertyToStringConverter();
+                    htmlData.Append("<table id=\"filters-table\">");
+                    htmlData.Append("<caption>Applied filters</caption>");
+                    htmlData.Append(@"<thead><tr><th>Property</th><th><div class=""v-header"">&nbsp;</div></th><th>Value</th</tr></thead><tbody>");
+                    foreach (var filter in filters)
+                    {
+                        htmlData.Append("<tr>");
+                        htmlData.Append("<td>" + (string)converter.Convert(filter.PropertiesBox.SelectedItem, typeof(string), null, CultureInfo.CurrentCulture) + "</td>");
+                        htmlData.Append("<td>" + filter.ConditionsBox.SelectedItem + "</td>");
+                        htmlData.Append("<td>" + filter.Value + "</td>");
+                        htmlData.Append("</tr>");
+                    }
+                    htmlData.Append("</tbody></table>");
+                }
 
+                var hItems = view.Header as IEnumerable;
                 htmlData.Append("<table id=\"schedule-table\"><caption>Schedule</caption><thead><tr>");
                 htmlData.Append("<th class=\"empty\">&nbsp;</th>");
                 foreach (var item in hItems)

@@ -15,6 +15,7 @@
     <WarningLevel>4</WarningLevel>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <ExpressionBlendVersion>12.0.50716.0</ExpressionBlendVersion>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -29,7 +30,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -102,7 +102,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Attributes\NotShownAttribute.cs" />
+    <Compile Include="Utils\Attributes\HiddenAttribute.cs" />
     <Compile Include="Controls\Calendar\CalendarHeader.cs" />
     <Compile Include="Controls\Calendar\CalendarHeaderItem.cs" />
     <Compile Include="Controls\Calendar\CalendarMonthSelector.xaml.cs">
@@ -113,7 +113,7 @@
     <Compile Include="Controls\Editors\Filter.xaml.cs">
       <DependentUpon>Filter.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\IScheduleView.cs" />
+    <Compile Include="Controls\ScheduleView.cs" />
     <Compile Include="Controls\ScheduleCell.cs" />
     <Compile Include="Controls\Slices\SliceCell.cs" />
     <Compile Include="Controls\Slices\SliceExpander.cs" />
@@ -151,10 +151,11 @@
     <Compile Include="Utils\ScheduleDbExceptionExtender.cs" />
     <Compile Include="Utils\ScheduleMapper.cs" />
     <Compile Include="Utils\SliceViewHelper.cs" />
+    <Compile Include="Utils\ValueConverters\CourseTypeToStringConverter.cs" />
     <Compile Include="Utils\ValueConverters\PropertyToStringConverter.cs" />
     <Compile Include="Utils\ValueConverters\StringToComparerConverter.cs" />
-    <Compile Include="Windows\EntityCardViewDialog.xaml.cs">
-      <DependentUpon>EntityCardViewDialog.xaml</DependentUpon>
+    <Compile Include="Windows\EntityGridViewDialog.xaml.cs">
+      <DependentUpon>EntityGridViewDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\Calendar\CalendarMonthSelector.xaml">
       <SubType>Designer</SubType>
@@ -189,11 +190,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\EditScheduleDialog.xaml">
+    <Page Include="Windows\EditEntityDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\EntityCardViewDialog.xaml">
+    <Page Include="Windows\EntityGridViewDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -228,8 +229,8 @@
     <Compile Include="Windows\ConflictsWindow.xaml.cs">
       <DependentUpon>ConflictsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\EditScheduleDialog.xaml.cs">
-      <DependentUpon>EditScheduleDialog.xaml</DependentUpon>
+    <Compile Include="Windows\EditEntityDialog.xaml.cs">
+      <DependentUpon>EditEntityDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
