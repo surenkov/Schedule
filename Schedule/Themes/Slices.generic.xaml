@@ -217,10 +217,10 @@
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <StackPanel>
                             <DockPanel>
-                                <Button DockPanel.Dock="Right" Height="25" Width="25" x:Name="PART_AddButton" Style="{StaticResource SliceButtonStyle}">
+                                <Button DockPanel.Dock="Right" Height="25" Width="25" x:Name="PART_AddButton" Style="{StaticResource SliceButtonStyle}" ToolTip="Add new schedule record here">
                                     <Path Data="M 4 4 l 0 -4 2 0 0 4 4 0 0 2 -4 0 0 4 -2 0 0 -4 -4 0 0 -2 Z" Fill="{TemplateBinding Foreground}" SnapsToDevicePixels="False"/>
                                 </Button>
-                                <Button DockPanel.Dock="Right" Height="25" Width="25" x:Name="PART_ViewButton" Style="{StaticResource SliceButtonStyle}">
+                                <Button DockPanel.Dock="Right" Height="25" Width="25" x:Name="PART_ViewButton" Style="{StaticResource SliceButtonStyle}" ToolTip="View all items in cell">
                                     <WrapPanel Width="15" Height="10">
                                         <Path Data="F 1 M 305.801,388 C 297.801,388 293,395.949 293,395.949 293,395.949 297.801,404 305.801,404 313.801,404 318.602,396 318.602,396 318.602,396 313.801,388 305.801,388 L 305.801,388 Z M 305.801,402.398 C 298.801,402.398 295,396 295,396 295,396 298.801,389.602 305.801,389.602 312.801,389.602 316.602,396 316.602,396 316.602,396 312.801,402.398 305.801,402.398 L 305.801,402.398 Z M 310.602,396 C 310.602,398.652 308.45,400.801 305.801,400.801 303.148,400.801 301,398.653 301,396 301,393.348 303.148,391.199 305.801,391.199 308.449,391.199 310.602,393.348 310.602,396 L 310.602,396 Z" Fill="{TemplateBinding Foreground}" SnapsToDevicePixels="False" Stretch="Fill"/>
                                     </WrapPanel>
