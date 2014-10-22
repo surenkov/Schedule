@@ -102,8 +102,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\Editors\SliceDatesSelector.xaml.cs">
-      <DependentUpon>SliceDatesSelector.xaml</DependentUpon>
+    <Compile Include="Controls\Editors\ScheduleDatesSelector.xaml.cs">
+      <DependentUpon>ScheduleDatesSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\Attributes\HiddenAttribute.cs" />
     <Compile Include="Controls\Calendar\CalendarHeader.cs" />
@@ -168,7 +168,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Editors\SliceDatesSelector.xaml">
+    <Page Include="Controls\Editors\ScheduleDatesSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

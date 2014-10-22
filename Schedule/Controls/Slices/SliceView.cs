@@ -127,10 +127,18 @@ namespace Schedule.Controls.Slices
             {
                 if (Header == null || VerticalHeader == null) return;
 
-                var q = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building")
+                HashSet<DayOfWeek> days = new HashSet<DayOfWeek>();
+                DateTime date = StartDate;
+                do
+                {
+                    days.Add(date.DayOfWeek);
+                    date = date.AddDays(1);
+                } while (!days.Contains(date.DayOfWeek) && date <= EndDate);
+
+                var q = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building").ApplyFilters(Filters).Cast<Models.Schedule>()
                         where s.EndDate >= StartDate && s.StartDate <= EndDate
                         select s;
-                var itemsList = q.ApplyFilters(Filters).Cast<Models.Schedule>().ToList();
+                var itemsList = q.Where(s => s.DaysOfWeek().Intersect(days).Count() > 0).ToList();
 
                 var horizontalHeaderItems = Header as IEnumerable;
                 var vericalHeaderItems = VerticalHeader.Cast<object>().Select(item => new SliceRowViewModel

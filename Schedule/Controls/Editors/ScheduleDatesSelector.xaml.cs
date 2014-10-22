@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace Schedule.Controls.Editors
 {
-    public partial class SliceDatesSelector : UserControl
+    public partial class ScheduleDatesSelector : UserControl
     {
         public DateTime StartDate
         {
@@ -13,7 +13,7 @@ namespace Schedule.Controls.Editors
         }
 
         public static readonly DependencyProperty StartDateProperty =
-            DependencyProperty.Register("StartDate", typeof(DateTime), typeof(SliceDatesSelector), 
+            DependencyProperty.Register("StartDate", typeof(DateTime), typeof(ScheduleDatesSelector), 
                 new PropertyMetadata(DateTime.Now.Date));
 
         public DateTime EndDate
@@ -23,11 +23,11 @@ namespace Schedule.Controls.Editors
         }
 
         public static readonly DependencyProperty EndDateProperty =
-            DependencyProperty.Register("EndDate", typeof(DateTime), typeof(SliceDatesSelector), 
+            DependencyProperty.Register("EndDate", typeof(DateTime), typeof(ScheduleDatesSelector), 
                 new PropertyMetadata(DateTime.Now.Date.AddMonths(1)));
 
 
-        public SliceDatesSelector()
+        public ScheduleDatesSelector()
         {
             InitializeComponent();
 

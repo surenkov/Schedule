@@ -36,6 +36,14 @@ namespace Schedule.Windows
             DependencyProperty.Register("SelectorViewModels", typeof(ISet<SliceViewSelectorViewModel>), typeof(MainWindow),
                 new PropertyMetadata(default(ISet<SliceViewSelectorViewModel>)));
 
+        public static readonly DependencyProperty StartDateProperty =
+            DependencyProperty.Register("StartDate", typeof(DateTime), typeof(MainWindow),
+                new PropertyMetadata(DateTime.Now.Date));
+
+        public static readonly DependencyProperty EndDateProperty =
+            DependencyProperty.Register("EndDate", typeof(DateTime), typeof(MainWindow),
+                new PropertyMetadata(DateTime.Now.Date.AddMonths(1)));
+
         public bool CalendarVisibility
         {
             get { return (bool)GetValue(CalendarVisibilityProperty); }
@@ -52,6 +60,18 @@ namespace Schedule.Windows
         {
             get { return (ISet<SliceViewSelectorViewModel>)GetValue(SelectorViewModelsProperty); }
             set { SetValue(SelectorViewModelsProperty, value); }
+        }
+
+        public DateTime StartDate
+        {
+            get { return (DateTime)GetValue(StartDateProperty); }
+            set { SetValue(StartDateProperty, value); }
+        }
+
+        public DateTime EndDate
+        {
+            get { return (DateTime)GetValue(EndDateProperty); }
+            set { SetValue(EndDateProperty, value); }
         }
 
         private static void OnCalendarVisibilityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
