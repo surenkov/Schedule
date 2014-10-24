@@ -13,24 +13,24 @@ namespace Schedule.Controls.Slices
 {
     public class SliceView : ScheduleView
     {
-        public static readonly DependencyProperty HorizontalHeaderTypeProperty = 
-            DependencyProperty.Register("HorizontalHeaderType", typeof(Type), typeof(SliceView), 
+        public static readonly DependencyProperty HorizontalHeaderTypeProperty =
+            DependencyProperty.Register("HorizontalHeaderType", typeof(Type), typeof(SliceView),
                 new PropertyMetadata(null, HorizontalHeaderTypePropertyChangedCallback));
 
-        public static readonly DependencyProperty VerticalHeaderTypeProperty = 
-            DependencyProperty.Register("VerticalHeaderType", typeof(Type), typeof(SliceView), 
+        public static readonly DependencyProperty VerticalHeaderTypeProperty =
+            DependencyProperty.Register("VerticalHeaderType", typeof(Type), typeof(SliceView),
                 new PropertyMetadata(null, VerticalHeaderTypePropertyChangedCallback));
 
-        public static readonly DependencyProperty VerticalHeaderProperty = 
-            DependencyProperty.Register("VerticalHeader", typeof(IEnumerable), typeof(SliceView), 
+        public static readonly DependencyProperty VerticalHeaderProperty =
+            DependencyProperty.Register("VerticalHeader", typeof(IEnumerable), typeof(SliceView),
                 new PropertyMetadata(null, VerticalHeaderChangedCallback));
 
         public static readonly DependencyProperty StartDateProperty =
-            DependencyProperty.Register("StartDate", typeof(DateTime), typeof(SliceView), 
+            DependencyProperty.Register("StartDate", typeof(DateTime), typeof(SliceView),
                 new PropertyMetadata(DateTime.Now.Date, DatesChangedCallback));
 
         public static readonly DependencyProperty EndDateProperty =
-            DependencyProperty.Register("EndDate", typeof(DateTime), typeof(SliceView), 
+            DependencyProperty.Register("EndDate", typeof(DateTime), typeof(SliceView),
                 new PropertyMetadata(DateTime.Now.Date.AddMonths(1), DatesChangedCallback));
 
         static SliceView()
@@ -65,31 +65,34 @@ namespace Schedule.Controls.Slices
             var view = d as SliceView;
             if (view != null)
             {
-                Type headerType = view.HorizontalHeaderType;
-                view.HorizontalHeaderType = null;
-                view.HorizontalHeaderType = headerType;
+                if (view.CheckInterval())
+                {
+                    Type headerType = view.HorizontalHeaderType;
+                    view.HorizontalHeaderType = null;
+                    view.HorizontalHeaderType = headerType;
 
-                headerType = view.VerticalHeaderType;
-                view.VerticalHeaderType = null;
-                view.VerticalHeaderType = headerType;
+                    headerType = view.VerticalHeaderType;
+                    view.VerticalHeaderType = null;
+                    view.VerticalHeaderType = headerType;
+                }
             }
         }
 
         public IEnumerable VerticalHeader
         {
-            get { return (IEnumerable) GetValue(VerticalHeaderProperty); }
+            get { return (IEnumerable)GetValue(VerticalHeaderProperty); }
             set { SetValue(VerticalHeaderProperty, value); }
         }
 
         public Type HorizontalHeaderType
         {
-            get { return (Type) GetValue(HorizontalHeaderTypeProperty); }
+            get { return (Type)GetValue(HorizontalHeaderTypeProperty); }
             set { SetValue(HorizontalHeaderTypeProperty, value); }
         }
 
         public Type VerticalHeaderType
         {
-            get { return (Type) GetValue(VerticalHeaderTypeProperty); }
+            get { return (Type)GetValue(VerticalHeaderTypeProperty); }
             set { SetValue(VerticalHeaderTypeProperty, value); }
         }
 
@@ -121,24 +124,31 @@ namespace Schedule.Controls.Slices
             Update();
         }
 
+        private bool CheckInterval()
+        {
+            int interval = Properties.Settings.Default.MaxInterval;
+            bool valid = (EndDate - StartDate).Days <= interval;
+            if (!valid)
+            {
+                MessageBox.Show(string.Format(Properties.Resources.Schedule_BigInterval, interval));
+                EndDate = StartDate.AddDays(interval);
+            }
+            return valid;
+        }
+
         private void Update()
         {
             using (ScheduleDbContext ctx = new ScheduleDbContext())
             {
                 if (Header == null || VerticalHeader == null) return;
 
-                HashSet<DayOfWeek> days = new HashSet<DayOfWeek>();
-                DateTime date = StartDate;
-                do
-                {
-                    days.Add(date.DayOfWeek);
-                    date = date.AddDays(1);
-                } while (!days.Contains(date.DayOfWeek) && date <= EndDate);
-
                 var q = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building").ApplyFilters(Filters).Cast<Models.Schedule>()
                         where s.EndDate >= StartDate && s.StartDate <= EndDate
                         select s;
-                var itemsList = q.Where(s => s.DaysOfWeek().Intersect(days).Count() > 0).ToList();
+
+                HashSet<Models.Schedule> itemsList = new HashSet<Models.Schedule>();
+                for (DateTime date = StartDate; date <= EndDate; date = date.AddDays(1))
+                    itemsList.UnionWith(q.Where(s => date >= s.StartDate && date <= s.EndDate && (date - s.StartDate).Days % s.Interval == 0));
 
                 var horizontalHeaderItems = Header as IEnumerable;
                 var vericalHeaderItems = VerticalHeader.Cast<object>().Select(item => new SliceRowViewModel

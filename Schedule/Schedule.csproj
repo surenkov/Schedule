@@ -57,6 +57,9 @@
   <PropertyGroup>
     <StartupObject>Schedule.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ClosedXML">
       <HintPath>..\packages\ClosedXML.0.75.0\lib\net40-client\ClosedXML.dll</HintPath>
@@ -145,7 +148,7 @@
     <Compile Include="Utils\EditorsFactory.cs" />
     <Compile Include="Utils\EditorsMapper.cs" />
     <Compile Include="Utils\Export\HtmlExporter.cs" />
-    <Compile Include="Utils\Export\IExporter.cs" />
+    <Compile Include="Utils\Export\Exporter.cs" />
     <Compile Include="Utils\Export\OpenXmlSpreadsheetExporter.cs" />
     <Compile Include="Utils\Filters\FilterEditorsFactory.cs" />
     <Compile Include="Utils\Filters\FiltersExtender.cs" />
@@ -296,6 +299,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\bullet_red.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

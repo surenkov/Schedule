@@ -12,19 +12,19 @@ using Schedule.Utils.ValueConverters;
 
 namespace Schedule.Utils.Export
 {
-    internal class OpenXmlSpreadsheetExporter : IExporter
+    public class OpenXmlSpreadsheetExporter : Exporter
     {
-        public string FormatString()
+        public override string FormatString()
         {
             return "Microsoft Excel (*.xlsx)|*.xlsx";
         }
 
-        public Type SourceType()
+        public override Type SourceType()
         {
             return typeof(SliceView);
         }
 
-        public void Save(string path, object source)
+        public override void Save(string path, object source)
         {
             var workbook = new XLWorkbook();
             var view = source as SliceView;

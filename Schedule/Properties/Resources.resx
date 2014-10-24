@@ -140,4 +140,7 @@
   <data name="Practice_Name" xml:space="preserve">
     <value>Практика</value>
   </data>
+  <data name="Schedule_BigInterval" xml:space="preserve">
+    <value>Please specify interval less than {0} days</value>
+  </data>
 </root>
