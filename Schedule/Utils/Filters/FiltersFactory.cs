@@ -1,27 +1,27 @@
 ﻿using System;
 using System.Windows.Controls;
 using Schedule.Controls.Editors;
+using System.Collections.Generic;
 
 namespace Schedule.Utils.Filters
 {
     class FiltersFactory
     {
-        private readonly Panel _panel;
-        private readonly Type _type;
-        private readonly int _height = 25;
+        private readonly Panel panel;
+        private readonly Type type;
+        private readonly int height = 25;
 
-        public FiltersFactory(Panel panel, Type type, int height = 25)
+        public FiltersFactory(Panel p, Type t, int h = 25)
         {
-            _panel = panel;
-            _type = type;
-            _height = height;
+            panel = p;
+            type = t;
+            height = h;
         }
 
         public Filter CreateFilter()
         {
-            var filter = new Filter(_type) { Height = _height };
-            filter.RemoveButton.Click += 
-                (sender, args) => _panel.Children.Remove(filter);
+            var filter = new Filter(type) { Height = height };
+            filter.RemoveButton.Click += (sender, args) => panel.Children.Remove(filter);
             return filter;
         }
     }

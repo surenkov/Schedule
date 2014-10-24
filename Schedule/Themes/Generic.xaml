@@ -42,10 +42,10 @@
                         <DockPanel>
                             <DockPanel Width="15" DockPanel.Dock="Right" LastChildFill="False">
                                 <StackPanel DockPanel.Dock="Top">
-                                    <Button x:Name="PART_EditButton" Height="15" Width="15" Margin="0 0 0 3" Style="{StaticResource CalendarButtonStyle}" ToolTip="Remove">
+                                    <Button x:Name="PART_EditButton" Height="15" Width="15" Margin="0 0 0 3" Style="{StaticResource CalendarButtonStyle}" ToolTip="Edit">
                                         <Path Stretch="UniformToFill" Margin="2" SnapsToDevicePixels="False" Data="F 1 M 7.327,92.183 L 16.934,90.93 8.579,82.575 Z M 10.053,71.27 L 9.068,78.822 20.687,90.441 28.239,89.456 79.653,38.043 61.467,19.856 Z M 81.06,4.81 C 80.448,4.198 79.642,3.894 78.825,3.894 77.965,3.894 77.093,4.231 76.423,4.9 L 64.013,17.31 82.199,35.496 94.609,23.086 C 95.915,21.781 95.955,19.704 94.7,18.449 L 81.06,4.81 Z" Fill="Gray"/>
                                     </Button>
-                                    <Button x:Name="PART_DeleteButton" Height="15" Width="15" Style="{StaticResource CalendarButtonStyle}" ToolTip="Edit">
+                                    <Button x:Name="PART_DeleteButton" Height="15" Width="15" Style="{StaticResource CalendarButtonStyle}" ToolTip="Remove">
                                         <Path Stretch="UniformToFill" Margin="2" SnapsToDevicePixels="False" Data="F 1 M 64.849,50 L 97.383,17.466 C 98.164,16.685 98.164,15.419 97.383,14.638 L 85.363,2.616 C 84.988,2.241 84.479,2.03 83.949,2.03 83.419,2.03 82.91,2.241 82.535,2.616 L 50,35.151 17.465,2.616 C 16.715,1.866 15.387,1.866 14.637,2.616 L 2.617,14.638 C 1.836,15.419 1.836,16.685 2.617,17.466 L 35.151,50 2.617,82.534 C 1.836,83.315 1.836,84.581 2.617,85.362 L 14.637,97.383 C 15.012,97.758 15.521,97.969 16.051,97.969 16.581,97.969 17.09,97.758 17.465,97.383 L 50,64.849 82.535,97.384 C 82.91,97.759 83.419,97.97 83.949,97.97 84.479,97.97 84.988,97.759 85.363,97.384 L 97.383,85.363 C 98.164,84.582 98.164,83.316 97.383,82.535 L 64.849,50 Z" Fill="Gray"/>
                                     </Button>
                                 </StackPanel>

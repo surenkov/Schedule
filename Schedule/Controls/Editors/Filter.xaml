@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:c="clr-namespace:Schedule.Utils.ValueConverters"
+             xmlns:vm="clr-namespace:Schedule.Models.ViewModels"
              mc:Ignorable="d" d:DesignWidth="300" Height="30">
     <Grid x:Name="FilterGrid">
         <Grid.ColumnDefinitions>
@@ -15,7 +16,8 @@
         <ComboBox Grid.Column="0" 
                   Margin="5 0 0 5" 
                   x:Name="PropertiesBox"
-                  ItemsSource="{Binding Properties}">
+                  ItemsSource="{Binding Properties}"
+                  SelectedIndex="0">
             <ComboBox.Resources>
                 <c:PropertyToStringConverter x:Key="Converter"/>
             </ComboBox.Resources>
@@ -25,10 +27,13 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <ComboBox Grid.Column="1" 
-                  Margin="5 0 5 5" 
-                  x:Name="ConditionsBox" 
-                  SelectedIndex="0"/>
+        <ComboBox Grid.Column="1" Margin="5 0 5 5" x:Name="ConditionsBox" SelectedValuePath="Comparer">
+            <ComboBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:FilterComparerViewModel}">
+                    <TextBlock Text="{Binding Sign}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
         <Button Grid.Column="3" Margin="0 0 5 5" x:Name="RemoveButton">
             <Path Stretch="Fill" Margin="5" SnapsToDevicePixels="False" Data="F 1 M 64.849,50 L 97.383,17.466 C 98.164,16.685 98.164,15.419 97.383,14.638 L 85.363,2.616 C 84.988,2.241 84.479,2.03 83.949,2.03 83.419,2.03 82.91,2.241 82.535,2.616 L 50,35.151 17.465,2.616 C 16.715,1.866 15.387,1.866 14.637,2.616 L 2.617,14.638 C 1.836,15.419 1.836,16.685 2.617,17.466 L 35.151,50 2.617,82.534 C 1.836,83.315 1.836,84.581 2.617,85.362 L 14.637,97.383 C 15.012,97.758 15.521,97.969 16.051,97.969 16.581,97.969 17.09,97.758 17.465,97.383 L 50,64.849 82.535,97.384 C 82.91,97.759 83.419,97.97 83.949,97.97 84.479,97.97 84.988,97.759 85.363,97.384 L 97.383,85.363 C 98.164,84.582 98.164,83.316 97.383,82.535 L 64.849,50 Z" Fill="Gray"/>
         </Button>

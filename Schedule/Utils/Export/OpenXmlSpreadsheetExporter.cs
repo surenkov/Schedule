@@ -9,22 +9,23 @@ using ClosedXML.Excel;
 using Schedule.Controls.Slices;
 using Schedule.Models.ViewModels.Slices;
 using Schedule.Utils.ValueConverters;
+using Schedule.Models.ViewModels;
 
 namespace Schedule.Utils.Export
 {
-    internal class OpenXmlSpreadsheetExporter : IExporter
+    public class OpenXmlSpreadsheetExporter : Exporter
     {
-        public string FormatString()
+        public override string FormatString()
         {
             return "Microsoft Excel (*.xlsx)|*.xlsx";
         }
 
-        public Type SourceType()
+        public override Type SourceType()
         {
             return typeof(SliceView);
         }
 
-        public void Save(string path, object source)
+        public override void Save(string path, object source)
         {
             var workbook = new XLWorkbook();
             var view = source as SliceView;
@@ -61,7 +62,7 @@ namespace Schedule.Utils.Export
             {
                 string propName = (string)converter.Convert(filter.PropertiesBox.SelectedItem,
                     typeof(string), null, CultureInfo.CurrentCulture);
-                string comparer = filter.ConditionsBox.SelectedItem.ToString();
+                string comparer = (filter.ConditionsBox.SelectedItem as FilterComparerViewModel).Sign;
                 object value = filter.Value;
                 filtersTable.Rows.Add(propName, comparer, value);
             }

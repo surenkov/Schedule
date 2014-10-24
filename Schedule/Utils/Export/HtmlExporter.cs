@@ -1,29 +1,30 @@
-﻿using System.IO;
-using System.Text;
-using System.Linq;
+﻿using System;
 using System.Collections;
-using System.Globalization;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
 using Schedule.Controls.Slices;
 using Schedule.Models.ViewModels.Slices;
 using Schedule.Utils.ValueConverters;
-using System;
+using Schedule.Models.ViewModels;
 
 namespace Schedule.Utils.Export
 {
-    class HtmlExporter : IExporter
+    class HtmlExporter : Exporter
     {
-        public string FormatString()
+        public override string FormatString()
         {
             return "HTML page (*.html)|*.html;*.htm";
         }
 
-        public Type SourceType()
+        public override Type SourceType()
         {
             return typeof(SliceView);
         }
 
-        public void Save(string path, object source)
+        public override void Save(string path, object source)
         {
             StringBuilder htmlData = new StringBuilder();
 
@@ -52,7 +53,7 @@ namespace Schedule.Utils.Export
                     {
                         htmlData.Append("<tr>");
                         htmlData.Append("<td>" + (string)converter.Convert(filter.PropertiesBox.SelectedItem, typeof(string), null, CultureInfo.CurrentCulture) + "</td>");
-                        htmlData.Append("<td>" + filter.ConditionsBox.SelectedItem + "</td>");
+                        htmlData.Append("<td>" + (filter.ConditionsBox.SelectedItem as FilterComparerViewModel).Sign + "</td>");
                         htmlData.Append("<td>" + filter.Value + "</td>");
                         htmlData.Append("</tr>");
                     }

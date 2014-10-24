@@ -21,7 +21,6 @@ namespace Schedule.Windows
     public partial class MainWindow : Window
     {
         private FiltersFactory filterFactory;
-        private List<IExporter> exporters;
         private Dictionary<Type, EntityGridViewDialog> gridViews;
 
         public static readonly DependencyProperty CalendarVisibilityProperty =
@@ -91,17 +90,21 @@ namespace Schedule.Windows
             }
         }
 
+        static MainWindow()
+        {
+            Exporter.Register(typeof(HtmlExporter));
+            Exporter.Register(typeof(OpenXmlSpreadsheetExporter));
+            Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
+        }
+
         public MainWindow()
         {
             InitializeComponent();
             gridViews = new Dictionary<Type, EntityGridViewDialog>();
             DataContext = this;
-            SliceViewVisibility = true;
 
             InitializeCardMenu();
             InitializeSelectorViewModels();
-            InitializeExporters();
-            Application.Current.ShutdownMode = ShutdownMode.OnMainWindowClose;
 
             filterFactory = new FiltersFactory(FiltersPanel, typeof(Models.Schedule), 30);
         }
@@ -139,14 +142,6 @@ namespace Schedule.Windows
             VerticalSelector.SelectedIndex = 6;
         }
 
-        private void InitializeExporters()
-        {
-            exporters = new List<IExporter> {
-                new HtmlExporter(),
-                new OpenXmlSpreadsheetExporter()
-            };
-        }
-
         private void Command_AlwaysExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -161,6 +156,7 @@ namespace Schedule.Windows
         {
             SaveFileDialog dlg = new SaveFileDialog();
             StringBuilder fmts = new StringBuilder();
+            var exporters = Exporter.RegisteredExporters();
 
             foreach (var exp in exporters)
                 fmts.Append(exp.FormatString() + "|");

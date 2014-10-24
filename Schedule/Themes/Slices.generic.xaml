@@ -229,9 +229,9 @@
                             </DockPanel>
                             <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource SliceCellItemsTemplate}" Focusable="False"/>
                             <slices:SliceExpander Visibility="{Binding ExpanderVisibility, Converter={StaticResource ExpanderVisibilityConverter}}"
-                                                      ItemTemplate="{StaticResource SliceCellItemsTemplate}"
-                                                      IsExpanded="{Binding IsExpanded}"
-                                                      ItemsSource="{Binding ExpanderItems}"/>
+                                                  ItemTemplate="{StaticResource SliceCellItemsTemplate}"
+                                                  IsExpanded="{Binding IsExpanded}"
+                                                  ItemsSource="{Binding ExpanderItems}"/>
                         </StackPanel>
                     </Border>
                 </ControlTemplate>

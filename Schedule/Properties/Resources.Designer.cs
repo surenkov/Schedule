@@ -107,6 +107,15 @@ namespace Schedule.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please specify interval less than {0} days.
+        /// </summary>
+        internal static string Schedule_BigInterval {
+            get {
+                return ResourceManager.GetString("Schedule_BigInterval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please fill end date.
         /// </summary>
         internal static string Schedule_EndDate_ErrMsg {
