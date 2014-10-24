@@ -8,6 +8,7 @@ using System.Text;
 using Schedule.Controls.Slices;
 using Schedule.Models.ViewModels.Slices;
 using Schedule.Utils.ValueConverters;
+using Schedule.Models.ViewModels;
 
 namespace Schedule.Utils.Export
 {
@@ -52,7 +53,7 @@ namespace Schedule.Utils.Export
                     {
                         htmlData.Append("<tr>");
                         htmlData.Append("<td>" + (string)converter.Convert(filter.PropertiesBox.SelectedItem, typeof(string), null, CultureInfo.CurrentCulture) + "</td>");
-                        htmlData.Append("<td>" + filter.ConditionsBox.SelectedItem + "</td>");
+                        htmlData.Append("<td>" + (filter.ConditionsBox.SelectedItem as FilterComparerViewModel).Sign + "</td>");
                         htmlData.Append("<td>" + filter.Value + "</td>");
                         htmlData.Append("</tr>");
                     }

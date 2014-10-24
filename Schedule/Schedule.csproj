@@ -105,9 +105,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Editors\Filters\DateFilter.cs" />
+    <Compile Include="Controls\Editors\Filters\EntityFilter.cs" />
+    <Compile Include="Controls\Editors\Filters\EnumFilter.cs" />
+    <Compile Include="Controls\Editors\Filters\IFilterControl.cs" />
+    <Compile Include="Controls\Editors\Filters\IntegerFilter.cs" />
+    <Compile Include="Controls\Editors\Filters\StringFilter.cs" />
     <Compile Include="Controls\Editors\ScheduleDatesSelector.xaml.cs">
       <DependentUpon>ScheduleDatesSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\FilterComparerViewModel.cs" />
     <Compile Include="Utils\Attributes\HiddenAttribute.cs" />
     <Compile Include="Controls\Calendar\CalendarHeader.cs" />
     <Compile Include="Controls\Calendar\CalendarHeaderItem.cs" />
@@ -150,16 +157,13 @@
     <Compile Include="Utils\Export\HtmlExporter.cs" />
     <Compile Include="Utils\Export\Exporter.cs" />
     <Compile Include="Utils\Export\OpenXmlSpreadsheetExporter.cs" />
-    <Compile Include="Utils\Filters\FilterEditorsFactory.cs" />
     <Compile Include="Utils\Filters\FiltersExtender.cs" />
     <Compile Include="Utils\Filters\FiltersFactory.cs" />
-    <Compile Include="Utils\Filters\FilterTypesValueConverter.cs" />
     <Compile Include="Utils\ScheduleDbExceptionExtender.cs" />
     <Compile Include="Utils\ScheduleMapper.cs" />
     <Compile Include="Utils\SliceViewHelper.cs" />
     <Compile Include="Utils\ValueConverters\CourseTypeToStringConverter.cs" />
     <Compile Include="Utils\ValueConverters\PropertyToStringConverter.cs" />
-    <Compile Include="Utils\ValueConverters\StringToComparerConverter.cs" />
     <Compile Include="Windows\EntityGridViewDialog.xaml.cs">
       <DependentUpon>EntityGridViewDialog.xaml</DependentUpon>
     </Compile>
@@ -306,6 +310,7 @@
   <ItemGroup>
     <Resource Include="icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

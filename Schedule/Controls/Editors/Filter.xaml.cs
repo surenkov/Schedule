@@ -1,37 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Linq;
 using System.Windows.Controls.Primitives;
 using Schedule.Models;
-using Schedule.Utils;
-using Schedule.Utils.Filters;
-using Schedule.Utils.ValueConverters;
+using Schedule.Controls.Editors.Filters;
+using Schedule.Utils.Attributes;
 using System.Windows.Data;
+using Schedule.Models.ViewModels;
 
 namespace Schedule.Controls.Editors
 {
-    public delegate bool CheckPropertyValueDelegate(IComparable value, IComparable compared);
     public partial class Filter : UserControl
     {
-        private Control _control;
+        private IFilterControl control;
+        private readonly Type type;
 
-        public static readonly DependencyProperty PropertiesProperty =
-            DependencyProperty.Register("Properties", typeof(ICollection<PropertyInfo>), typeof(Filter),
-                new PropertyMetadata(default(ICollection<PropertyInfo>)));
-
-        public static readonly DependencyProperty ValueProperty = 
-            DependencyProperty.Register("Value", typeof(object), typeof(Filter), 
-                new PropertyMetadata(default(object)));
+        public static readonly Dictionary<Type, Type> filterTypes = new Dictionary<Type, Type>();
 
         public ICollection<PropertyInfo> Properties
         {
             get { return (ICollection<PropertyInfo>)GetValue(PropertiesProperty); }
             set { SetValue(PropertiesProperty, value); }
         }
+        public static readonly DependencyProperty PropertiesProperty =
+            DependencyProperty.Register("Properties", typeof(ICollection<PropertyInfo>), typeof(Filter),
+                new PropertyMetadata(default(ICollection<PropertyInfo>)));
 
         public object Value
         {
@@ -39,34 +36,44 @@ namespace Schedule.Controls.Editors
             set { SetValue(ValueProperty, value); }
         }
 
-        private readonly List<string> _comparers = new List<string>
-        {
-            "=",
-            "<>",
-            "<",
-            ">",
-            "<=",
-            ">="
-        };
+        public static readonly DependencyProperty ValueProperty =
+            DependencyProperty.Register("Value", typeof(object), typeof(Filter), new PropertyMetadata(null));
 
-        private readonly Type _type;
+        public static void RegisterFilterControl(Type val, Type control)
+        {
+            filterTypes.Add(val, control);
+        }
+
+        private static Control CreateFilterControl(Type t)
+        {
+            while (t != null)
+            {
+                if (filterTypes.ContainsKey(t))
+                    return Activator.CreateInstance(filterTypes[t]) as Control;
+                t = t.BaseType;
+            }
+            return null;
+        }
+
+        static Filter()
+        {
+            RegisterFilterControl(typeof(int), typeof(IntegerFilter));
+            RegisterFilterControl(typeof(string), typeof(StringFilter));
+            RegisterFilterControl(typeof(Enum), typeof(EnumFilter));
+            RegisterFilterControl(typeof(Entity), typeof(EntityFilter));
+            RegisterFilterControl(typeof(DateTime), typeof(DateFilter));
+        }
 
         public Filter()
         {
             InitializeComponent();
-
-            ConditionsBox.ItemsSource = _comparers;
-            ConditionsBox.SelectedIndex = 0;
-
             DataContext = this;
             PropertiesBox.DataContext = this;
-            PropertiesBox.SelectedIndex = 0;
         }
 
-        public Filter(Type type)
-            : this()
+        public Filter(Type t) : this()
         {
-            _type = type;
+            type = t;
             FillPropertiesBox();
             var dpd = DependencyPropertyDescriptor.FromProperty(Selector.SelectedItemProperty, typeof(ComboBox));
             if (dpd != null) dpd.AddValueChanged(PropertiesBox, PropertiesBox_PropertyChanged);
@@ -74,74 +81,61 @@ namespace Schedule.Controls.Editors
 
         private void PropertiesBox_PropertyChanged(object sender, EventArgs eventArgs)
         {
-            var property = PropertiesBox.SelectedItem as PropertyInfo;
-            var factory = new FilterEditorsFactory();
-            var mapper = new EditorsMapper();
+            if (control != null)
+                BindingOperations.ClearAllBindings(control as Control);
 
+            var property = PropertiesBox.SelectedItem as PropertyInfo;
             if (property != null)
             {
-                var control = factory.CreateControl(property.PropertyType);
-                mapper.FillData(control, property.PropertyType);
-
-                DependencyProperty dp = factory.ValueProperty(control);
-                if (dp != null)
-                {
-                    Binding binding = new Binding("Value") { Source = this };
-                    BindingOperations.SetBinding(control, dp, binding);
-                }
-
-                var box = control as ComboBox;
-                if (box != null) box.IsEditable = true;
-
+                var control = CreateFilterControl(property.PropertyType);
                 control.Margin = new Thickness(0, 0, 5, 5);
                 Grid.SetColumn(control, 2);
-                FilterGrid.Children.Remove(_control);
-                _control = control;
-                FilterGrid.Children.Add(_control);
+
+                FilterGrid.Children.Remove(this.control as Control);
+                FilterGrid.Children.Add(control);
+
+                this.control = control as IFilterControl;
+                this.control.SetSourceType(property.PropertyType);
+
+                ConditionsBox.ItemsSource = this.control.Comparers();
+                ConditionsBox.SelectedIndex = 0;
+
+                DependencyProperty dp = this.control.ValueProperty();
+                if (dp != null)
+                {
+                    Binding binding = new Binding("Value") { Source = this, Mode = BindingMode.TwoWay };
+                    BindingOperations.SetBinding(control, dp, binding);
+                }
             }
         }
 
         public IEnumerable<Entity> FilterEntities(IEnumerable<Entity> entities)
         {
-            return entities.Where(ApplyFilterOnEntity).ToList();
+            return entities.Where(ApplyFilterOnEntity);
         }
 
         private bool ApplyFilterOnEntity(Entity entity)
         {
             var property = PropertiesBox.SelectedItem as PropertyInfo;
-            var converter = new StringToComparerConverter();
-            var factory = new FilterEditorsFactory();
+            var comparer = ConditionsBox.SelectedValue as CheckPropertyValueDelegate;
 
-            if (property != null)
-            {
-                var value = (IComparable)property.GetValue(entity);
-                if (value != null)
-                {
-                    var comparer = converter.Convert(ConditionsBox.SelectedItem as string,
-                        typeof(CheckPropertyValueDelegate), null, null) as CheckPropertyValueDelegate;
-                    var compared = (IComparable)_control.GetValue(factory.ValueProperty(_control));
-                    if (compared != null)
-                    {
-                        if (compared.GetType() != value.GetType())
-                            compared = (IComparable)compared.FilterConvert(value.GetType());
-                        return comparer != null && comparer(value, compared);
-                    }
-                }
-            }
+            if (property != null && comparer != null && control.Value() != null)
+                return comparer(control.Value(), property.GetValue(entity));
             return false;
         }
 
         private void FillPropertiesBox()
         {
-            var properties = _type.GetProperties();
+            var properties = type.GetProperties();
 
             Properties = new List<PropertyInfo>(properties.Length);
             foreach (
                 var property in
                     properties.Where(
                         property =>
-                            property.PropertyType == typeof(string) ||
-                            property.PropertyType.GetInterface("IEnumerable") == null))
+                            property.GetCustomAttribute<HiddenAttribute>() == null ||
+                            property.GetCustomAttribute<HiddenAttribute>() != null &&
+                            !property.GetCustomAttribute<HiddenAttribute>().Hidden))
                 Properties.Add(property);
         }
     }

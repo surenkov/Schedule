@@ -23,10 +23,13 @@ namespace Schedule.Utils
 
         private static void FillCalssroomSelector(Control c, Type t)
         {
-            var selector = c as EntitySelector;
+            var selector = c as Selector;
             if (selector == null) return;
 
-            selector.ItemsType = t;
+            var entitySelector = selector as EntitySelector;
+            if (entitySelector != null)
+                entitySelector.ItemsType = t;
+
             using (ScheduleDbContext ctx = new ScheduleDbContext())
             {
                 ctx.Set(t).Include("Building").Load();

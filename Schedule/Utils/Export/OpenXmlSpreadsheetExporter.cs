@@ -9,6 +9,7 @@ using ClosedXML.Excel;
 using Schedule.Controls.Slices;
 using Schedule.Models.ViewModels.Slices;
 using Schedule.Utils.ValueConverters;
+using Schedule.Models.ViewModels;
 
 namespace Schedule.Utils.Export
 {
@@ -61,7 +62,7 @@ namespace Schedule.Utils.Export
             {
                 string propName = (string)converter.Convert(filter.PropertiesBox.SelectedItem,
                     typeof(string), null, CultureInfo.CurrentCulture);
-                string comparer = filter.ConditionsBox.SelectedItem.ToString();
+                string comparer = (filter.ConditionsBox.SelectedItem as FilterComparerViewModel).Sign;
                 object value = filter.Value;
                 filtersTable.Rows.Add(propName, comparer, value);
             }
