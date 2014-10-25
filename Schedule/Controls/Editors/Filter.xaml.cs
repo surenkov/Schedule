@@ -100,7 +100,7 @@ namespace Schedule.Controls.Editors
                 ConditionsBox.ItemsSource = this.control.Comparers();
                 ConditionsBox.SelectedIndex = 0;
 
-                DependencyProperty dp = this.control.ValueProperty();
+                DependencyProperty dp = this.control.ValueProperty;
                 if (dp != null)
                 {
                     Binding binding = new Binding("Value") { Source = this, Mode = BindingMode.TwoWay };
@@ -119,8 +119,8 @@ namespace Schedule.Controls.Editors
             var property = PropertiesBox.SelectedItem as PropertyInfo;
             var comparer = ConditionsBox.SelectedValue as CheckPropertyValueDelegate;
 
-            if (property != null && comparer != null && control.Value() != null)
-                return comparer(control.Value(), property.GetValue(entity));
+            if (property != null && comparer != null && control.Value != null)
+                return comparer(control.Value, property.GetValue(entity));
             return false;
         }
 

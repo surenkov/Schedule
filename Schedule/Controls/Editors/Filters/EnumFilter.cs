@@ -24,14 +24,14 @@ namespace Schedule.Controls.Editors.Filters
             mapper.FillData(this, t);
         }
 
-        public object Value()
+        public object Value
         {
-            return SelectedItem;
+            get { return SelectedItem; }
         }
 
-        public DependencyProperty ValueProperty()
+        public DependencyProperty ValueProperty
         {
-            return SelectedItemProperty;
+            get { return SelectedItemProperty; }
         }
     }
 }

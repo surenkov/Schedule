@@ -9,7 +9,7 @@ namespace Schedule.Controls.Editors.Filters
     {
         IEnumerable<FilterComparerViewModel> Comparers();
         void SetSourceType(Type t);
-        object Value();
-        DependencyProperty ValueProperty();
+        object Value { get; }
+        DependencyProperty ValueProperty { get; }
     }
 }

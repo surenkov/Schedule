@@ -27,16 +27,16 @@ namespace Schedule.Controls.Editors.Filters
             };
         }
 
-        public object Value()
+        public object Value
         {
-            return SelectedDate;
+            get { return SelectedDate; }
+        }
+
+        public DependencyProperty ValueProperty
+        {
+            get { return SelectedDateProperty; }
         }
 
         public void SetSourceType(Type t) { }
-
-        public DependencyProperty ValueProperty()
-        {
-            return SelectedDateProperty;
-        }
     }
 }

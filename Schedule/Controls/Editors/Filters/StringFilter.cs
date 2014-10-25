@@ -21,16 +21,16 @@ namespace Schedule.Controls.Editors.Filters
             };
         }
 
-        public object Value()
+        public object Value
         {
-            return Text;
+            get { return Text; }
+        }
+
+        public DependencyProperty ValueProperty
+        {
+            get { return TextProperty; }
         }
 
         public void SetSourceType(Type t) { }
-
-        public DependencyProperty ValueProperty()
-        {
-            return TextProperty;
-        }
     }
 }

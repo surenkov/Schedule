@@ -1,14 +1,15 @@
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Windows.Data;
 using Schedule.Annotations;
 using Schedule.Properties;
+using Schedule.Utils.Attributes;
 
 namespace Schedule.Models
 {
-    using System;
-    using System.Collections.Generic;
 
     public enum DoubleClass
     {
@@ -56,7 +57,7 @@ namespace Schedule.Models
         [Description("End date"), Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "Schedule_EndDate_ErrMsg")]
         public System.DateTime EndDate { get; set; }
 
-        [Required, Description("Interval")]
+        [Required, Integer(ErrorMessage = "Value must be integer"), Description("Interval")]
         public int Interval { get; set; }
 
         [Description("Number of period")]

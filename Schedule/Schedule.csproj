@@ -143,6 +143,7 @@
     <Compile Include="Models\ViewModels\Slices\SliceCellViewModel.cs" />
     <Compile Include="Models\ViewModels\Slices\SliceRowViewModel.cs" />
     <Compile Include="Models\ViewModels\Slices\SliceViewSelectorViewModel.cs" />
+    <Compile Include="Utils\Attributes\IntegerAttribute.cs" />
     <Compile Include="Utils\Conflicts\Checkers\DifferentCoursesInClassroom.cs" />
     <Compile Include="Utils\Conflicts\Checkers\DifferentCourseTypesInClassroom.cs" />
     <Compile Include="Utils\Conflicts\Checkers\GroupInDifferentClassrooms.cs" />

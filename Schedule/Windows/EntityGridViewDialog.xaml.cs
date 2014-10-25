@@ -178,6 +178,7 @@ namespace Schedule.Windows
                 {
                     dlg.Close();
                     UpdateGrid();
+                    RaiseEvent(new RoutedEventArgs(ItemsChangedEvent));
                 }
             };
 
