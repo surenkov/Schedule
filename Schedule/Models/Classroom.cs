@@ -1,11 +1,11 @@
+using System.Collections.Generic;
 using System.Globalization;
+using System.ComponentModel.DataAnnotations.Schema;
 using Schedule.Utils.Attributes;
+using Schedule.Annotations;
 
 namespace Schedule.Models
 {
-    using System;
-    using System.Collections.Generic;
-
     public enum ClassroomType
     {
         LectionClass,
@@ -17,13 +17,21 @@ namespace Schedule.Models
     public partial class Classroom : Entity
     {
         public int Number { get; set; }
+
         public string Sign { get; set; }
+
         public ClassroomType Type { get; set; }
+
         public int Capacity { get; set; }
+
+
         [Hidden]
         public int BuildingId { get; set; }
     
+        [NotNull, ForeignKey("BuildingId")]
         public virtual Building Building { get; set; }
+
+
         [Hidden]
         public virtual ICollection<Schedule> Schedules { get; set; }
 

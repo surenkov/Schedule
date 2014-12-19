@@ -8,6 +8,11 @@ namespace Schedule.Controls.Editors.Filters
 {
     class StringFilter : TextBox, IFilterControl
     {
+        public StringFilter()
+        {
+            VerticalContentAlignment = VerticalAlignment.Center;
+        }
+
         public IEnumerable<FilterComparerViewModel> Comparers()
         {
             return new List<FilterComparerViewModel>

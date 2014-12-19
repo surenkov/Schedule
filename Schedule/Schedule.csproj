@@ -105,6 +105,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Controls\Editors\Editors\DateEditor.cs" />
+    <Compile Include="Controls\Editors\Editors\EnumEditor.cs" />
+    <Compile Include="Controls\Editors\Editors\IEditorControl.cs" />
+    <Compile Include="Controls\Editors\Editors\IntegerEditor.cs" />
+    <Compile Include="Controls\Editors\Editors\StringEditor.cs" />
     <Compile Include="Controls\Editors\Filters\DateFilter.cs" />
     <Compile Include="Controls\Editors\Filters\EntityFilter.cs" />
     <Compile Include="Controls\Editors\Filters\EnumFilter.cs" />
@@ -121,7 +126,7 @@
     <Compile Include="Controls\Editors\CalendarMonthSelector.xaml.cs">
       <DependentUpon>CalendarMonthSelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Editors\EntitySelector.cs" />
+    <Compile Include="Controls\Editors\Editors\EntityEditor.cs" />
     <Compile Include="Controls\ScheduleCardItem.cs" />
     <Compile Include="Controls\Editors\Filter.xaml.cs">
       <DependentUpon>Filter.xaml</DependentUpon>
@@ -143,7 +148,7 @@
     <Compile Include="Models\ViewModels\Slices\SliceCellViewModel.cs" />
     <Compile Include="Models\ViewModels\Slices\SliceRowViewModel.cs" />
     <Compile Include="Models\ViewModels\Slices\SliceViewSelectorViewModel.cs" />
-    <Compile Include="Utils\Attributes\IntegerAttribute.cs" />
+    <Compile Include="Utils\Attributes\PositiveAttribute.cs" />
     <Compile Include="Utils\Conflicts\Checkers\DifferentCoursesInClassroom.cs" />
     <Compile Include="Utils\Conflicts\Checkers\DifferentCourseTypesInClassroom.cs" />
     <Compile Include="Utils\Conflicts\Checkers\GroupInDifferentClassrooms.cs" />
@@ -153,8 +158,8 @@
     <Compile Include="Utils\Conflicts\Conflict.cs" />
     <Compile Include="Utils\Conflicts\ConflictsManager.cs" />
     <Compile Include="Utils\Conflicts\IConflictsChecker.cs" />
-    <Compile Include="Utils\EditorsFactory.cs" />
-    <Compile Include="Utils\EditorsMapper.cs" />
+    <Compile Include="Utils\Editors\EditorsFactory.cs" />
+    <Compile Include="Utils\Editors\EditorsMapper.cs" />
     <Compile Include="Utils\Export\HtmlExporter.cs" />
     <Compile Include="Utils\Export\Exporter.cs" />
     <Compile Include="Utils\Export\OpenXmlSpreadsheetExporter.cs" />
@@ -229,7 +234,6 @@
     <Compile Include="Models\Classroom.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\DataLayer\ScheduleDbContext.cs" />
-    <Compile Include="Models\DataLayer\ScheduleInitializer.cs" />
     <Compile Include="Models\Faculty.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Schedule.cs" />
@@ -311,7 +315,15 @@
   <ItemGroup>
     <Resource Include="icon.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="ScheduleDB.mdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ScheduleDB_log.ldf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <DependentUpon>ScheduleDB.mdf</DependentUpon>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

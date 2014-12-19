@@ -2,11 +2,14 @@
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using Schedule.Utils.Attributes;
 using Schedule.Models;
 using Schedule.Models.DataLayer;
-using Schedule.Utils;
+using Schedule.Utils.Editors;
+using System.Linq;
+using Schedule.Controls.Editors.Editors;
+using System.Collections.Generic;
+using System;
 
 namespace Schedule.Windows
 {
@@ -25,12 +28,26 @@ namespace Schedule.Windows
 
     public partial class EditEntityDialog : Window
     {
+        private Dictionary<PropertyInfo, IEditorControl> editors;
+
         public static readonly RoutedEvent ApplyEvent =
             EventManager.RegisterRoutedEvent("Apply", RoutingStrategy.Direct, typeof(ApplyEventHandler),
                 typeof(EditEntityDialog));
 
+        public event ApplyEventHandler Apply
+        {
+            add { AddHandler(ApplyEvent, value); }
+            remove { RemoveHandler(ApplyEvent, value); }
+        }
+
         public static readonly DependencyProperty ItemProperty =
             DependencyProperty.Register("Item", typeof(Entity), typeof(EditEntityDialog));
+
+        private Entity Item
+        {
+            get { return (Entity)GetValue(ItemProperty); }
+            set { SetValue(ItemProperty, value); }
+        }
 
         public EditEntityDialog(Entity entity = null, bool copy = false)
         {
@@ -42,23 +59,22 @@ namespace Schedule.Windows
             else
                 Item = entity;
 
+            editors = new Dictionary<PropertyInfo, IEditorControl>();
             InitEditors();
         }
 
-        public event ApplyEventHandler Apply
-        {
-            add { AddHandler(ApplyEvent, value); }
-            remove { RemoveHandler(ApplyEvent, value); }
-        }
-
-        private Entity Item
-        {
-            get { return (Entity)GetValue(ItemProperty); }
-            set { SetValue(ItemProperty, value); }
-        }
         private void ApplyButton_OnClick(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new ApplyEventArgs(ApplyEvent, Item));
+            try
+            {
+                foreach (var editor in editors)
+                    editor.Value.SetObjectValue(editor.Key, Item);
+                RaiseEvent(new ApplyEventArgs(ApplyEvent, Item));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void LoadEntity(Entity entity)
@@ -66,7 +82,12 @@ namespace Schedule.Windows
             using (ScheduleDbContext ctx = new ScheduleDbContext())
             {
                 if (entity != null)
+                {
                     Item = ctx.Set(entity.GetType()).Find(entity.Id) as Entity;
+                    foreach (var rel in Item.GetType().GetProperties().
+                        Where(p => p.PropertyType.IsSubclassOf(typeof(Entity))))
+                        ctx.Entry(Item).Reference(rel.Name).Load();
+                }
             }
         }
 
@@ -91,16 +112,16 @@ namespace Schedule.Windows
 
 
                 Label lbl = new Label { Content = caption, Margin = new Thickness(0, 5, 0, 0) };
-                var ctrl = factory.CreateControl(property.PropertyType);
-                mapper.FillData(ctrl, property.PropertyType);
+
+                var ctrl = factory.CreateEditor(property.PropertyType);
+                if (ctrl == null) continue;
                 ctrl.Margin = new Thickness(0, 5, 0, 0);
 
-                DependencyProperty dp = factory.BindingProperty(factory.ControlType(property.PropertyType));
-                if (dp != null)
-                {
-                    Binding binding = new Binding(property.Name) { Source = Item };
-                    BindingOperations.SetBinding(ctrl, dp, binding);
-                }
+                var editor = ctrl as IEditorControl;
+                if (editor == null) continue;
+                editor.Initialize(property.PropertyType);
+                editor.Value = property.GetValue(Item);
+                editors.Add(property, editor);
 
                 Grid.SetColumn(lbl, 0);
                 Grid.SetColumn(ctrl, 1);

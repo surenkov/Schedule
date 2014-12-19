@@ -148,7 +148,13 @@ namespace Schedule.Windows
             Cursor = Cursors.AppStarting;
 
             if (!editDialogs.ContainsKey(entity.Id))
-                editDialogs[entity.Id] = new EditEntityDialog(entity, true) { ShowInTaskbar = true };
+            {
+                editDialogs[entity.Id] = new EditEntityDialog(entity, true)
+                {
+                    ShowInTaskbar = true,
+                    Title = "Edit " + entity.GetType().BaseType.Name + " entity"
+                };
+            }
 
             var dlg = editDialogs[entity.Id];
 
@@ -156,7 +162,6 @@ namespace Schedule.Windows
             {
                 var item = args.Item;
                 args.Handled = true;
-                bool noExcept = true;
 
                 using (ScheduleDbContext ctx = new ScheduleDbContext())
                 {
@@ -167,18 +172,15 @@ namespace Schedule.Windows
                             ctx.Set(rel.GetType()).Attach(rel);
                         ctx.Entry(item).State = EntityState.Modified;
                         ctx.SaveChanges();
+
+                        dlg.Close();
+                        LoadData();
+                        RaiseEvent(new RoutedEventArgs(ItemsChangedEvent));
                     }
                     catch (DbEntityValidationException ex)
                     {
                         ex.ShowMessage();
-                        noExcept = false;
                     }
-                }
-                if (noExcept)
-                {
-                    dlg.Close();
-                    UpdateGrid();
-                    RaiseEvent(new RoutedEventArgs(ItemsChangedEvent));
                 }
             };
 
@@ -243,12 +245,15 @@ namespace Schedule.Windows
             if (ItemsSource == null) return;
 
             var type = ItemsSource.GetType().GenericTypeArguments[0];
-            var dlg = new EditEntityDialog(Activator.CreateInstance(type) as Entity) { ShowInTaskbar = true };
+            var dlg = new EditEntityDialog(Activator.CreateInstance(type) as Entity)
+            {
+                ShowInTaskbar = true,
+                Title = "Add " + type.Name + " record"
+            };
             dlg.Apply += delegate (object o, ApplyEventArgs args)
             {
                 args.Handled = true;
                 var item = args.Item;
-                bool noExcept = true;
 
                 using (ScheduleDbContext ctx = new ScheduleDbContext())
                 {
@@ -260,22 +265,18 @@ namespace Schedule.Windows
                             ctx.Set(rel.GetType()).Attach(rel);
                         ctx.Entry(item).State = item.Id == 0 ? EntityState.Added : EntityState.Modified;
                         ctx.SaveChanges();
+
+                        dlg.Close();
+                        LoadData();
                     }
                     catch (DbEntityValidationException ex)
                     {
                         ex.ShowMessage();
-                        noExcept = false;
                     }
                     catch (NullReferenceException)
                     {
                         MessageBox.Show("Please fill all required fields", "Error");
-                        noExcept = false;
                     }
-                }
-                if (noExcept)
-                {
-                    dlg.Close();
-                    LoadData();
                 }
             };
             dlg.Show();

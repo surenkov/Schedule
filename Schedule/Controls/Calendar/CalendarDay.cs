@@ -9,6 +9,7 @@ using Schedule.Utils;
 using Schedule.Windows;
 using System.Collections.Generic;
 using Schedule.Models.ViewModels.Calendar;
+using Schedule.Properties;
 
 namespace Schedule.Controls.Calendar
 {
@@ -21,13 +22,26 @@ namespace Schedule.Controls.Calendar
 
     public class CalendarDay : ScheduleCell
     {
-        public static readonly DependencyProperty DateProperty = 
+        public static readonly DependencyProperty DateProperty =
             DependencyProperty.Register("Date", typeof(DateTime), typeof(CalendarDay),
                 new FrameworkPropertyMetadata(DateChangedCallback));
 
-        public static readonly DependencyProperty DayTypeProperty = 
+        public static readonly DependencyProperty DayTypeProperty =
             DependencyProperty.Register("DayType", typeof(CalendarDayType), typeof(CalendarDay),
                 new PropertyMetadata(CalendarDayType.CurrentMonth));
+
+
+
+        public Visibility HeaderVisibility
+        {
+            get { return (Visibility)GetValue(HeaderVisibilityProperty); }
+            set { SetValue(HeaderVisibilityProperty, value); }
+        }
+
+        public static readonly DependencyProperty HeaderVisibilityProperty =
+            DependencyProperty.Register("HeaderVisibility", typeof(Visibility), typeof(CalendarDay), new PropertyMetadata(Visibility.Hidden));
+
+
 
 
         static CalendarDay()
@@ -49,39 +63,46 @@ namespace Schedule.Controls.Calendar
 
         protected override void OnAddButtonClick(object sender, RoutedEventArgs args)
         {
-            EditEntityDialog dlg = new EditEntityDialog(new Models.Schedule { StartDate = Date, EndDate = Date }) { ShowInTaskbar = true };
+            EditEntityDialog dlg = new EditEntityDialog(new Models.Schedule
+            {
+                StartDate = Date,
+                EndDate = Date.AddMonths(1),
+                Interval = Settings.Default.DefaultInterval
+            })
+            {
+                ShowInTaskbar = true,
+                Title = "Add new schedule record"
+            };
             dlg.Apply += delegate (object o, ApplyEventArgs eventArgs)
             {
                 var item = eventArgs.Item;
                 eventArgs.Handled = true;
-                bool noExcept = true;
 
                 using (ScheduleDbContext ctx = new ScheduleDbContext())
                 {
                     try
                     {
-                        var properties =
-                            item.GetType().GetProperties().Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
+                        var properties = item
+                            .GetType()
+                            .GetProperties()
+                            .Where(p => p.PropertyType.IsSubclassOf(typeof(Entity)));
+
                         foreach (var rel in properties.Select(p => p.GetValue(item) as Entity))
                             ctx.Set(rel.GetType()).Attach(rel);
                         ctx.Entry(item).State = item.Id == 0 ? EntityState.Added : EntityState.Modified;
                         ctx.SaveChanges();
+
+                        dlg.Close();
+                        View.UpdateView();
                     }
                     catch (DbEntityValidationException e)
                     {
                         e.ShowMessage();
-                        noExcept = false;
                     }
                     catch (NullReferenceException)
                     {
                         MessageBox.Show("Please fill all required fields", "Error");
-                        noExcept = false;
                     }
-                }
-                if (noExcept)
-                {
-                    dlg.Close();
-                    View.UpdateView();
                 }
             };
             dlg.Show();

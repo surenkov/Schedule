@@ -10,6 +10,7 @@ using Schedule.Models;
 using Schedule.Models.DataLayer;
 using Schedule.Utils;
 using Schedule.Windows;
+using System.Diagnostics;
 
 namespace Schedule.Controls
 {
@@ -87,8 +88,7 @@ namespace Schedule.Controls
                 var item = args.Item;
                 using (ScheduleDbContext ctx = new ScheduleDbContext())
                 {
-                    StringBuilder b = new StringBuilder();
-                    ctx.Database.Log = s => b.Append(s);
+                    ctx.Database.Log = s => Debug.Write(s);
 
                     ctx.Entry(Item).State = EntityState.Detached;
 
@@ -99,7 +99,6 @@ namespace Schedule.Controls
                     try
                     {
                         ctx.SaveChanges();
-                        MessageBox.Show(b.ToString());
                     }
                     catch (DbEntityValidationException e)
                     {

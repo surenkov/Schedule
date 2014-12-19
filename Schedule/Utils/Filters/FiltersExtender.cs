@@ -10,7 +10,7 @@ namespace Schedule.Utils.Filters
         public static IEnumerable<Entity> ApplyFilters(this IEnumerable<Entity> entities, IEnumerable<Filter> filters)
         {
             if (filters != null)
-                return filters.Aggregate(entities, (e, f) => f.FilterEntities(e));
+                return filters.AsParallel().AsOrdered().Aggregate(entities, (e, f) => f.FilterEntities(e));
             return entities;
         }
     }

@@ -216,7 +216,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}">
                         <StackPanel>
-                            <DockPanel>
+                            <DockPanel x:Name="SliceCellHeader" Visibility="Hidden">
                                 <Button DockPanel.Dock="Right" Height="25" Width="25" x:Name="PART_AddButton" Style="{StaticResource SliceButtonStyle}" ToolTip="Add new schedule record here">
                                     <Path Data="M 4 4 l 0 -4 2 0 0 4 4 0 0 2 -4 0 0 4 -2 0 0 -4 -4 0 0 -2 Z" Fill="{TemplateBinding Foreground}" SnapsToDevicePixels="False"/>
                                 </Button>
@@ -234,6 +234,11 @@
                                                   ItemsSource="{Binding ExpanderItems}"/>
                         </StackPanel>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="SliceCellHeader" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

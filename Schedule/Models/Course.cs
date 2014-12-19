@@ -18,6 +18,7 @@ namespace Schedule.Models
         }
     
         public string Name { get; set; }
+
         [Hidden]
         public virtual ICollection<Teacher> Teachers { get; set; }
 

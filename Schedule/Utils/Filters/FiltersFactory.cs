@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows.Controls;
 using Schedule.Controls.Editors;
-using System.Collections.Generic;
 
 namespace Schedule.Utils.Filters
 {

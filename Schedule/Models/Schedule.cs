@@ -7,6 +7,7 @@ using System.Windows.Data;
 using Schedule.Annotations;
 using Schedule.Properties;
 using Schedule.Utils.Attributes;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Schedule.Models
 {
@@ -23,7 +24,7 @@ namespace Schedule.Models
         Eighth
     }
 
-    [ValueConversion(typeof(DoubleClass), typeof(String))]
+    [ValueConversion(typeof(DoubleClass), typeof(string))]
     public class DoubleClassToStringConverter : IValueConverter
     {
         private static readonly Dictionary<DoubleClass, String> Dict = new Dictionary<DoubleClass, string>
@@ -57,22 +58,41 @@ namespace Schedule.Models
         [Description("End date"), Required(ErrorMessageResourceType = typeof(Resources), ErrorMessageResourceName = "Schedule_EndDate_ErrMsg")]
         public System.DateTime EndDate { get; set; }
 
-        [Required, Integer(ErrorMessage = "Value must be integer"), Description("Interval")]
+        [Required, Positive(ErrorMessage = "Value must be a positive number"), Description("Interval")]
         public int Interval { get; set; }
 
         [Description("Number of period")]
         public DoubleClass DoubleClass { get; set; }
 
-        [NotNull, Required]
-        public virtual Teacher Teacher { get; set; }
-        [NotNull, Required]
-        public virtual Course Course { get; set; }
-
         [Description("Type of course")]
         public virtual CourseType Type { get; set; }
-        [NotNull, Required]
+
+
+        [Hidden]
+        public int TeacherId { get; set; }
+
+        [NotNull, Required, ForeignKey("TeacherId")]
+        public virtual Teacher Teacher { get; set; }
+
+
+        [Hidden]
+        public int CourseId { get; set; }
+
+        [NotNull, Required, ForeignKey("CourseId")]
+        public virtual Course Course { get; set; }
+
+        
+        [Hidden]
+        public int GroupId { get; set; }
+
+        [NotNull, Required, ForeignKey("GroupId")]
         public virtual Group Group { get; set; }
-        [NotNull, Required]
+
+
+        [Hidden]
+        public int ClassId { get; set; }
+
+        [NotNull, Required, ForeignKey("ClassId")]
         public virtual Classroom Class { get; set; }
 
         public ISet<DayOfWeek> DaysOfWeek()

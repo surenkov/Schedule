@@ -9,6 +9,7 @@ namespace Schedule.Models.ViewModels.Calendar
         private DateTime _date;
         private ScheduleView _view;
         private IEnumerable<CalendarItemViewModel> _items;
+        private bool _headerVisibility;
 
         public DateTime Date
         {
@@ -36,6 +37,16 @@ namespace Schedule.Models.ViewModels.Calendar
             set
             {
                 _items = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool HeaderVisibility
+        {
+            get { return _headerVisibility; }
+            set
+            {
+                _headerVisibility = value;
                 OnPropertyChanged();
             }
         }

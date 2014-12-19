@@ -6,11 +6,11 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using Schedule.Models;
-using Schedule.Controls.Editors.Filters;
-using Schedule.Utils.Attributes;
 using System.Windows.Data;
+using Schedule.Controls.Editors.Filters;
+using Schedule.Models;
 using Schedule.Models.ViewModels;
+using Schedule.Utils.Attributes;
 
 namespace Schedule.Controls.Editors
 {
@@ -39,9 +39,9 @@ namespace Schedule.Controls.Editors
         public static readonly DependencyProperty ValueProperty =
             DependencyProperty.Register("Value", typeof(object), typeof(Filter), new PropertyMetadata(null));
 
-        public static void RegisterFilterControl(Type val, Type control)
+        public static void RegisterFilterControl<TType, TControl>()
         {
-            filterTypes.Add(val, control);
+            filterTypes.Add(typeof(TType), typeof(TControl));
         }
 
         private static Control CreateFilterControl(Type t)
@@ -57,11 +57,11 @@ namespace Schedule.Controls.Editors
 
         static Filter()
         {
-            RegisterFilterControl(typeof(int), typeof(IntegerFilter));
-            RegisterFilterControl(typeof(string), typeof(StringFilter));
-            RegisterFilterControl(typeof(Enum), typeof(EnumFilter));
-            RegisterFilterControl(typeof(Entity), typeof(EntityFilter));
-            RegisterFilterControl(typeof(DateTime), typeof(DateFilter));
+            RegisterFilterControl<int, IntegerFilter>();
+            RegisterFilterControl<string, StringFilter>();
+            RegisterFilterControl<Enum, EnumFilter>();
+            RegisterFilterControl<Entity, EntityFilter>();
+            RegisterFilterControl<DateTime, DateFilter>();
         }
 
         public Filter()

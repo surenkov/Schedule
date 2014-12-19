@@ -142,20 +142,29 @@ namespace Schedule.Controls.Slices
             {
                 if (Header == null || VerticalHeader == null) return;
 
-                var q = from s in ctx.Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building").ApplyFilters(Filters).Cast<Models.Schedule>()
+                var q = from s in ctx.
+                            Schedule.Include("Course").Include("Teacher").Include("Group").Include("Class.Building").
+                            ApplyFilters(Filters).Cast<Models.Schedule>()
                         where s.EndDate >= StartDate && s.StartDate <= EndDate
                         select s;
 
                 HashSet<Models.Schedule> itemsList = new HashSet<Models.Schedule>();
                 for (DateTime date = StartDate; date <= EndDate; date = date.AddDays(1))
-                    itemsList.UnionWith(q.Where(s => date >= s.StartDate && date <= s.EndDate && (date - s.StartDate).Days % s.Interval == 0));
+                    itemsList.UnionWith(
+                        q.Where(
+                            s => date >= s.StartDate &&
+                            date <= s.EndDate &&
+                            (date - s.StartDate).Days % s.Interval == 0));
 
                 var horizontalHeaderItems = Header as IEnumerable;
-                var vericalHeaderItems = VerticalHeader.Cast<object>().Select(item => new SliceRowViewModel
-                {
-                    Header = item,
-                    Items = new List<SliceCellViewModel>()
-                }).ToList();
+                var vericalHeaderItems =
+                    VerticalHeader
+                        .Cast<object>()
+                        .Select(item => new SliceRowViewModel
+                        {
+                            Header = item,
+                            Items = new List<SliceCellViewModel>()
+                        }).ToList();
 
                 var conflicts = new ConflictsManager().CheckAll(itemsList);
                 foreach (var rowModel in vericalHeaderItems)

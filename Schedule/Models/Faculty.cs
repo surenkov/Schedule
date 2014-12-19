@@ -5,7 +5,8 @@ namespace Schedule.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class Faculty : Entity
     {
         public Faculty()
@@ -16,13 +17,18 @@ namespace Schedule.Models
     
         [NotNull]
         public string Name { get; set; }
+
+
         [Hidden]
         public int SchoolId { get; set; }
     
-        [NotNull]
+        [NotNull, ForeignKey("SchoolId")]
         public virtual School School { get; set; }
+
+
         [Hidden]
         public virtual ICollection<Teacher> Teachers { get; set; }
+
         [Hidden]
         public virtual ICollection<Group> Groups { get; set; }
 

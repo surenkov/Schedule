@@ -18,10 +18,17 @@ namespace Schedule.Models
         [NotNull]
         public string Name { get; set; }
 
-        [NotNull]
+
+        [Hidden]
+        public int FacultyId { get; set; }
+
+        [NotNull, ForeignKey("FacultyId")]
         public virtual Faculty Faculty { get; set; }
+
+
         [Hidden]
         public virtual ICollection<Student> Students { get; set; }
+
         [Hidden]
         public virtual ICollection<Schedule> Schedule { get; set; }
 

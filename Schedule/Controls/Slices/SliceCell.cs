@@ -10,6 +10,7 @@ using Schedule.Models;
 using Schedule.Models.DataLayer;
 using Schedule.Models.ViewModels.Slices;
 using Schedule.Windows;
+using Schedule.Properties;
 
 namespace Schedule.Controls.Slices
 {
@@ -55,12 +56,22 @@ namespace Schedule.Controls.Slices
 
         protected override void OnAddButtonClick(object sender, RoutedEventArgs args)
         {
-            EditEntityDialog dlg = new EditEntityDialog(new Models.Schedule { StartDate = DateTime.Now.Date, EndDate = DateTime.Now.Date }) { ShowInTaskbar = true };
+            SliceView view = (SliceView)View;
+            EditEntityDialog dlg = new EditEntityDialog(
+                new Models.Schedule
+                {
+                    StartDate = view.StartDate,
+                    EndDate = view.EndDate,
+                    Interval = Settings.Default.DefaultInterval
+                })
+            {
+                ShowInTaskbar = true,
+                Title = "Add new schedule record"
+            };
             dlg.Apply += delegate (object o, ApplyEventArgs eventArgs)
             {
                 var item = eventArgs.Item;
                 eventArgs.Handled = true;
-                bool noExcept = true;
 
                 using (ScheduleDbContext ctx = new ScheduleDbContext())
                 {
@@ -72,22 +83,18 @@ namespace Schedule.Controls.Slices
                             ctx.Set(rel.GetType()).Attach(rel);
                         ctx.Entry(item).State = item.Id == 0 ? EntityState.Added : EntityState.Modified;
                         ctx.SaveChanges();
+
+                        dlg.Close();
+                        view.UpdateView();
                     }
                     catch (DbEntityValidationException e)
                     {
                         e.ShowMessage();
-                        noExcept = false;
                     }
                     catch (NullReferenceException)
                     {
                         MessageBox.Show("Please fill all required fields", "Error");
-                        noExcept = false;
                     }
-                }
-                if (noExcept)
-                {
-                    dlg.Close();
-                    View.UpdateView();
                 }
             };
             dlg.Show();

@@ -20,6 +20,7 @@ namespace Schedule.Models
     
         [Hidden]
         public virtual ICollection<Building> Buildings { get; set; }
+
         [Hidden]
         public virtual ICollection<Faculty> Faculties { get; set; }
 

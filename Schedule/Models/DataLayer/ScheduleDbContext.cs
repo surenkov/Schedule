@@ -4,10 +4,20 @@ namespace Schedule.Models.DataLayer
 {
     class ScheduleDbContext : DbContext
     {
-        public ScheduleDbContext()
-            : base("ScheduleDBConnection")
+        public ScheduleDbContext() : 
+            base("name=ScheduleDBConnectionString") { }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //Database.SetInitializer(new ScheduleInitializer());
+            modelBuilder.Entity<Group>().
+                HasRequired(g => g.Faculty).
+                WithMany().
+                WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Teacher>().
+                HasRequired(t => t.Faculty).
+                WithMany().
+                WillCascadeOnDelete(false);
         }
 
         public DbSet<Building> Buildings { get; set; }

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using Schedule.Controls.Editors;
 using Schedule.Models;
 using Schedule.Models.DataLayer;
 
-namespace Schedule.Utils
+namespace Schedule.Utils.Editors
 {
     internal delegate void ControlFillDelegate(Control control, Type dataType);
 
@@ -26,10 +25,6 @@ namespace Schedule.Utils
             var selector = c as Selector;
             if (selector == null) return;
 
-            var entitySelector = selector as EntitySelector;
-            if (entitySelector != null)
-                entitySelector.ItemsType = t;
-
             using (ScheduleDbContext ctx = new ScheduleDbContext())
             {
                 ctx.Set(t).Include("Building").Load();
@@ -41,10 +36,6 @@ namespace Schedule.Utils
         {
             var selector = c as Selector;
             if (selector == null) return;
-
-            var entitySelector = selector as EntitySelector;
-            if (entitySelector != null)
-                entitySelector.ItemsType = t;
 
             using (ScheduleDbContext ctx = new ScheduleDbContext())
             {

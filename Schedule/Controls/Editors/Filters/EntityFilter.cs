@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using Schedule.Models.ViewModels;
-using Schedule.Utils;
 using Schedule.Models;
+using Schedule.Models.ViewModels;
+using Schedule.Utils.Editors;
 
 namespace Schedule.Controls.Editors.Filters
 {

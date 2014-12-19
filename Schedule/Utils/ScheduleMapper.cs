@@ -29,20 +29,20 @@ namespace Schedule.Utils
             if (items == null || conflicts == null) return null;
 
             List<CalendarItemViewModel> list = new List<CalendarItemViewModel>();
-            var groupByPairQuery = items.GroupBy(schedule => schedule.DoubleClass);
+            var groupedByTime = items.GroupBy(schedule => schedule.DoubleClass);
 
-            foreach (IGrouping<DoubleClass, Models.Schedule> schedules in groupByPairQuery)
+            foreach (var pairs in groupedByTime)
             {
                 CalendarItemViewModel itemViewModel = new CalendarItemViewModel
                 {
-                    BorderBrush = PairColors[schedules.Key],
-                    Period = schedules.Key,
+                    BorderBrush = PairColors[pairs.Key],
+                    Period = pairs.Key,
                     Items = new Collection<ScheduleCardViewModel>(),
                     View = calendar
                 };
 
-                foreach (var schedule in schedules)
-                    itemViewModel.Items.Add(new ScheduleCardViewModel { ScheduleView = calendar, Item = schedule, HasConflict = conflicts.Where(c => c.Schedule.CompareTo(schedule) == 0).Count() > 0 });
+                foreach (var item in pairs)
+                    itemViewModel.Items.Add(new ScheduleCardViewModel { ScheduleView = calendar, Item = item, HasConflict = conflicts.Where(c => c.Schedule.CompareTo(item) == 0).Count() > 0 });
 
                 list.Add(itemViewModel);
             }

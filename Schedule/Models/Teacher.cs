@@ -17,11 +17,15 @@ namespace Schedule.Models
     
         [NotNull, MaxLength(300)]
         public string Name { get; set; }
+
+
         [Hidden]
         public int FacultyId { get; set; }
         
-        [NotNull]
+        [NotNull, ForeignKey("FacultyId")]
         public virtual Faculty Faculty { get; set; }
+
+
         [Hidden]
         public virtual ICollection<Course> Courses { get; set; }
 

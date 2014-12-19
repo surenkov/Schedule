@@ -8,25 +8,6 @@
         <ResourceDictionary Source="/Schedule;component/Themes/Slices.generic.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <Style TargetType="{x:Type editors:EntitySelector}">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type editors:EntitySelector}">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
-                        <DockPanel>
-                            <Button DockPanel.Dock="Right" Width="25" x:Name="PART_AddButton">
-                                <Path Fill="DimGray" Data="M 4 4 l 0 -4 2 0 0 4 4 0 0 2 -4 0 0 4 -2 0 0 -4 -4 0 0 -2 Z" SnapsToDevicePixels="False"/>
-                            </Button>
-                            <ComboBox x:Name="PART_Items" DockPanel.Dock="Left" Margin="0 0 5 0" IsEditable="True" ItemsSource="{Binding ItemsSource, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" SelectedItem="{Binding SelectedItem, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
-                        </DockPanel>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style TargetType="{x:Type controls:ScheduleCardItem}">
         <Setter Property="Foreground" Value="Black"/>
         <Setter Property="Template">

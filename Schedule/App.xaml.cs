@@ -7,7 +7,10 @@ namespace Schedule
     {
         public App()
         {
-
+            using (ScheduleDbContext ctx = new ScheduleDbContext())
+            {
+                ctx.Database.Connection.Open();
+            }
         }
     }
 }
