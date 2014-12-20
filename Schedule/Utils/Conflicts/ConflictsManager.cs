@@ -8,7 +8,7 @@ namespace Schedule.Utils.Conflicts
     {
         private List<IConflictsChecker> checkers = new List<IConflictsChecker>
         {
-                new TwoTeachersInClassroom(),
+                new TeachersInOneClassroom(),
                 new GroupInDifferentClassrooms(),
                 new TeacherInDifferentClassrooms(),
                 new DifferentCourseTypesInClassroom(),
@@ -30,8 +30,9 @@ namespace Schedule.Utils.Conflicts
         {
             List<Conflict> conflicts = new List<Conflict>();
 
-            foreach (var checker in checkers)
-                conflicts.AddRange(checker.Check(items));
+            if (items != null)
+                foreach (var checker in checkers)
+                    conflicts.AddRange(checker.Check(items));
 
             return conflicts;
         }

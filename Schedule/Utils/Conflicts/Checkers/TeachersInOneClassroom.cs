@@ -8,7 +8,7 @@ using Schedule.Models.ViewModels;
 namespace Schedule.Utils.Conflicts.Checkers
 {
     [Description("Two teachers in one classroom at the same time")]
-    class TwoTeachersInClassroom : IConflictsChecker
+    class TeachersInOneClassroom : IConflictsChecker
     {
         public IEnumerable<Conflict> Check(IEnumerable<Models.Schedule> items)
         {

@@ -133,19 +133,25 @@ namespace Schedule.Utils
             if (hComparer != null && vComparer != null)
             {
                 var items =
-                    scheduleItems.
-                        Where(item => hComparer(cell.HorizontalValue, item) && vComparer(cell.VerticalValue, item)).
-                        Select(item => new ScheduleCardViewModel { Item = item, ScheduleView = cell.ScheduleView, HasConflict = conflicts.Where(c => c.Schedule.CompareTo(item) == 0).Count() > 0 });
+                    scheduleItems
+                        .Where(item => hComparer(cell.HorizontalValue, item) && vComparer(cell.VerticalValue, item))
+                        .Select(item => new ScheduleCardViewModel { Item = item, ScheduleView = cell.ScheduleView, HasConflict = conflicts.Where(c => c.Schedule.CompareTo(item) == 0).Count() > 0 });
 
                 var header = new StringBuilder();
                 int cnt = items.Where(m => m.HasConflict).Count();
-                if (cnt > 0) header.Append(cnt + " conflict(s)");
+                if (cnt > 0) header.Append(InclineConflicts(cnt));
 
                 cell.Items = items.Take(SliceCell.VisibleItemsCount);
                 cell.ExpanderItems = items.Skip(SliceCell.VisibleItemsCount);
                 cell.ExpanderVisibility = cell.ExpanderItems.Count() > 0;
                 cell.Header = header.ToString();
             }
+        }
+
+        public static string InclineConflicts(int count)
+        {
+            string str = count.ToString();
+            return count + " conflict" + (str[str.Length - 1] != '1' ? "s" : "");
         }
     }
 }

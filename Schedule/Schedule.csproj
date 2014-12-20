@@ -154,7 +154,7 @@
     <Compile Include="Utils\Conflicts\Checkers\GroupInDifferentClassrooms.cs" />
     <Compile Include="Utils\Conflicts\Checkers\SmallClassroom.cs" />
     <Compile Include="Utils\Conflicts\Checkers\TeacherInDifferentClassrooms.cs" />
-    <Compile Include="Utils\Conflicts\Checkers\TwoTeachersInClassroom.cs" />
+    <Compile Include="Utils\Conflicts\Checkers\TeachersInOneClassroom.cs" />
     <Compile Include="Utils\Conflicts\Conflict.cs" />
     <Compile Include="Utils\Conflicts\ConflictsManager.cs" />
     <Compile Include="Utils\Conflicts\IConflictsChecker.cs" />
